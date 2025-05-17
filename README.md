@@ -30,19 +30,19 @@ It is important to notice that the classification tree data structure is designe
 
 Using it in C++ is easy. The data structure is a class template, and including it is as easy as
 
-``` cpp
+```cpp
 #include <ctree/ctree.hpp>
 ```
 
 Declaring a possible tree for the example above is as easy as
 
-``` cpp
+```cpp
 ctree::ctree<object, object_metadata, int, double, std::string> kd;
 ```
 
-Here, `object_metadata` can be a struct that can implement the `+=` operator so that the metadata of the new object can be merged with the object already present in the structure. For example
+Here, `object_metadata` can be a struct that implements the `+=` operator so that the metadata of the new object is merged with the object already present in the structure. For example
 
-``` cpp
+```cpp
 struct object_metadata {
     std::size_t num_occs = 0;
     object_metadata& operator+= (const object_metadata& m) noexcept {
@@ -52,16 +52,16 @@ struct object_metadata {
 };
 ```
 
-The metadata can be a simple trivial type such as an `int` or a `double` as long as the type supports the `+=` operator.
+The metadata can be a simple trivial type such as an `int` or a `double` as long as the type supports the `+=` operator. There is no need to support this operator, however, if all calls to `add` are such that it can store repeats.
 
 To add a new object, simply call `add`:
 
-``` cpp
+```cpp
 kd.add(std::move(o), {.num_occs = 1}, 1, 0.5, "a");
 // no need to std::move
 ```
 
-By default, this object stores unique instances. Call it with `<false>` to store all objects.
+By default, this object stores unique instances. Call it with `<false>` to allow repeats in the tree. If repeats are allowed, then they are simply added to the tree with no ordering whatsoever.
 
 ## Case studies
 
