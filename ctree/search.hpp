@@ -26,9 +26,18 @@
 // C++ includes
 #include <vector>
 
+// ctree includes
+#include <ctree/concepts.hpp>
+
 namespace classtree {
 
-template <typename T, typename U>
+template <typename T>
+static constexpr inline bool are_equal(const T& a, const T& b) noexcept
+{
+	return not(a < b) and not(b < a);
+}
+
+template <LessthanComparable T, typename U>
 [[nodiscard]] static constexpr std::pair<std::size_t, bool>
 search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
 {
@@ -39,7 +48,7 @@ search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
 		if (value < v[0].first) {
 			return {0, false};
 		}
-		if (value == v[0].first) {
+		if (are_equal(value, v[0].first)) {
 			return {0, true};
 		}
 		return {1, false};
@@ -50,7 +59,7 @@ search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
 	while (i < j) {
 		const std::size_t m = ((i + j) / 2);
 
-		if (value == v[m].first) {
+		if (are_equal(value, v[m].first)) {
 			return {m, true};
 		}
 
@@ -68,7 +77,7 @@ search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
 		}
 	}
 
-	if (value == v[i].first) {
+	if (are_equal(value, v[i].first)) {
 		return {i, true};
 	}
 	if (value < v[i].first) {
@@ -77,4 +86,4 @@ search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
 	return {i + 1, false};
 }
 
-} // namespace ir_tree
+} // namespace classtree

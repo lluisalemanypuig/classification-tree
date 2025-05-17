@@ -23,50 +23,10 @@
 
 #pragma once
 
-// C++ includes
-#include <concepts>
+// ctree includes
+#include <ctree/concepts.hpp>
 
 namespace classtree {
-
-/**
- * @brief Equality comparable concept.
- * 
- * Two objects of type @e T are comparable via the '==' operator.
- * @tparam T Type.
- */
-template <typename T>
-concept EqualityComparable = std::equality_comparable<T>;
-
-/**
- * @brief Less-than comparable concept.
- * 
- * Two objects of type @e T are comparable via the '<' operator.
- * @tparam T Type.
- */
-template <typename T>
-concept LessthanComparable = requires(const T& t1, const T& t2) {
-	{ t1 < t2 } -> std::same_as<bool>;
-};
-
-/**
- * @brief Equality comparable concept.
- * 
- * An object of type @e T can be incremented from another object of the
- * same type via the '+=' operator.
- * @tparam T Type.
- */
-template <typename T>
-concept Incrementable = requires(T& t1, const T& t2) { t1 += t2; };
-
-/**
- * @brief Comparable concept.
- * 
- * Any two objects of type @e T can be compared via the '<' and '=='
- * operators.
- * @tparam T Type.
- */
-template <typename T>
-concept Comparable = EqualityComparable<T> and LessthanComparable<T>;
 
 /**
  * @brief The Classification Tree class.

@@ -113,8 +113,6 @@ public:
 		}
 
 		if constexpr (LessthanComparable<_value_t>) {
-			static_assert(Comparable<_value_t>);
-
 			// do binary search and then add if needed.
 			const auto [i, exists] = search(m_data, val);
 			if (exists) {
