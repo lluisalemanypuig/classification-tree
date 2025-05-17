@@ -37,8 +37,8 @@
 
 TEST_CASE("Unique elements -- depth 3")
 {
-	typedef classtree::ctree<A, B, int, int, int> my_tree;
-	classtree::ctree<A, B, int, int, int> kd;
+	typedef classtree::ctree<data_eq, meta_incr, int, int, int> my_tree;
+	classtree::ctree<data_eq, meta_incr, int, int, int> kd;
 	static_assert(std::is_nothrow_move_constructible_v<my_tree>);
 	static_assert(std::is_move_constructible_v<my_tree>);
 
@@ -167,47 +167,47 @@ TEST_CASE("Unique elements -- depth 3")
 	SUBCASE("Manual iteration")
 	{
 		auto it = kd.get_const_iterator();
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, B{.num_occs = 2});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 2});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 3});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 3});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, B{.num_occs = 2});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 2});
 		--it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, B{.num_occs = 2});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 2});
 		--it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, B{.num_occs = 2});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 2});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 3});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 3});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 4});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 4});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 2, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 2, .k = 1, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 2, .k = 2, .z = 1});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 2, .k = 2, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 2, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 2, .k = 1, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 4});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 4});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 	}
 
 	SUBCASE("Iterate over a range forward")
@@ -289,8 +289,8 @@ TEST_CASE("Unique elements -- depth 3")
 
 TEST_CASE("All elements -- depth 3")
 {
-	typedef classtree::ctree<A, B, int, int, int> my_tree;
-	classtree::ctree<A, B, int, int, int> kd;
+	typedef classtree::ctree<data_eq, meta_incr, int, int, int> my_tree;
+	classtree::ctree<data_eq, meta_incr, int, int, int> kd;
 	static_assert(std::is_nothrow_move_constructible_v<my_tree>);
 	static_assert(std::is_move_constructible_v<my_tree>);
 
@@ -425,50 +425,50 @@ TEST_CASE("All elements -- depth 3")
 	SUBCASE("Manual iteration")
 	{
 		auto it = kd.get_const_iterator();
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 3});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 3});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 3});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 3});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 4});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 4});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 2, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 2, .k = 1, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 2, .k = 2, .z = 1});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 2, .k = 2, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 2, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 2, .k = 1, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 	}
 
 	SUBCASE("Iterate over a range forward")

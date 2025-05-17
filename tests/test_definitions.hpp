@@ -27,37 +27,74 @@
 #include <sstream>
 #include <ostream>
 
-struct A {
+// ctree includes
+#include <ctree/ctree.hpp>
+
+struct data_eq {
 	int i, j, k, z;
-	[[nodiscard]] bool operator== (const A& o) const noexcept
+	[[nodiscard]] bool operator== (const data_eq& o) const noexcept
 	{
 		return i == o.i and j == o.j and k == o.k and z == o.z;
 	}
 
 	inline friend std::ostream&
-	operator<< (std::ostream& os, const A& c) noexcept
+	operator<< (std::ostream& os, const data_eq& c) noexcept
 	{
 		os << '(' << c.i << ' ' << c.j << ' ' << c.k << ' ' << c.z << ')';
 		return os;
 	}
 };
 
-struct B {
+static_assert(classtree::EqualityComparable<data_eq>);
+
+struct data_lt {
+	int i, j, k, z;
+
+	[[nodiscard]] bool operator== (const data_lt& o) const noexcept
+	{
+		return i == o.i and j == o.j and k == o.k and z == o.z;
+	}
+	[[nodiscard]] std::strong_ordering operator<=> (const data_lt& o
+	) const noexcept
+	{
+		if (i == o.i) {
+			if (j == o.j) {
+				if (k == o.k) {
+					return z <=> o.z;
+				}
+				return k <=> o.k;
+			}
+			return j <=> o.j;
+		}
+		return i <=> o.i;
+	}
+
+	inline friend std::ostream&
+	operator<< (std::ostream& os, const data_lt& c) noexcept
+	{
+		os << '(' << c.i << ' ' << c.j << ' ' << c.k << ' ' << c.z << ')';
+		return os;
+	}
+};
+
+static_assert(classtree::LessthanComparable<data_lt>);
+
+struct meta_incr {
 	int num_occs = 0;
 
-	B& operator+= (const B& m) noexcept
+	meta_incr& operator+= (const meta_incr& m) noexcept
 	{
 		num_occs += m.num_occs;
 		return *this;
 	}
 
-	[[nodiscard]] bool operator== (const B& other) const noexcept
+	[[nodiscard]] bool operator== (const meta_incr& other) const noexcept
 	{
 		return num_occs == other.num_occs;
 	}
 
 	inline friend std::ostream&
-	operator<< (std::ostream& os, const B& c) noexcept
+	operator<< (std::ostream& os, const meta_incr& c) noexcept
 	{
 		os << '{' << c.num_occs << '}';
 		return os;

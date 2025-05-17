@@ -33,9 +33,9 @@
 // custom includes
 #include "test_definitions.hpp"
 
-TEST_CASE("Unique elements -- depth 0")
+TEST_CASE("Unique elements")
 {
-	classtree::ctree<A, B> kd;
+	classtree::ctree<data_eq, meta_incr> kd;
 
 	kd.add({.i = 1, .j = 1, .k = 1, .z = 1}, {.num_occs = 1});
 	kd.add({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1});
@@ -132,47 +132,47 @@ TEST_CASE("Unique elements -- depth 0")
 	SUBCASE("Manual iteration")
 	{
 		auto it = kd.get_const_iterator();
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, B{.num_occs = 2});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 2});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 3});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 3});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, B{.num_occs = 2});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 2});
 		--it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, B{.num_occs = 2});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 2});
 		--it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, B{.num_occs = 2});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 2});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 3});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 3});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 4});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 4});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 2, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 2, .k = 1, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 	}
 }
 
-TEST_CASE("All elements -- depth 0")
+TEST_CASE("All elements")
 {
-	classtree::ctree<A, B> kd;
+	classtree::ctree<data_eq, meta_incr> kd;
 
-	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 1}, {.num_occs = 1});
 	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1});
+	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 1}, {.num_occs = 1});
 	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 3}, {.num_occs = 1});
 	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 4}, {.num_occs = 1});
 	kd.add<false>({.i = 1, .j = 2, .k = 1, .z = 1}, {.num_occs = 1});
@@ -189,8 +189,8 @@ TEST_CASE("All elements -- depth 0")
 	{
 
 		static constexpr std::string_view kd_str = "^ size: 11 11\n"
-												   "├── (1 1 1 1) {1}\n"
 												   "├── (1 1 1 2) {1}\n"
+												   "├── (1 1 1 1) {1}\n"
 												   "├── (1 1 1 3) {1}\n"
 												   "├── (1 1 1 4) {1}\n"
 												   "├── (1 2 1 1) {1}\n"
@@ -209,8 +209,8 @@ TEST_CASE("All elements -- depth 0")
 	{
 
 		static constexpr std::string_view kd_iter_str = "Iterate:\n"
-														"    (1 1 1 1) {1}\n"
 														"    (1 1 1 2) {1}\n"
+														"    (1 1 1 1) {1}\n"
 														"    (1 1 1 3) {1}\n"
 														"    (1 1 1 4) {1}\n"
 														"    (1 2 1 1) {1}\n"
@@ -250,8 +250,8 @@ TEST_CASE("All elements -- depth 0")
 			"    (1 2 1 1) {1}\n"
 			"    (1 1 1 4) {1}\n"
 			"    (1 1 1 3) {1}\n"
-			"    (1 1 1 2) {1}\n"
-			"    (1 1 1 1) {1}\n";
+			"    (1 1 1 1) {1}\n"
+			"    (1 1 1 2) {1}\n";
 
 		const std::string iter_str_const = [&]()
 		{
@@ -271,38 +271,38 @@ TEST_CASE("All elements -- depth 0")
 	SUBCASE("Manual iteration")
 	{
 		auto it = kd.get_const_iterator();
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 3});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 3});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 3});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 3});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 1, .k = 1, .z = 4});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 4});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, A{.i = 1, .j = 2, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, B{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 2, .k = 1, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 	}
 }
 
