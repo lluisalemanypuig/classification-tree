@@ -21,12 +21,11 @@
  * 		https://github.com/lluisalemanypuig
  */
 
-#define DOCTEST_CONFIG_IMPLEMENT
-
 // C++ includes
+#define DOCTEST_CONFIG_IMPLEMENT
 #include <doctest/doctest.h>
 
-// isorepr includes
+// ctree includes
 #include <ctree/ctree.hpp>
 #include <ctree/iterator.hpp>
 #include <ctree/range_iterator.hpp>

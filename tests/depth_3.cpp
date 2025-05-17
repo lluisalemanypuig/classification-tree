@@ -27,7 +27,7 @@
 #include <iostream>
 #include <doctest/doctest.h>
 
-// isorepr includes
+// ctree includes
 #include <ctree/ctree.hpp>
 #include <ctree/iterator.hpp>
 #include <ctree/range_iterator.hpp>
