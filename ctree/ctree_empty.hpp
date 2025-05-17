@@ -32,6 +32,7 @@
 
 // custom includes
 #include <ctree/ctree.hpp>
+#include <ctree/search.hpp>
 
 namespace classtree {
 
@@ -43,7 +44,7 @@ namespace classtree {
  * @tparam value_t Type of the values to add.
  * @tparam metadata_t Type of the metadata associated to the values.
  */
-template <EqualityComparable value_t, Incrementable metadata_t>
+template <typename value_t, typename metadata_t>
 class ctree<value_t, metadata_t> {
 public:
 
@@ -58,22 +59,22 @@ public:
 	/// Iterator to the key-child pair container.
 	[[nodiscard]] container_t::iterator begin() noexcept
 	{
-		return m_children.begin();
+		return m_data.begin();
 	}
 	/// Iterator to the key-child pair container.
 	[[nodiscard]] container_t::const_iterator begin() const noexcept
 	{
-		return m_children.begin();
+		return m_data.begin();
 	}
 	/// Iterator to the key-child pair container.
 	[[nodiscard]] container_t::iterator end() noexcept
 	{
-		return m_children.end();
+		return m_data.end();
 	}
 	/// Iterator to the key-child pair container.
 	[[nodiscard]] container_t::const_iterator end() const noexcept
 	{
-		return m_children.end();
+		return m_data.end();
 	}
 
 	/**
@@ -93,16 +94,45 @@ public:
 	{
 		static_assert(check_types<_value_t, _metadata_t>());
 
-		if constexpr (unique) {
-			for (auto& [v, m] : m_children) {
-				if (val == v) {
-					m += meta;
-					return false;
-				}
-			}
+		/* store all objects */
+
+		if constexpr (not unique) {
+			// simply add the object and its metadata -- no need
+			// to check the types.
+			m_data.emplace_back(std::move(val), std::move(meta));
+			return true;
 		}
 
-		m_children.emplace_back(std::move(val), std::move(meta));
+		/* store unique objects */
+
+		if constexpr (not EqualityComparable<_value_t> and
+					  not LessthanComparable<_value_t>) {
+			// this cannot happen if we want to keep unique instances.
+			static_assert(false);
+			return false;
+		}
+
+		if constexpr (LessthanComparable<_value_t>) {
+			// do binary search and then add if needed.
+			const auto [i, exists] = search(m_data, val);
+			if (exists) {
+				m_data[i].second += meta;
+				return false;
+			}
+			auto it = m_data.begin();
+			std::advance(it, i);
+			m_data.insert(it, {std::move(val), std::move(meta)});
+			return true;
+		}
+
+		static_assert(EqualityComparable<_value_t>);
+		for (auto& [v, m] : m_data) {
+			if (val == v) {
+				m += meta;
+				return false;
+			}
+		}
+		m_data.emplace_back(std::move(val), std::move(meta));
 		return true;
 	}
 
@@ -112,7 +142,7 @@ public:
 	 */
 	[[nodiscard]] std::size_t size() const noexcept
 	{
-		return m_children.size();
+		return m_data.size();
 	}
 	/**
 	 * @brief The number of keys in this node.
@@ -122,7 +152,7 @@ public:
 	 */
 	[[nodiscard]] std::size_t num_keys() const noexcept
 	{
-		return m_children.size();
+		return m_data.size();
 	}
 
 	/**
@@ -133,9 +163,9 @@ public:
 	std::pair<value_t, metadata_t>& get_child(const std::size_t i) noexcept
 	{
 #if defined DEBUG
-		assert(i < m_children.size());
+		assert(i < m_data.size());
 #endif
-		return m_children[i];
+		return m_data[i];
 	}
 
 	/**
@@ -152,10 +182,10 @@ public:
 	{
 		os << tab << "^ size: " << size() << ' ' << num_keys() << '\n';
 		if (print_leaves) {
-			for (std::size_t i = 0; i < m_children.size(); ++i) {
-				const auto& [v, meta] = m_children[i];
+			for (std::size_t i = 0; i < m_data.size(); ++i) {
+				const auto& [v, meta] = m_data[i];
 
-				if (i < m_children.size() - 1) {
+				if (i < m_data.size() - 1) {
 					os << tab << "├── ";
 				}
 				else {
@@ -235,7 +265,7 @@ private:
 private:
 
 	/// The unique elements in this tree.
-	container_t m_children;
+	container_t m_data;
 };
 
-} // namespace ctree
+} // namespace classtree

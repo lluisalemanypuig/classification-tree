@@ -103,24 +103,15 @@ concept Comparable = EqualityComparable<T> or LessthanComparable<T>;
  * value.
  * @tparam keys_t The types of the values returned by the key functions.
  */
-template <
-	EqualityComparable value_t,
-	Incrementable metadata_t,
-	Comparable... keys_t>
+template <typename value_t, typename metadata_t, Comparable... keys_t>
 class ctree;
 
 /// Iterator class over the leaves of a tree @ref ir_tree.
-template <
-	EqualityComparable value_t,
-	Incrementable metadata_t,
-	Comparable... keys_t>
+template <typename value_t, typename metadata_t, Comparable... keys_t>
 class iterator;
 
 /// Constant iterator class over the leaves of a tree @ref ir_tree.
-template <
-	EqualityComparable value_t,
-	Incrementable metadata_t,
-	Comparable... keys_t>
+template <typename value_t, typename metadata_t, Comparable... keys_t>
 class const_iterator;
 
 /**
@@ -129,10 +120,7 @@ class const_iterator;
  * This class iterates over ranges of values of the keys determined by a
  * series of functions passed as parameter.
  */
-template <
-	EqualityComparable value_t,
-	Incrementable metadata_t,
-	Comparable... keys_t>
+template <typename value_t, typename metadata_t, Comparable... keys_t>
 class range_iterator;
 
 /**
@@ -141,45 +129,30 @@ class range_iterator;
  * This class iterates over ranges of values of the keys determined by a
  * series of functions passed as parameter.
  */
-template <
-	EqualityComparable value_t,
-	Incrementable metadata_t,
-	Comparable... keys_t>
+template <typename value_t, typename metadata_t, Comparable... keys_t>
 class const_range_iterator;
 
 /// Implementation details.
 namespace detail {
 
 /// Pointer type to an instance of @ref ir_tree.
-template <
-	EqualityComparable value_t,
-	Incrementable metadata_t,
-	Comparable... keys_t>
+template <typename value_t, typename metadata_t, Comparable... keys_t>
 struct pointer {
 	using type = ctree<value_t, metadata_t, keys_t...> *;
 };
 
 /// Pointer type to an instance of @ref ir_tree.
-template <
-	EqualityComparable value_t,
-	Incrementable metadata_t,
-	Comparable... keys_t>
+template <typename value_t, typename metadata_t, Comparable... keys_t>
 using pointer_t = pointer<value_t, metadata_t, keys_t...>::type;
 
 /// Constant pointer type to an instance of @ref ir_tree.
-template <
-	EqualityComparable value_t,
-	Incrementable metadata_t,
-	Comparable... keys_t>
+template <typename value_t, typename metadata_t, Comparable... keys_t>
 struct const_pointer {
 	using type = const ctree<value_t, metadata_t, keys_t...> *;
 };
 
 /// Constant pointer type to an instance of @ref ir_tree.
-template <
-	EqualityComparable value_t,
-	Incrementable metadata_t,
-	Comparable... keys_t>
+template <typename value_t, typename metadata_t, Comparable... keys_t>
 using const_pointer_t = const_pointer<value_t, metadata_t, keys_t...>::type;
 
 } // namespace detail

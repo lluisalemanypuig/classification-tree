@@ -45,8 +45,8 @@ namespace classtree {
  * @tparam keys_t Type of the remaining keys.
  */
 template <
-	EqualityComparable value_t,
-	Incrementable metadata_t,
+	typename value_t,
+	typename metadata_t,
 	Comparable key_t,
 	Comparable... keys_t>
 class ctree<value_t, metadata_t, key_t, keys_t...> {

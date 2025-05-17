@@ -44,8 +44,8 @@ namespace detail {
 template <
 	typename tree_pointer_t,
 	typename container_iterator_t,
-	EqualityComparable value_t,
-	Incrementable metadata_t,
+	typename value_t,
+	typename metadata_t,
 	Comparable... keys_t>
 class range_iterator_;
 
@@ -59,8 +59,8 @@ class range_iterator_;
  */
 template <
 	typename tree_pointer_t,
-	EqualityComparable value_t,
-	Incrementable metadata_t,
+	typename value_t,
+	typename metadata_t,
 	Comparable key_t,
 	Comparable... keys_t>
 struct sub_range_iterator {
@@ -109,8 +109,8 @@ struct sub_range_iterator {
  */
 template <
 	typename tree_pointer_t,
-	EqualityComparable value_t,
-	Incrementable metadata_t,
+	typename value_t,
+	typename metadata_t,
 	Comparable key_t,
 	Comparable... keys_t>
 using sub_range_iterator_t =
@@ -127,8 +127,8 @@ using sub_range_iterator_t =
 template <
 	typename tree_pointer_t,
 	typename container_iterator_t,
-	EqualityComparable value_t,
-	Incrementable metadata_t>
+	typename value_t,
+	typename metadata_t>
 class range_iterator_<
 	tree_pointer_t,
 	container_iterator_t,
@@ -243,8 +243,8 @@ private:
 template <
 	typename tree_pointer_t,
 	typename container_iterator_t,
-	EqualityComparable value_t,
-	Incrementable metadata_t,
+	typename value_t,
+	typename metadata_t,
 	Comparable key_t,
 	Comparable... keys_t>
 class range_iterator_<
@@ -468,7 +468,7 @@ private:
  * @tparam value_t Type of the values to add.
  * @tparam metadata_t Type of the metadata associated to the values.
  */
-template <EqualityComparable value_t, Incrementable metadata_t>
+template <typename value_t, typename metadata_t>
 class range_iterator<value_t, metadata_t>
 	: public detail::range_iterator_<
 		  detail::pointer_t<value_t, metadata_t>,
@@ -486,8 +486,8 @@ public:
  * @tparam keys_t Type of the remaining keys.
  */
 template <
-	EqualityComparable value_t,
-	Incrementable metadata_t,
+	typename value_t,
+	typename metadata_t,
 	Comparable key_t,
 	Comparable... keys_t>
 class range_iterator<value_t, metadata_t, key_t, keys_t...>
@@ -507,7 +507,7 @@ public:
  * @tparam value_t Type of the values to add.
  * @tparam metadata_t Type of the metadata associated to the values.
  */
-template <EqualityComparable value_t, Incrementable metadata_t>
+template <typename value_t, typename metadata_t>
 class const_range_iterator<value_t, metadata_t>
 	: public detail::range_iterator_<
 		  detail::const_pointer_t<value_t, metadata_t>,
@@ -525,8 +525,8 @@ public:
  * @tparam keys_t Type of the remaining keys.
  */
 template <
-	EqualityComparable value_t,
-	Incrementable metadata_t,
+	typename value_t,
+	typename metadata_t,
 	Comparable key_t,
 	Comparable... keys_t>
 class const_range_iterator<value_t, metadata_t, key_t, keys_t...>
