@@ -27,7 +27,7 @@
 #include <functional>
 #include <tuple>
 
-// isorepr includes
+// ctree includes
 #include <ctree/ctree.hpp>
 
 namespace classtree {
