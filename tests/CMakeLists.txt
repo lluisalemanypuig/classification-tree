@@ -159,5 +159,8 @@ configure_executable(depth_0__eq)
 add_executable(depth_0__lt depth_0__lt.cpp test_definitions.hpp ${ctree})
 configure_executable(depth_0__lt)
 
-add_executable(depth_3 depth_3.cpp test_definitions.hpp ${ctree})
-configure_executable(depth_3)
+add_executable(depth_3__eq depth_3__eq.cpp test_definitions.hpp ${ctree})
+configure_executable(depth_3__eq)
+
+add_executable(depth_3__lt depth_3__lt.cpp test_definitions.hpp ${ctree})
+configure_executable(depth_3__lt)
