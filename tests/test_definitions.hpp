@@ -28,7 +28,7 @@
 #include <ostream>
 
 // ctree includes
-#include <ctree/ctree.hpp>
+#include <ctree/concepts.hpp>
 
 struct data_eq {
 	int i, j, k, z;
@@ -50,10 +50,12 @@ static_assert(classtree::EqualityComparable<data_eq>);
 struct data_lt {
 	int i, j, k, z;
 
+	// this is needed for DOCTEST
 	[[nodiscard]] bool operator== (const data_lt& o) const noexcept
 	{
 		return i == o.i and j == o.j and k == o.k and z == o.z;
 	}
+
 	[[nodiscard]] std::strong_ordering operator<=> (const data_lt& o
 	) const noexcept
 	{
