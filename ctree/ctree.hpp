@@ -66,7 +66,7 @@ concept Incrementable = requires(T& t1, const T& t2) { t1 += t2; };
  * @tparam T Type.
  */
 template <typename T>
-concept Comparable = EqualityComparable<T> or LessthanComparable<T>;
+concept Comparable = EqualityComparable<T> and LessthanComparable<T>;
 
 /**
  * @brief The Classification Tree class.
@@ -93,7 +93,8 @@ concept Comparable = EqualityComparable<T> or LessthanComparable<T>;
  * corresponding representative via the '+=' operator. In this case,
  * @e value_t is a type that must be Comparable via either the '==' operator
  * (see concept @ref EqualityComparable) or the '<' operator (see concept
- * @ref LessthanComparable). Lastly, and @e metadata_t is a type that
+ * @ref LessthanComparable) and the '==' operator (see concept
+ * @ref EqualityComparable). Lastly, and @e metadata_t is a type that
  * implements the += operator (see concept @ref Incrementable).
  * - Keep all objects. Store the new object at the corresponding leaf of
  * the tree ignoring possible repeats.

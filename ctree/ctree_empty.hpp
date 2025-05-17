@@ -113,6 +113,8 @@ public:
 		}
 
 		if constexpr (LessthanComparable<_value_t>) {
+			static_assert(Comparable<_value_t>);
+
 			// do binary search and then add if needed.
 			const auto [i, exists] = search(m_data, val);
 			if (exists) {
@@ -125,15 +127,18 @@ public:
 			return true;
 		}
 
-		static_assert(EqualityComparable<_value_t>);
-		for (auto& [v, m] : m_data) {
-			if (val == v) {
-				m += meta;
-				return false;
+		if constexpr (EqualityComparable<_value_t>) {
+			static_assert(Incrementable<_metadata_t>);
+
+			for (auto& [v, m] : m_data) {
+				if (val == v) {
+					m += meta;
+					return false;
+				}
 			}
+			m_data.emplace_back(std::move(val), std::move(meta));
+			return true;
 		}
-		m_data.emplace_back(std::move(val), std::move(meta));
-		return true;
 	}
 
 	/**
