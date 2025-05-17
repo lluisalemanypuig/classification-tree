@@ -1,0 +1,8 @@
+qbuild-*/
+build-*/
+*-release/
+*-debug/
+*.html
+.Rhistory
+
+CMakeLists.txt.user
