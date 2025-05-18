@@ -3,7 +3,7 @@
 if [ ! -d tests-debug ]; then
 	mkdir tests-debug
 	cd tests-debug
-	cmake ../tests
+	cmake -DCMAKE_BUILD_TYPE=Debug ../tests
 	cd ..
 fi
 
