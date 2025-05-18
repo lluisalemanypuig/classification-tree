@@ -44,7 +44,7 @@ TEST_CASE("Unique elements")
 	kd.add({.i = 1, .j = 2, .k = 1, .z = 1}, {.num_occs = 1});
 	kd.add({.i = 1, .j = 2, .k = 2, .z = 1}, {.num_occs = 1});
 	kd.add({.i = 1, .j = 3, .k = 5, .z = 1}, {.num_occs = 1});
-	kd.add({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1}); // *
+	kd.add({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1});
 	kd.add({.i = 2, .j = 2, .k = 2, .z = 1}, {.num_occs = 1});
 	kd.add({.i = 2, .j = 2, .k = 2, .z = 2}, {.num_occs = 1});
 	kd.add({.i = 2, .j = 2, .k = 3, .z = 2}, {.num_occs = 1});
