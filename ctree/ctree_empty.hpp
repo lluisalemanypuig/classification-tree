@@ -116,7 +116,9 @@ public:
 			// do binary search and then add if needed.
 			const auto [i, exists] = search(m_data, val);
 			if (exists) {
-				m_data[i].second += meta;
+				if constexpr (requires { m_data[i].second += meta; }) {
+					m_data[i].second += meta;
+				}
 				return false;
 			}
 			auto it = m_data.begin();
@@ -130,7 +132,9 @@ public:
 
 			for (auto& [v, m] : m_data) {
 				if (val == v) {
-					m += meta;
+					if constexpr (requires { m += meta; }) {
+						m += meta;
+					}
 					return false;
 				}
 			}
