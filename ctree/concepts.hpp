@@ -68,4 +68,13 @@ concept Incrementable = requires(T& t1, const T& t2) { t1 += t2; };
 template <typename T>
 concept Comparable = EqualityComparable<T> and LessthanComparable<T>;
 
+/**
+ * @brief Mergeable concept.
+ *
+ * Any two objects of type @e T can be merged via the '+=' operator.
+ * @tparam T Type.
+ */
+template <typename T>
+concept Mergeable = requires(T t1, T t2) { t1 += t2; };
+
 } // namespace classtree

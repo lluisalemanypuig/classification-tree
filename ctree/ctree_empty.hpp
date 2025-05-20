@@ -116,7 +116,7 @@ public:
 			// do binary search and then add if needed.
 			const auto [i, exists] = search(m_data, val);
 			if (exists) {
-				if constexpr (requires { m_data[i].second += meta; }) {
+				if constexpr (Mergeable<_metadata_t>) {
 					m_data[i].second += meta;
 				}
 				return false;
@@ -132,7 +132,7 @@ public:
 
 			for (auto& [v, m] : m_data) {
 				if (val == v) {
-					if constexpr (requires { m += meta; }) {
+					if constexpr (Mergeable<_metadata_t>) {
 						m += meta;
 					}
 					return false;
