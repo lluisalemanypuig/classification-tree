@@ -128,8 +128,6 @@ public:
 		}
 
 		if constexpr (EqualityComparable<_value_t>) {
-			static_assert(Incrementable<_metadata_t>);
-
 			for (auto& [v, m] : m_data) {
 				if (val == v) {
 					if constexpr (Mergeable<_metadata_t>) {
