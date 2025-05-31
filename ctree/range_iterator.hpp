@@ -147,6 +147,12 @@ public:
 	/// Place the iterator at the beginning.
 	[[nodiscard]] bool at_begin() noexcept
 	{
+		if (m_tree->size() == 0) [[unlikely]] {
+			m_past_begin = true;
+			m_it = m_tree->end();
+			return false;
+		}
+
 		m_past_begin = false;
 		m_it = m_tree->begin();
 		return true;
@@ -154,6 +160,12 @@ public:
 	/// Place the iterator at the end.
 	[[nodiscard]] bool at_end() noexcept
 	{
+		if (m_tree->size() == 0) [[unlikely]] {
+			m_past_begin = true;
+			m_it = m_tree->end();
+			return false;
+		}
+
 		m_past_begin = false;
 		m_it = m_tree->end();
 		--m_it;
@@ -272,6 +284,12 @@ public:
 	/// Place the iterator at the beginning.
 	[[nodiscard]] bool at_begin() noexcept
 	{
+		if (m_tree->size() == 0) [[unlikely]] {
+			m_past_begin = true;
+			m_it = m_tree->end();
+			return false;
+		}
+
 		m_past_begin = false;
 		m_it = m_tree->begin();
 		return next();
@@ -279,6 +297,12 @@ public:
 	/// Place the iterator at the end.
 	[[nodiscard]] bool at_end() noexcept
 	{
+		if (m_tree->size() == 0) [[unlikely]] {
+			m_past_begin = true;
+			m_it = m_tree->end();
+			return false;
+		}
+
 		m_past_begin = false;
 		m_it = m_tree->end();
 		--m_it;
@@ -541,4 +565,4 @@ class const_range_iterator<value_t, metadata_t, key_t, keys_t...>
 public:
 };
 
-} // namespace isorepr
+} // namespace classtree

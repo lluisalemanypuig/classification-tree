@@ -139,12 +139,24 @@ public:
 	/// Place the iterator at the beginning.
 	void at_begin() noexcept
 	{
+		if (m_tree->size() == 0) [[unlikely]] {
+			m_past_begin = true;
+			m_it = m_tree->end();
+			return;
+		}
+
 		m_past_begin = false;
 		m_it = m_tree->begin();
 	}
 	/// Place the iterator at the end.
 	void at_end() noexcept
 	{
+		if (m_tree->size() == 0) [[unlikely]] {
+			m_past_begin = true;
+			m_it = m_tree->end();
+			return;
+		}
+
 		m_past_begin = false;
 		m_it = m_tree->end();
 		--m_it;
@@ -257,6 +269,12 @@ public:
 	/// Initialize the iteration at the beginning.
 	void at_begin() noexcept
 	{
+		if (m_tree->size() == 0) [[unlikely]] {
+			m_past_begin = true;
+			m_it = m_tree->end();
+			return;
+		}
+
 		m_past_begin = false;
 		m_it = m_tree->begin();
 		m_subtree_iterator.set_pointer(&m_it->second);
@@ -265,6 +283,12 @@ public:
 	/// Initialize the iteration at the end.
 	void at_end() noexcept
 	{
+		if (m_tree->size() == 0) [[unlikely]] {
+			m_past_begin = true;
+			m_it = m_tree->end();
+			return;
+		}
+
 		m_past_begin = false;
 		m_it = m_tree->end();
 		--m_it;
