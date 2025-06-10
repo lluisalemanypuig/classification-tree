@@ -12,9 +12,7 @@ To formalize things a little bit, notice that the key values must be values such
 
 -   are the same then $k_1(p) = k_1(q)$, $\dots$, $k_n(p) = k_n(q)$,
 
--   are different then $k_i(p) \neq k_i(q)$, for some key function $k_i$,
-
--   the fact that $k_1(p) = k_1(q)$, $\dots$, $k_n(p) = k_n(q)$ does not imply $p = q$.
+-   are such that $k_1(p) = k_1(q)$, $\dots$, $k_n(p) = k_n(q)$ then $p$ and $q$ are not necessarily equal.
 
 ### Wait... isn't this a trie?
 
