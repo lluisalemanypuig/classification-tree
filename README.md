@@ -14,6 +14,8 @@ To formalize things a little bit, notice that the key values must be values such
 
 -   are such that $k_1(p) = k_1(q)$, $\dots$, $k_n(p) = k_n(q)$ then $p$ and $q$ are not necessarily equal.
 
+-   are such that $k_i(p) \neq k_i(q)$, for some $i$, then $p$ and $q$ are different.
+
 ### Wait... isn't this a trie?
 
 Not really, but there is one similarity. A trie is a data structure that provides storage of words of dynamic size in a tree-like data structure; at each node of the tree is stored a letter of a word plus some extra data to indicate that that letter is the last letter of a word. Something like this:
