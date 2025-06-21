@@ -9,7 +9,9 @@ fi
 
 cd tests-debug
 make -j4
-./depth_0__eq
-./depth_0__lt
-./depth_3__eq
-./depth_3__lt
+for i in 0 3; do
+	for f in $(ls depth_0__*); do
+		echo $f
+		./$f
+	done
+done
