@@ -195,6 +195,11 @@ public:
 		}
 	}
 
+	[[nodiscard]] std::size_t count() const noexcept
+	{
+		return m_tree->size();
+	}
+
 	/// Is the iteration at the beginning?
 	[[nodiscard]] bool begin() const noexcept
 	{
@@ -338,6 +343,24 @@ public:
 				[[maybe_unused]] const bool _ = previous();
 			}
 		}
+	}
+
+	[[nodiscard]] std::size_t count() noexcept
+	{
+		std::size_t c = 0;
+		[[maybe_unused]] const auto _ = at_begin();
+		while (not end()) {
+			while (not end() and not m_func(m_it->first)) {
+				++m_it;
+			}
+
+			if (not end()) {
+				m_subtree_iterator.set_pointer(&m_it->second);
+				c += m_subtree_iterator.count();
+				++m_it;
+			}
+		}
+		return c;
 	}
 
 	/// Is the iteration at the beginning?
