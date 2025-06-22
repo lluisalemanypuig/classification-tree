@@ -150,9 +150,6 @@ find_package(doctest REQUIRED)
 
 file(GLOB_RECURSE ctree ../ctree/*.hpp)
 
-add_executable(compilation_checks compilation_checks.cpp ${ctree})
-configure_executable(compilation_checks)
-
 add_executable(depth_0__empty depth_0__empty.cpp test_definitions.hpp ${ctree})
 configure_executable(depth_0__empty)
 
