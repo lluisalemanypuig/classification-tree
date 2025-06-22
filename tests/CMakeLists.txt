@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 3.10)
 # project declaration
 project(TESTS DESCRIPTION "Tests for ir-tree")
 
+# Turn on export of compile commands
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # needed includes to make CMake work
 include(CheckCXXCompilerFlag)
 # installation directories (platform dependent)
@@ -12,7 +15,7 @@ include(GNUInstallDirs)
 # Custom functions
 function(add_compiler_flag executable flag)
 	check_cxx_compiler_flag(${flag} CXX_HAS_FLAG_${flag})
-	
+
 	if (CXX_HAS_FLAG_${flag})
 		target_compile_options(${executable} PRIVATE ${flag})
 	endif()
@@ -85,7 +88,7 @@ function(configure_executable executable)
 
 	# doctest
 	target_link_libraries(${executable} doctest::doctest)
-	
+
 endfunction(configure_executable)
 
 # ******************************************************************************
@@ -167,3 +170,12 @@ configure_executable(depth_3__eq)
 
 add_executable(depth_3__lt depth_3__lt.cpp test_definitions.hpp ${ctree})
 configure_executable(depth_3__lt)
+
+# *******************************************************************************
+# Other
+
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+	file(COPY_FILE ../tests-debug/compile_commands.json compile_commands.json)
+else()
+	file(COPY_FILE ../tests-release/compile_commands.json compile_commands.json)
+endif()

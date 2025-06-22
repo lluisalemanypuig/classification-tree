@@ -148,6 +148,26 @@ TEST_CASE("Empty tree")
 		}();
 		CHECK_EQ(kd_iter_str, iter_str);
 	}
+
+	SUBCASE("Count elements")
+	{
+		const auto f1 = [](const int v) -> bool
+		{
+			return v == 1;
+		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return 1 <= v and v <= 2;
+		};
+		const auto f3 = [](const int) -> bool
+		{
+			return true;
+		};
+
+		auto it = kd.get_range_iterator(f1, f2, f3);
+		const std::size_t c = it.count();
+		CHECK_EQ(c, 0);
+	}
 }
 
 int main(int argc, char **argv)

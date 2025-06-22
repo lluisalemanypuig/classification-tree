@@ -285,6 +285,66 @@ TEST_CASE("Unique elements -- depth 3")
 		}();
 		CHECK_EQ(kd_iter_str, iter_str);
 	}
+
+	SUBCASE("Count elements (1)")
+	{
+		const auto f1 = [](const int v) -> bool
+		{
+			return v == 1;
+		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return 1 <= v and v <= 2;
+		};
+		const auto f3 = [](const int) -> bool
+		{
+			return true;
+		};
+
+		auto it = kd.get_range_iterator(f1, f2, f3);
+		const std::size_t c = it.count();
+		CHECK_EQ(c, 6);
+	}
+
+	SUBCASE("Count elements (2)")
+	{
+		const auto f1 = [](const int v) -> bool
+		{
+			return v == 10;
+		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return 1 <= v and v <= 2;
+		};
+		const auto f3 = [](const int) -> bool
+		{
+			return true;
+		};
+
+		auto it = kd.get_range_iterator(f1, f2, f3);
+		const std::size_t c = it.count();
+		CHECK_EQ(c, 0);
+	}
+
+	SUBCASE("Count elements (3)")
+	{
+		const auto f1 = [](const int) -> bool
+		{
+			return true;
+		};
+		const auto f2 = [](const int) -> bool
+		{
+			return true;
+		};
+		const auto f3 = [](const int) -> bool
+		{
+			return true;
+		};
+
+		auto it = kd.get_range_iterator(f1, f2, f3);
+		const std::size_t c = it.count();
+		CHECK_EQ(c, kd.size());
+	}
 }
 
 TEST_CASE("All elements -- depth 3")
@@ -545,6 +605,66 @@ TEST_CASE("All elements -- depth 3")
 			return range_iterate_string_backward(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str);
+	}
+
+	SUBCASE("Count elements (1)")
+	{
+		const auto f1 = [](const int v) -> bool
+		{
+			return v == 1;
+		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return 1 <= v and v <= 2;
+		};
+		const auto f3 = [](const int) -> bool
+		{
+			return true;
+		};
+
+		auto it = kd.get_range_iterator(f1, f2, f3);
+		const std::size_t c = it.count();
+		CHECK_EQ(c, 7);
+	}
+
+	SUBCASE("Count elements (2)")
+	{
+		const auto f1 = [](const int v) -> bool
+		{
+			return v == 10;
+		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return 1 <= v and v <= 2;
+		};
+		const auto f3 = [](const int) -> bool
+		{
+			return true;
+		};
+
+		auto it = kd.get_range_iterator(f1, f2, f3);
+		const std::size_t c = it.count();
+		CHECK_EQ(c, 0);
+	}
+
+	SUBCASE("Count elements (3)")
+	{
+		const auto f1 = [](const int) -> bool
+		{
+			return true;
+		};
+		const auto f2 = [](const int) -> bool
+		{
+			return true;
+		};
+		const auto f3 = [](const int) -> bool
+		{
+			return true;
+		};
+
+		auto it = kd.get_range_iterator(f1, f2, f3);
+		const std::size_t c = it.count();
+		CHECK_EQ(c, kd.size());
 	}
 }
 
