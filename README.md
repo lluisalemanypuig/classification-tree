@@ -1,6 +1,6 @@
 # Classification trees
 
-This is a C++23 tree-like data structure to classify objects using handcrafted key values. The data structure implemented can be iterated normally element-to-element and also supports range queries.
+This is a tree-like data structure to classify objects using handcrafted key values. The data structure implemented can be iterated normally element-to-element and also supports range queries. It is implemented in C++23.
 
 The classification tree in this repository enables users to work with an arbitrary number of key values with little to no added code complexity. At every node of the tree is stored pairs of (key, subtree). At depth level $i$ of the tree, the key values in the pairs correspond to $k_i$. The illustration of this data structure for the example above is the following:
 
