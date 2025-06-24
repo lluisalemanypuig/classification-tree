@@ -1,22 +1,22 @@
 /**
  * Classification Tree
  * Copyright (C) 2025  Lluís Alemany Puig
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
  * by the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- * 
+ *
  * Contact:
- * 
+ *
  * 		Lluís Alemany Puig
  * 		https://github.com/lluisalemanypuig
  */
@@ -38,7 +38,7 @@ namespace classtree {
 
 /**
  * @brief Partial template specialization of the Classification Tree.
- * 
+ *
  * This class has no subtrees and is implemented simply as an array of
  * pairs of value and its metadata (see @ref element_t).
  * @tparam value_t Type of the values to add.
@@ -240,7 +240,7 @@ public:
 		return it;
 	}
 
-#if defined IR_DEBUG
+#if defined CTREE_DEBUG
 	/// Ensure that the all keys in every node of this tree are sorted.
 	[[nodiscard]] bool check_sorted_keys() const noexcept
 	{

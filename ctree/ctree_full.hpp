@@ -284,7 +284,7 @@ public:
 		return it;
 	}
 
-#if defined IR_DEBUG
+#if defined CTREE_DEBUG
 	/// Ensure that the all keys in every node of this tree are sorted.
 	[[nodiscard]] bool check_sorted_keys() const noexcept
 	{
