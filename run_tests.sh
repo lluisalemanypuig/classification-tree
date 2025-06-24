@@ -7,11 +7,6 @@ if [ ! -d tests-debug ]; then
 	cd ..
 fi
 
-cd tests-debug
-make -j4
-for i in 0 3; do
-	for f in $(ls depth_0__*); do
-		echo $f
-		./$f
-	done
-done
+cd build-debug/tests
+ctest .
+cd ../..
