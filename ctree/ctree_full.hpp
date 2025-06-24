@@ -247,7 +247,7 @@ public:
 	{
 		iterator<value_t, metadata_t, key_t, keys_t...> it;
 		it.set_pointer(this);
-		it.at_begin();
+		it.to_begin();
 		return it;
 	}
 	/// Returns a constant iterator object over the leaves of this tree.
@@ -256,7 +256,7 @@ public:
 	{
 		const_iterator<value_t, metadata_t, key_t, keys_t...> it;
 		it.set_pointer(this);
-		it.at_begin();
+		it.to_begin();
 		return it;
 	}
 
@@ -268,7 +268,7 @@ public:
 		range_iterator<value_t, metadata_t, key_t, keys_t...> it;
 		it.set_functions(std::forward<Callables>(fs)...);
 		it.set_pointer(this);
-		[[maybe_unused]] const bool _ = it.at_begin();
+		[[maybe_unused]] const bool _ = it.to_begin();
 		return it;
 	}
 
@@ -280,7 +280,7 @@ public:
 		const_range_iterator<value_t, metadata_t, key_t, keys_t...> it;
 		it.set_functions(std::forward<Callables>(fs)...);
 		it.set_pointer(this);
-		[[maybe_unused]] const bool _ = it.at_begin();
+		[[maybe_unused]] const bool _ = it.to_begin();
 		return it;
 	}
 

@@ -127,7 +127,7 @@ std::string iterate_string(it_t& it) noexcept
 template <typename it_t>
 std::string iterate_string_backward(it_t& it) noexcept
 {
-	it.at_end();
+	it.to_end();
 
 	std::stringstream ss;
 	ss << "Iterate:\n";
@@ -142,7 +142,7 @@ std::string iterate_string_backward(it_t& it) noexcept
 template <typename it_t>
 std::string range_iterate_string_backward(it_t& it) noexcept
 {
-	[[maybe_unused]] const bool _ = it.at_end();
+	[[maybe_unused]] const bool _ = it.to_end();
 
 	std::stringstream ss;
 	ss << "Iterate:\n";

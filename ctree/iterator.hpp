@@ -137,7 +137,7 @@ public:
 	}
 
 	/// Place the iterator at the beginning.
-	void at_begin() noexcept
+	void to_begin() noexcept
 	{
 		if (m_tree->size() == 0) [[unlikely]] {
 			m_past_begin = true;
@@ -149,7 +149,7 @@ public:
 		m_it = m_tree->begin();
 	}
 	/// Place the iterator at the end.
-	void at_end() noexcept
+	void to_end() noexcept
 	{
 		if (m_tree->size() == 0) [[unlikely]] {
 			m_past_begin = true;
@@ -267,7 +267,7 @@ public:
 	}
 
 	/// Initialize the iteration at the beginning.
-	void at_begin() noexcept
+	void to_begin() noexcept
 	{
 		if (m_tree->size() == 0) [[unlikely]] {
 			m_past_begin = true;
@@ -278,10 +278,10 @@ public:
 		m_past_begin = false;
 		m_it = m_tree->begin();
 		m_subtree_iterator.set_pointer(&m_it->second);
-		m_subtree_iterator.at_begin();
+		m_subtree_iterator.to_begin();
 	}
 	/// Initialize the iteration at the end.
-	void at_end() noexcept
+	void to_end() noexcept
 	{
 		if (m_tree->size() == 0) [[unlikely]] {
 			m_past_begin = true;
@@ -293,7 +293,7 @@ public:
 		m_it = m_tree->end();
 		--m_it;
 		m_subtree_iterator.set_pointer(&m_it->second);
-		m_subtree_iterator.at_end();
+		m_subtree_iterator.to_end();
 	}
 
 	/// Advance one value in the iteration.
@@ -305,7 +305,7 @@ public:
 			++m_it;
 			if (not end()) {
 				m_subtree_iterator.set_pointer(&m_it->second);
-				m_subtree_iterator.at_begin();
+				m_subtree_iterator.to_begin();
 			}
 		}
 	}
@@ -327,7 +327,7 @@ public:
 			else [[likely]] {
 				--m_it;
 				m_subtree_iterator.set_pointer(&m_it->second);
-				m_subtree_iterator.at_end();
+				m_subtree_iterator.to_end();
 			}
 		}
 	}

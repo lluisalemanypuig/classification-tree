@@ -145,7 +145,7 @@ public:
 	void set_functions() noexcept { }
 
 	/// Place the iterator at the beginning.
-	[[nodiscard]] bool at_begin() noexcept
+	[[nodiscard]] bool to_begin() noexcept
 	{
 		if (m_tree->size() == 0) [[unlikely]] {
 			m_past_begin = true;
@@ -158,7 +158,7 @@ public:
 		return true;
 	}
 	/// Place the iterator at the end.
-	[[nodiscard]] bool at_end() noexcept
+	[[nodiscard]] bool to_end() noexcept
 	{
 		if (m_tree->size() == 0) [[unlikely]] {
 			m_past_begin = true;
@@ -287,7 +287,7 @@ public:
 	}
 
 	/// Place the iterator at the beginning.
-	[[nodiscard]] bool at_begin() noexcept
+	[[nodiscard]] bool to_begin() noexcept
 	{
 		if (m_tree->size() == 0) [[unlikely]] {
 			m_past_begin = true;
@@ -300,7 +300,7 @@ public:
 		return next();
 	}
 	/// Place the iterator at the end.
-	[[nodiscard]] bool at_end() noexcept
+	[[nodiscard]] bool to_end() noexcept
 	{
 		if (m_tree->size() == 0) [[unlikely]] {
 			m_past_begin = true;
@@ -348,7 +348,7 @@ public:
 	[[nodiscard]] std::size_t count() noexcept
 	{
 		std::size_t c = 0;
-		[[maybe_unused]] const auto _ = at_begin();
+		[[maybe_unused]] const auto _ = to_begin();
 		while (not end()) {
 			while (not end() and not m_func(m_it->first)) {
 				++m_it;
@@ -433,7 +433,11 @@ public:
 
 private:
 
-	/// Find the next element according to function @ref m_func.
+	/**
+	 * @brief Find the next element according to function @ref m_func.
+	 * @returns True if a valid element (according to the functions) was
+	 * found, or false if otherwise.
+	 */
 	[[nodiscard]] bool next() noexcept
 	{
 		bool stop = false;
@@ -446,7 +450,7 @@ private:
 			}
 
 			m_subtree_iterator.set_pointer(&m_it->second);
-			stop = m_subtree_iterator.at_begin();
+			stop = m_subtree_iterator.to_begin();
 
 			if (not stop) {
 				++m_it;
@@ -479,7 +483,7 @@ private:
 			}
 
 			m_subtree_iterator.set_pointer(&m_it->second);
-			stop = m_subtree_iterator.at_end();
+			stop = m_subtree_iterator.to_end();
 
 			if (not stop) {
 				simple_move_back();

@@ -207,7 +207,7 @@ public:
 	{
 		iterator<value_t, metadata_t> it;
 		it.set_pointer(this);
-		it.at_begin();
+		it.to_begin();
 		return it;
 	}
 	/// Returns a constant iterator object over the leaves of this tree.
@@ -216,7 +216,7 @@ public:
 	{
 		const_iterator<value_t, metadata_t> it;
 		it.set_pointer(this);
-		it.at_begin();
+		it.to_begin();
 		return it;
 	}
 
@@ -226,7 +226,7 @@ public:
 	{
 		range_iterator<value_t, metadata_t> it;
 		it.set_pointer(this);
-		it.at_begin();
+		[[maybe_unused]] const auto _ = it.to_begin();
 		return it;
 	}
 
@@ -236,7 +236,7 @@ public:
 	{
 		const_range_iterator<value_t, metadata_t> it;
 		it.set_pointer(this);
-		it.at_begin();
+		[[maybe_unused]] const auto _ = it.to_begin();
 		return it;
 	}
 
