@@ -165,7 +165,10 @@ public:
 	/// Move forward one value in the iteration.
 	void operator++ () noexcept
 	{
-		m_past_begin = false;
+		if (m_past_begin) [[unlikely]] {
+			m_past_begin = false;
+			return;
+		}
 		++m_it;
 	}
 	/**
@@ -188,7 +191,7 @@ public:
 	/// Is the iteration at the beginning?
 	[[nodiscard]] bool begin() const noexcept
 	{
-		return m_it == m_tree->begin();
+		return not m_past_begin and (m_it == m_tree->begin());
 	}
 	/// Is the iteration past the beginning?
 	[[nodiscard]] bool past_begin() const noexcept
@@ -223,7 +226,7 @@ public:
 		return std::make_tuple(m_it->first, m_it->second);
 	}
 
-protected:
+private:
 
 	/// Pointer to the tree iterated on.
 	tree_pointer_t m_tree;
@@ -296,21 +299,21 @@ public:
 		m_subtree_iterator.to_end();
 	}
 
-	/// Advance one value in the iteration.
+	/// Advance one step in the iteration.
 	void operator++ () noexcept
 	{
 		m_past_begin = false;
 		++m_subtree_iterator;
-		if (m_subtree_iterator.end()) {
+		if (m_subtree_iterator.end()) [[unlikely]] {
 			++m_it;
-			if (not end()) {
+			if (not shallow_end()) [[likely]] {
 				m_subtree_iterator.set_pointer(&m_it->second);
 				m_subtree_iterator.to_begin();
 			}
 		}
 	}
 	/**
-	 * @brief Move back one value in the iteration.
+	 * @brief Move back one step in the iteration.
 	 *
 	 * In case the iterator is at the beginning of the iteration (see
 	 * @ref begin) a flag (see @ref m_past_begin) is activated to detect a
@@ -321,31 +324,43 @@ public:
 		--m_subtree_iterator;
 		if (m_subtree_iterator.past_begin()) [[unlikely]] {
 
-			if (begin()) [[unlikely]] {
+			if (shallow_begin()) [[unlikely]] {
 				m_past_begin = true;
 			}
-			else [[likely]] {
+			else {
 				--m_it;
 				m_subtree_iterator.set_pointer(&m_it->second);
 				m_subtree_iterator.to_end();
 			}
+		}
+		if (shallow_end()) {
+			--m_it;
 		}
 	}
 
 	/// Is the iteration at the beginning?
 	[[nodiscard]] bool begin() const noexcept
 	{
-		return m_it == m_tree->begin();
+		if (m_tree->size() == 0) [[unlikely]] {
+			return true;
+		}
+		return shallow_begin() and m_subtree_iterator.begin();
 	}
 	/// Is the iteration past the beginning?
 	[[nodiscard]] bool past_begin() const noexcept
 	{
-		return m_past_begin;
+		if (m_tree->size() == 0) [[unlikely]] {
+			return true;
+		}
+		return shallow_past_begin() and m_subtree_iterator.past_begin();
 	}
 	/// Is the iteration at the end?
 	[[nodiscard]] bool end() const noexcept
 	{
-		return m_it == m_tree->end();
+		if (m_tree->size() == 0) [[unlikely]] {
+			return true;
+		}
+		return shallow_end() and m_subtree_iterator.end();
 	}
 
 	/// Returns the current value of the iteration.
@@ -381,7 +396,7 @@ public:
 		return current;
 	}
 
-protected:
+private:
 
 	template <std::size_t i, std::size_t total_size>
 	static constexpr void move_tuple_into(
@@ -393,6 +408,22 @@ protected:
 			std::get<i>(current) = std::get<i - 1>(std::move(subtree));
 			move_tuple_into<i + 1, total_size>(current, std::move(subtree));
 		}
+	}
+
+	/// Is the iteration of this node at the beginning?
+	[[nodiscard]] bool shallow_begin() const noexcept
+	{
+		return not shallow_past_begin() and m_it == m_tree->begin();
+	}
+	/// Is the iteration of this node past the beginning?
+	[[nodiscard]] bool shallow_past_begin() const noexcept
+	{
+		return m_past_begin;
+	}
+	/// Is the iteration of this node at the end?
+	[[nodiscard]] bool shallow_end() const noexcept
+	{
+		return m_it == m_tree->end();
 	}
 
 protected:

@@ -175,7 +175,10 @@ public:
 	/// Advance one value in the iteration.
 	void operator++ () noexcept
 	{
-		m_past_begin = false;
+		if (m_past_begin) [[unlikely]] {
+			m_past_begin = false;
+			return;
+		}
 		++m_it;
 	}
 	/**
@@ -203,7 +206,7 @@ public:
 	/// Is the iteration at the beginning?
 	[[nodiscard]] bool begin() const noexcept
 	{
-		return m_it == m_tree->begin();
+		return not m_past_begin and (m_it == m_tree->begin());
 	}
 	/// Is the iteration past the beginning?
 	[[nodiscard]] bool past_begin() const noexcept
@@ -317,10 +320,13 @@ public:
 	/// Advance one value in the iteration.
 	void operator++ () noexcept
 	{
+		m_past_begin = false;
 		++m_subtree_iterator;
 		if (m_subtree_iterator.end()) {
 			++m_it;
-			[[maybe_unused]] const bool _ = next();
+			if (not shallow_end()) [[likely]] {
+				[[maybe_unused]] const bool _ = next();
+			}
 		}
 	}
 	/**
@@ -335,7 +341,7 @@ public:
 		--m_subtree_iterator;
 		if (m_subtree_iterator.past_begin()) [[unlikely]] {
 
-			if (begin()) [[unlikely]] {
+			if (shallow_begin()) [[unlikely]] {
 				m_past_begin = true;
 			}
 			else [[likely]] {
@@ -343,18 +349,21 @@ public:
 				[[maybe_unused]] const bool _ = previous();
 			}
 		}
+		if (shallow_end()) {
+			--m_it;
+		}
 	}
 
 	[[nodiscard]] std::size_t count() noexcept
 	{
 		std::size_t c = 0;
 		[[maybe_unused]] const auto _ = to_begin();
-		while (not end()) {
-			while (not end() and not m_func(m_it->first)) {
+		while (not shallow_end()) {
+			while (not shallow_end() and not m_func(m_it->first)) {
 				++m_it;
 			}
 
-			if (not end()) {
+			if (not shallow_end()) {
 				m_subtree_iterator.set_pointer(&m_it->second);
 				c += m_subtree_iterator.count();
 				++m_it;
@@ -366,17 +375,26 @@ public:
 	/// Is the iteration at the beginning?
 	[[nodiscard]] bool begin() const noexcept
 	{
-		return m_it == m_tree->begin();
+		if (m_tree->size() == 0) [[unlikely]] {
+			return true;
+		}
+		return shallow_begin() and m_subtree_iterator.begin();
 	}
 	/// Is the iteration past the beginning?
 	[[nodiscard]] bool past_begin() const noexcept
 	{
-		return m_past_begin;
+		if (m_tree->size() == 0) [[unlikely]] {
+			return true;
+		}
+		return shallow_past_begin() and m_subtree_iterator.past_begin();
 	}
 	/// Is the iteration at the end?
 	[[nodiscard]] bool end() const noexcept
 	{
-		return m_it == m_tree->end();
+		if (m_tree->size() == 0) [[unlikely]] {
+			return true;
+		}
+		return shallow_end() and m_subtree_iterator.end();
 	}
 
 	/// Returns the current value of the iteration.
@@ -412,6 +430,8 @@ public:
 		return current;
 	}
 
+private:
+
 	/**
 	 * @brief Move a tuple into another.
 	 * @tparam i Index of the element to move.
@@ -433,6 +453,22 @@ public:
 
 private:
 
+	/// Is the iteration of this node at the beginning?
+	[[nodiscard]] bool shallow_begin() const noexcept
+	{
+		return not shallow_past_begin() and m_it == m_tree->begin();
+	}
+	/// Is the iteration of this node past the beginning?
+	[[nodiscard]] bool shallow_past_begin() const noexcept
+	{
+		return m_past_begin;
+	}
+	/// Is the iteration of this node at the end?
+	[[nodiscard]] bool shallow_end() const noexcept
+	{
+		return m_it == m_tree->end();
+	}
+
 	/**
 	 * @brief Find the next element according to function @ref m_func.
 	 * @returns True if a valid element (according to the functions) was
@@ -442,10 +478,10 @@ private:
 	{
 		bool stop = false;
 		while (not stop) {
-			while (not end() and not m_func(m_it->first)) {
+			while (not shallow_end() and not m_func(m_it->first)) {
 				++m_it;
 			}
-			if (end()) {
+			if (shallow_end()) {
 				return false;
 			}
 
@@ -462,7 +498,7 @@ private:
 	/// Move one step backwards. Update @ref m_past_begin appropriately.
 	void simple_move_back() noexcept
 	{
-		if (begin()) [[unlikely]] {
+		if (shallow_begin()) [[unlikely]] {
 			m_past_begin = true;
 		}
 		else [[likely]] {
@@ -475,10 +511,10 @@ private:
 	{
 		bool stop = false;
 		while (not stop) {
-			while (not past_begin() and not m_func(m_it->first)) {
+			while (not shallow_past_begin() and not m_func(m_it->first)) {
 				simple_move_back();
 			}
-			if (past_begin()) {
+			if (shallow_past_begin()) {
 				return false;
 			}
 
