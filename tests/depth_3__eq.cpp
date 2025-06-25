@@ -345,6 +345,113 @@ TEST_CASE("Unique elements -- depth 3")
 		const std::size_t c = it.count();
 		CHECK_EQ(c, kd.size());
 	}
+
+	SUBCASE("Check iterator bounds")
+	{
+		auto it = kd.get_const_iterator();
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), true);
+		CHECK_EQ(it.end(), false);
+
+		for (int i = 0; i < 3; ++i) {
+			--it;
+			CHECK_EQ(it.past_begin(), true);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), false);
+
+			++it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), true);
+			CHECK_EQ(it.end(), false);
+		}
+
+		for (std::size_t i = 0; i < kd.size(); ++i) {
+			CHECK_EQ(it.past_begin(), false);
+			if (i > 0) {
+				CHECK_EQ(it.begin(), false);
+			}
+			CHECK_EQ(it.end(), false);
+
+			++it;
+		}
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), true);
+
+		for (int i = 0; i < 3; ++i) {
+			--it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), false);
+
+			++it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), true);
+		}
+	}
+
+	SUBCASE("Check range iterator bounds")
+	{
+		const auto f1 = [](const int v) -> bool
+		{
+			return v == 1;
+		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return 1 <= v and v <= 2;
+		};
+		const auto f3 = [](const int) -> bool
+		{
+			return true;
+		};
+
+		auto it = kd.get_const_range_iterator(f1, f2, f3);
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), true);
+		CHECK_EQ(it.end(), false);
+
+		for (int i = 0; i < 3; ++i) {
+			--it;
+			CHECK_EQ(it.past_begin(), true);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), false);
+
+			++it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), true);
+			CHECK_EQ(it.end(), false);
+		}
+
+		for (std::size_t i = 0; i < 6; ++i) {
+			CHECK_EQ(it.past_begin(), false);
+			if (i > 0) {
+				CHECK_EQ(it.begin(), false);
+			}
+			CHECK_EQ(it.end(), false);
+
+			++it;
+		}
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), true);
+
+		for (int i = 0; i < 3; ++i) {
+			--it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), false);
+
+			++it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), true);
+		}
+	}
 }
 
 TEST_CASE("All elements -- depth 3")
@@ -665,6 +772,113 @@ TEST_CASE("All elements -- depth 3")
 		auto it = kd.get_range_iterator(f1, f2, f3);
 		const std::size_t c = it.count();
 		CHECK_EQ(c, kd.size());
+	}
+
+	SUBCASE("Check iterator bounds")
+	{
+		auto it = kd.get_const_iterator();
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), true);
+		CHECK_EQ(it.end(), false);
+
+		for (int i = 0; i < 3; ++i) {
+			--it;
+			CHECK_EQ(it.past_begin(), true);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), false);
+
+			++it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), true);
+			CHECK_EQ(it.end(), false);
+		}
+
+		for (std::size_t i = 0; i < kd.size(); ++i) {
+			CHECK_EQ(it.past_begin(), false);
+			if (i > 0) {
+				CHECK_EQ(it.begin(), false);
+			}
+			CHECK_EQ(it.end(), false);
+
+			++it;
+		}
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), true);
+
+		for (int i = 0; i < 3; ++i) {
+			--it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), false);
+
+			++it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), true);
+		}
+	}
+
+	SUBCASE("Check range iterator bounds")
+	{
+		const auto f1 = [](const int v) -> bool
+		{
+			return v == 1;
+		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return 1 <= v and v <= 2;
+		};
+		const auto f3 = [](const int) -> bool
+		{
+			return true;
+		};
+
+		auto it = kd.get_const_range_iterator(f1, f2, f3);
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), true);
+		CHECK_EQ(it.end(), false);
+
+		for (int i = 0; i < 3; ++i) {
+			--it;
+			CHECK_EQ(it.past_begin(), true);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), false);
+
+			++it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), true);
+			CHECK_EQ(it.end(), false);
+		}
+
+		for (std::size_t i = 0; i < 7; ++i) {
+			CHECK_EQ(it.past_begin(), false);
+			if (i > 0) {
+				CHECK_EQ(it.begin(), false);
+			}
+			CHECK_EQ(it.end(), false);
+
+			++it;
+		}
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), true);
+
+		for (int i = 0; i < 3; ++i) {
+			--it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), false);
+
+			++it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), true);
+		}
 	}
 }
 

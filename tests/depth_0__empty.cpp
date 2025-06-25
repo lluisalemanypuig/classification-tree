@@ -83,6 +83,20 @@ TEST_CASE("Empty tree")
 		}();
 		CHECK_EQ(kd_iter_str, iter_str_fb);
 	}
+
+	SUBCASE("Check iterator bounds")
+	{
+		auto it = kd.get_const_iterator();
+		CHECK_EQ(it.end(), true);
+		CHECK_EQ(it.past_begin(), true);
+	}
+
+	SUBCASE("Check range iterator bounds")
+	{
+		auto it = kd.get_const_range_iterator();
+		CHECK_EQ(it.end(), true);
+		CHECK_EQ(it.past_begin(), true);
+	}
 }
 
 int main(int argc, char **argv)

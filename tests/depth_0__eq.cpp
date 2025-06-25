@@ -1,22 +1,22 @@
 /**
  * Tests for the Classification Tree
  * Copyright (C) 2025  Lluís Alemany Puig
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
  * by the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- * 
+ *
  * Contact:
- * 
+ *
  * 		Lluís Alemany Puig
  * 		https://github.com/lluisalemanypuig
  */
@@ -165,6 +165,105 @@ TEST_CASE("Unique elements")
 		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 2, .k = 1, .z = 1});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 	}
+
+	SUBCASE("Check iterator bounds")
+	{
+		auto it = kd.get_const_iterator();
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), true);
+		CHECK_EQ(it.end(), false);
+
+		for (int i = 0; i < 3; ++i) {
+			--it;
+			CHECK_EQ(it.past_begin(), true);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), false);
+
+			++it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), true);
+			CHECK_EQ(it.end(), false);
+		}
+
+		std::size_t c = 0;
+		for (std::size_t i = 0; i < kd.size(); ++i) {
+			CHECK_EQ(it.past_begin(), false);
+			if (i > 0) {
+				CHECK_EQ(it.begin(), false);
+			}
+			CHECK_EQ(it.end(), false);
+
+			++it;
+			++c;
+		}
+		CHECK_EQ(kd.size(), c);
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), true);
+
+		for (int i = 0; i < 3; ++i) {
+			--it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), false);
+
+			++it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), true);
+		}
+	}
+
+	SUBCASE("Check range iterator bounds")
+	{
+		auto it = kd.get_const_range_iterator();
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), true);
+		CHECK_EQ(it.end(), false);
+
+		for (int i = 0; i < 3; ++i) {
+			--it;
+			CHECK_EQ(it.past_begin(), true);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), false);
+
+			++it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), true);
+			CHECK_EQ(it.end(), false);
+		}
+
+		std::size_t c = 0;
+		for (std::size_t i = 0; i < kd.size(); ++i) {
+			CHECK_EQ(it.past_begin(), false);
+			if (i > 0) {
+				CHECK_EQ(it.begin(), false);
+			}
+			CHECK_EQ(it.end(), false);
+
+			++it;
+			++c;
+		}
+		CHECK_EQ(kd.size(), c);
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), true);
+
+		for (int i = 0; i < 3; ++i) {
+			--it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), false);
+
+			++it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), true);
+		}
+	}
 }
 
 TEST_CASE("All elements")
@@ -303,6 +402,106 @@ TEST_CASE("All elements")
 		++it;
 		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 2, .k = 1, .z = 1});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+	}
+
+	SUBCASE("Check iterator bounds")
+	{
+		auto it = kd.get_const_iterator();
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), true);
+		CHECK_EQ(it.end(), false);
+
+		for (int i = 0; i < 3; ++i) {
+			--it;
+			CHECK_EQ(it.past_begin(), true);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), false);
+
+			++it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), true);
+			CHECK_EQ(it.end(), false);
+		}
+
+		std::size_t c = 0;
+		for (std::size_t i = 0; i < kd.size(); ++i) {
+			CHECK_EQ(it.past_begin(), false);
+			if (i > 0) {
+				CHECK_EQ(it.begin(), false);
+			}
+			CHECK_EQ(it.end(), false);
+
+			++it;
+			++c;
+		}
+		CHECK_EQ(kd.size(), c);
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), true);
+
+		for (int i = 0; i < 3; ++i) {
+			--it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), false);
+
+			++it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), true);
+		}
+	}
+
+	SUBCASE("Check range iterator bounds")
+	{
+		auto it = kd.get_const_range_iterator();
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), true);
+		CHECK_EQ(it.end(), false);
+
+		for (int i = 0; i < 3; ++i) {
+			--it;
+			CHECK_EQ(it.past_begin(), true);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), false);
+
+			++it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), true);
+			CHECK_EQ(it.end(), false);
+		}
+
+		std::size_t c = 0;
+		for (std::size_t i = 0; i < kd.size(); ++i) {
+			CHECK_EQ(it.past_begin(), false);
+			if (i > 0) {
+				CHECK_EQ(it.begin(), false);
+			}
+			CHECK_EQ(it.end(), false);
+
+			++it;
+			++c;
+		}
+		CHECK_EQ(kd.size(), c);
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), true);
+
+		for (int i = 0; i < 3; ++i) {
+			--it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), false);
+
+			++it;
+			CHECK_EQ(it.past_begin(), false);
+			CHECK_EQ(it.begin(), false);
+			CHECK_EQ(it.end(), true);
+		}
 	}
 }
 

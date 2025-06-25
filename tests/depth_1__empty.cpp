@@ -35,7 +35,7 @@
 
 TEST_CASE("Empty tree")
 {
-	classtree::ctree<data_eq, meta_incr, int, int, int> kd;
+	classtree::ctree<data_eq, meta_incr, int> kd;
 
 	CHECK_EQ(kd.size(), 0);
 
@@ -93,25 +93,17 @@ TEST_CASE("Empty tree")
 		{
 			return v == 1;
 		};
-		const auto f2 = [](const int v) -> bool
-		{
-			return 1 <= v and v <= 2;
-		};
-		const auto f3 = [](const int) -> bool
-		{
-			return true;
-		};
 
 		const std::string iter_str_const = [&]()
 		{
-			auto it = kd.get_const_range_iterator(f1, f2, f3);
+			auto it = kd.get_const_range_iterator(f1);
 			return iterate_string(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str_const);
 
 		const std::string iter_str = [&]()
 		{
-			auto it = kd.get_range_iterator(f1, f2, f3);
+			auto it = kd.get_range_iterator(f1);
 			return iterate_string(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str);
@@ -125,25 +117,17 @@ TEST_CASE("Empty tree")
 		{
 			return v == 1;
 		};
-		const auto f2 = [](const int v) -> bool
-		{
-			return 1 <= v and v <= 2;
-		};
-		const auto f3 = [](const int) -> bool
-		{
-			return true;
-		};
 
 		const std::string iter_str_const = [&]()
 		{
-			auto it = kd.get_const_range_iterator(f1, f2, f3);
+			auto it = kd.get_const_range_iterator(f1);
 			return range_iterate_string_backward(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str_const);
 
 		const std::string iter_str = [&]()
 		{
-			auto it = kd.get_range_iterator(f1, f2, f3);
+			auto it = kd.get_range_iterator(f1);
 			return range_iterate_string_backward(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str);
@@ -155,16 +139,8 @@ TEST_CASE("Empty tree")
 		{
 			return v == 1;
 		};
-		const auto f2 = [](const int v) -> bool
-		{
-			return 1 <= v and v <= 2;
-		};
-		const auto f3 = [](const int) -> bool
-		{
-			return true;
-		};
 
-		auto it = kd.get_range_iterator(f1, f2, f3);
+		auto it = kd.get_range_iterator(f1);
 		const std::size_t c = it.count();
 		CHECK_EQ(c, 0);
 	}
@@ -182,16 +158,8 @@ TEST_CASE("Empty tree")
 		{
 			return v == 1;
 		};
-		const auto f2 = [](const int v) -> bool
-		{
-			return 1 <= v and v <= 2;
-		};
-		const auto f3 = [](const int) -> bool
-		{
-			return true;
-		};
 
-		auto it = kd.get_const_range_iterator(f1, f2, f3);
+		auto it = kd.get_const_range_iterator(f1);
 		CHECK_EQ(it.end(), true);
 		CHECK_EQ(it.past_begin(), true);
 	}

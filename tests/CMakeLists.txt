@@ -48,6 +48,8 @@ find_package(doctest REQUIRED)
 
 file(GLOB_RECURSE ctree ../ctree/*.hpp)
 
+# DEPTH 0
+
 add_executable(test_depth_0__empty depth_0__empty.cpp test_definitions.hpp ${ctree})
 configure_executable(test_depth_0__empty)
 add_test(NAME test_depth_0__empty COMMAND test_depth_0__empty)
@@ -59,6 +61,22 @@ add_test(NAME test_depth_0__eq COMMAND test_depth_0__eq)
 add_executable(test_depth_0__lt depth_0__lt.cpp test_definitions.hpp ${ctree})
 configure_executable(test_depth_0__lt)
 add_test(NAME test_depth_0__lt COMMAND test_depth_0__lt)
+
+# DEPTH 1
+
+add_executable(test_depth_1__empty depth_1__empty.cpp test_definitions.hpp ${ctree})
+configure_executable(test_depth_1__empty)
+add_test(NAME test_depth_1__empty COMMAND test_depth_1__empty)
+
+add_executable(test_depth_1__eq depth_1__eq.cpp test_definitions.hpp ${ctree})
+configure_executable(test_depth_1__eq)
+add_test(NAME test_depth_1__eq COMMAND test_depth_1__eq)
+
+add_executable(test_depth_1__lt depth_1__lt.cpp test_definitions.hpp ${ctree})
+configure_executable(test_depth_1__lt)
+add_test(NAME test_depth_1__lt COMMAND test_depth_1__lt)
+
+# DEPTH 3
 
 add_executable(test_depth_3__empty depth_3__empty.cpp test_definitions.hpp ${ctree})
 configure_executable(test_depth_3__empty)
