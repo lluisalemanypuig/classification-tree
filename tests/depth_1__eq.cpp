@@ -281,7 +281,7 @@ TEST_CASE("Unique elements -- depth 1")
 		CHECK_EQ(c, kd.size());
 	}
 
-	SUBCASE("Check iterator bounds")
+	SUBCASE("Check iterator bounds (1)")
 	{
 		auto it = kd.get_const_iterator();
 
@@ -328,10 +328,80 @@ TEST_CASE("Unique elements -- depth 1")
 		}
 	}
 
-	SUBCASE("Check range iterator bounds")
+	SUBCASE("Check iterator bounds (2)")
 	{
-		const auto f1 = [](const int v) -> bool
+		auto it = kd.get_const_iterator();
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), true);
+		CHECK_EQ(it.end(), false);
+
+		++it;
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), false);
+
+		++it;
+		++it;
+		++it;
+		++it;
+		++it;
+		++it;
+		++it;
+		++it;
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), false);
+
 		{
+			const auto& d = (*it).first;
+			CHECK_EQ(d.i, 2);
+			CHECK_EQ(d.j, 2);
+			CHECK_EQ(d.k, 3);
+			CHECK_EQ(d.z, 2);
+		}
+
+		++it;
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), true);
+
+		--it;
+		--it;
+		--it;
+		--it;
+		--it;
+		--it;
+		--it;
+		--it;
+		--it;
+		--it;
+
+		{
+			const auto& d = (*it).first;
+			CHECK_EQ(d.i, 1);
+			CHECK_EQ(d.j, 1);
+			CHECK_EQ(d.k, 1);
+			CHECK_EQ(d.z, 2);
+		}
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), true);
+		CHECK_EQ(it.end(), false);
+
+		--it;
+
+		CHECK_EQ(it.past_begin(), true);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), false);
+	}
+
+	SUBCASE("Check range iterator bounds (1)")
+	{
+		const auto f1 = [](const int v) -> bool {
 			return v == 1;
 		};
 
@@ -378,6 +448,75 @@ TEST_CASE("Unique elements -- depth 1")
 			CHECK_EQ(it.begin(), false);
 			CHECK_EQ(it.end(), true);
 		}
+	}
+
+	SUBCASE("Check range iterator bounds (2)")
+	{
+		const auto f1 = [](const int v) -> bool {
+			return v == 1;
+		};
+
+		auto it = kd.get_const_range_iterator(f1);
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), true);
+		CHECK_EQ(it.end(), false);
+
+		++it;
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), false);
+
+		++it;
+		++it;
+		++it;
+		++it;
+		++it;
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), false);
+
+		{
+			const auto& d = (*it).first;
+			CHECK_EQ(d.i, 1);
+			CHECK_EQ(d.j, 3);
+			CHECK_EQ(d.k, 5);
+			CHECK_EQ(d.z, 1);
+		}
+
+		++it;
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), true);
+
+		--it;
+		--it;
+		--it;
+		--it;
+		--it;
+		--it;
+		--it;
+
+		{
+			const auto& d = (*it).first;
+			CHECK_EQ(d.i, 1);
+			CHECK_EQ(d.j, 1);
+			CHECK_EQ(d.k, 1);
+			CHECK_EQ(d.z, 2);
+		}
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), true);
+		CHECK_EQ(it.end(), false);
+
+		--it;
+
+		CHECK_EQ(it.past_begin(), true);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), false);
 	}
 }
 
@@ -641,7 +780,7 @@ TEST_CASE("All elements -- depth 1")
 		CHECK_EQ(c, kd.size());
 	}
 
-	SUBCASE("Check iterator bounds")
+	SUBCASE("Check iterator bounds (1)")
 	{
 		auto it = kd.get_const_iterator();
 
@@ -688,7 +827,80 @@ TEST_CASE("All elements -- depth 1")
 		}
 	}
 
-	SUBCASE("Check range iterator bounds")
+	SUBCASE("Check iterator bounds (2)")
+	{
+		auto it = kd.get_const_iterator();
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), true);
+		CHECK_EQ(it.end(), false);
+
+		++it;
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), false);
+
+		++it;
+		++it;
+		++it;
+		++it;
+		++it;
+		++it;
+		++it;
+		++it;
+		++it;
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), false);
+
+		{
+			const auto& d = (*it).first;
+			CHECK_EQ(d.i, 2);
+			CHECK_EQ(d.j, 2);
+			CHECK_EQ(d.k, 3);
+			CHECK_EQ(d.z, 2);
+		}
+
+		++it;
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), true);
+
+		--it;
+		--it;
+		--it;
+		--it;
+		--it;
+		--it;
+		--it;
+		--it;
+		--it;
+		--it;
+		--it;
+
+		{
+			const auto& d = (*it).first;
+			CHECK_EQ(d.i, 1);
+			CHECK_EQ(d.j, 1);
+			CHECK_EQ(d.k, 1);
+			CHECK_EQ(d.z, 2);
+		}
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), true);
+		CHECK_EQ(it.end(), false);
+
+		--it;
+
+		CHECK_EQ(it.past_begin(), true);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), false);
+	}
+
+	SUBCASE("Check range iterator bounds (1)")
 	{
 		const auto f1 = [](const int v) -> bool
 		{
@@ -738,6 +950,78 @@ TEST_CASE("All elements -- depth 1")
 			CHECK_EQ(it.begin(), false);
 			CHECK_EQ(it.end(), true);
 		}
+	}
+
+	SUBCASE("Check range iterator bounds (2)")
+	{
+		const auto f1 = [](const int v) -> bool
+		{
+			return v == 1;
+		};
+
+		auto it = kd.get_const_range_iterator(f1);
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), true);
+		CHECK_EQ(it.end(), false);
+
+		++it;
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), false);
+
+		++it;
+		++it;
+		++it;
+		++it;
+		++it;
+		++it;
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), false);
+
+		{
+			const auto& d = (*it).first;
+			CHECK_EQ(d.i, 1);
+			CHECK_EQ(d.j, 1);
+			CHECK_EQ(d.k, 1);
+			CHECK_EQ(d.z, 2);
+		}
+
+		++it;
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), true);
+
+		--it;
+		--it;
+		--it;
+		--it;
+		--it;
+		--it;
+		--it;
+		--it;
+
+		{
+			const auto& d = (*it).first;
+			CHECK_EQ(d.i, 1);
+			CHECK_EQ(d.j, 1);
+			CHECK_EQ(d.k, 1);
+			CHECK_EQ(d.z, 2);
+		}
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), true);
+		CHECK_EQ(it.end(), false);
+
+		--it;
+
+		CHECK_EQ(it.past_begin(), true);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), false);
 	}
 }
 
