@@ -345,6 +345,26 @@ TEST_CASE("Unique elements")
 		CHECK_EQ(c, kd.size());
 	}
 
+	SUBCASE("Count elements (4)")
+	{
+		const auto f1 = [](const int) -> bool
+		{
+			return false;
+		};
+		const auto f2 = [](const int) -> bool
+		{
+			return false;
+		};
+		const auto f3 = [](const int) -> bool
+		{
+			return false;
+		};
+
+		auto it = kd.get_range_iterator(f1, f2, f3);
+		const std::size_t c = it.count();
+		CHECK_EQ(c, 0);
+	}
+
 	SUBCASE("Check iterator bounds (1)")
 	{
 		auto it = kd.get_const_iterator();

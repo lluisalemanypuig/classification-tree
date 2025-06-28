@@ -291,6 +291,18 @@ TEST_CASE("All elements -- depth 1")
 		CHECK_EQ(c, kd.size());
 	}
 
+	SUBCASE("Count elements (4)")
+	{
+		const auto f1 = [](const int) -> bool
+		{
+			return false;
+		};
+
+		auto it = kd.get_range_iterator(f1);
+		const std::size_t c = it.count();
+		CHECK_EQ(c, 0);
+	}
+
 	SUBCASE("Check iterator bounds (1)")
 	{
 		auto it = kd.get_const_iterator();
