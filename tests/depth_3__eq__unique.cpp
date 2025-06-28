@@ -694,6 +694,281 @@ TEST_CASE("Unique elements")
 	}
 }
 
+TEST_CASE("All elements (2)")
+{
+	typedef classtree::ctree<data_eq, meta_incr, int, int, int> my_tree;
+	classtree::ctree<data_eq, meta_incr, int, int, int> kd;
+	static_assert(std::is_nothrow_move_constructible_v<my_tree>);
+	static_assert(std::is_move_constructible_v<my_tree>);
+
+	for (int i = 1; i <= 3; ++i) {
+		for (int j = 1; j <= 3; ++j) {
+			for (int k = 1; k <= 3; ++k) {
+				kd.add(
+					{.i = i, .j = j, .k = k, .z = 3}, {.num_occs = 1}, i, j, k
+				);
+				kd.add(
+					{.i = i, .j = j, .k = k, .z = 2}, {.num_occs = 1}, i, j, k
+				);
+				kd.add(
+					{.i = i, .j = j, .k = k, .z = 1}, {.num_occs = 1}, i, j, k
+				);
+			}
+		}
+	}
+
+	CHECK_EQ(kd.size(), 81);
+
+	SUBCASE("Print entire tree")
+	{
+		static constexpr std::string_view kd_str =
+			"size: 81\n"
+			"keys: 3\n"
+			"├── 1\n"
+			"│   size: 27\n"
+			"│   keys: 3\n"
+			"│   ├── 1\n"
+			"│   │   size: 9\n"
+			"│   │   keys: 3\n"
+			"│   │   ├── 1\n"
+			"│   │   │   ^ size: 3 3\n"
+			"│   │   │   ├── (1 1 1 3) {1}\n"
+			"│   │   │   ├── (1 1 1 2) {1}\n"
+			"│   │   │   └── (1 1 1 1) {1}\n"
+			"│   │   ├── 2\n"
+			"│   │   │   ^ size: 3 3\n"
+			"│   │   │   ├── (1 1 2 3) {1}\n"
+			"│   │   │   ├── (1 1 2 2) {1}\n"
+			"│   │   │   └── (1 1 2 1) {1}\n"
+			"│   │   └── 3\n"
+			"│   │       ^ size: 3 3\n"
+			"│   │       ├── (1 1 3 3) {1}\n"
+			"│   │       ├── (1 1 3 2) {1}\n"
+			"│   │       └── (1 1 3 1) {1}\n"
+			"│   ├── 2\n"
+			"│   │   size: 9\n"
+			"│   │   keys: 3\n"
+			"│   │   ├── 1\n"
+			"│   │   │   ^ size: 3 3\n"
+			"│   │   │   ├── (1 2 1 3) {1}\n"
+			"│   │   │   ├── (1 2 1 2) {1}\n"
+			"│   │   │   └── (1 2 1 1) {1}\n"
+			"│   │   ├── 2\n"
+			"│   │   │   ^ size: 3 3\n"
+			"│   │   │   ├── (1 2 2 3) {1}\n"
+			"│   │   │   ├── (1 2 2 2) {1}\n"
+			"│   │   │   └── (1 2 2 1) {1}\n"
+			"│   │   └── 3\n"
+			"│   │       ^ size: 3 3\n"
+			"│   │       ├── (1 2 3 3) {1}\n"
+			"│   │       ├── (1 2 3 2) {1}\n"
+			"│   │       └── (1 2 3 1) {1}\n"
+			"│   └── 3\n"
+			"│       size: 9\n"
+			"│       keys: 3\n"
+			"│       ├── 1\n"
+			"│       │   ^ size: 3 3\n"
+			"│       │   ├── (1 3 1 3) {1}\n"
+			"│       │   ├── (1 3 1 2) {1}\n"
+			"│       │   └── (1 3 1 1) {1}\n"
+			"│       ├── 2\n"
+			"│       │   ^ size: 3 3\n"
+			"│       │   ├── (1 3 2 3) {1}\n"
+			"│       │   ├── (1 3 2 2) {1}\n"
+			"│       │   └── (1 3 2 1) {1}\n"
+			"│       └── 3\n"
+			"│           ^ size: 3 3\n"
+			"│           ├── (1 3 3 3) {1}\n"
+			"│           ├── (1 3 3 2) {1}\n"
+			"│           └── (1 3 3 1) {1}\n"
+			"├── 2\n"
+			"│   size: 27\n"
+			"│   keys: 3\n"
+			"│   ├── 1\n"
+			"│   │   size: 9\n"
+			"│   │   keys: 3\n"
+			"│   │   ├── 1\n"
+			"│   │   │   ^ size: 3 3\n"
+			"│   │   │   ├── (2 1 1 3) {1}\n"
+			"│   │   │   ├── (2 1 1 2) {1}\n"
+			"│   │   │   └── (2 1 1 1) {1}\n"
+			"│   │   ├── 2\n"
+			"│   │   │   ^ size: 3 3\n"
+			"│   │   │   ├── (2 1 2 3) {1}\n"
+			"│   │   │   ├── (2 1 2 2) {1}\n"
+			"│   │   │   └── (2 1 2 1) {1}\n"
+			"│   │   └── 3\n"
+			"│   │       ^ size: 3 3\n"
+			"│   │       ├── (2 1 3 3) {1}\n"
+			"│   │       ├── (2 1 3 2) {1}\n"
+			"│   │       └── (2 1 3 1) {1}\n"
+			"│   ├── 2\n"
+			"│   │   size: 9\n"
+			"│   │   keys: 3\n"
+			"│   │   ├── 1\n"
+			"│   │   │   ^ size: 3 3\n"
+			"│   │   │   ├── (2 2 1 3) {1}\n"
+			"│   │   │   ├── (2 2 1 2) {1}\n"
+			"│   │   │   └── (2 2 1 1) {1}\n"
+			"│   │   ├── 2\n"
+			"│   │   │   ^ size: 3 3\n"
+			"│   │   │   ├── (2 2 2 3) {1}\n"
+			"│   │   │   ├── (2 2 2 2) {1}\n"
+			"│   │   │   └── (2 2 2 1) {1}\n"
+			"│   │   └── 3\n"
+			"│   │       ^ size: 3 3\n"
+			"│   │       ├── (2 2 3 3) {1}\n"
+			"│   │       ├── (2 2 3 2) {1}\n"
+			"│   │       └── (2 2 3 1) {1}\n"
+			"│   └── 3\n"
+			"│       size: 9\n"
+			"│       keys: 3\n"
+			"│       ├── 1\n"
+			"│       │   ^ size: 3 3\n"
+			"│       │   ├── (2 3 1 3) {1}\n"
+			"│       │   ├── (2 3 1 2) {1}\n"
+			"│       │   └── (2 3 1 1) {1}\n"
+			"│       ├── 2\n"
+			"│       │   ^ size: 3 3\n"
+			"│       │   ├── (2 3 2 3) {1}\n"
+			"│       │   ├── (2 3 2 2) {1}\n"
+			"│       │   └── (2 3 2 1) {1}\n"
+			"│       └── 3\n"
+			"│           ^ size: 3 3\n"
+			"│           ├── (2 3 3 3) {1}\n"
+			"│           ├── (2 3 3 2) {1}\n"
+			"│           └── (2 3 3 1) {1}\n"
+			"└── 3\n"
+			"    size: 27\n"
+			"    keys: 3\n"
+			"    ├── 1\n"
+			"    │   size: 9\n"
+			"    │   keys: 3\n"
+			"    │   ├── 1\n"
+			"    │   │   ^ size: 3 3\n"
+			"    │   │   ├── (3 1 1 3) {1}\n"
+			"    │   │   ├── (3 1 1 2) {1}\n"
+			"    │   │   └── (3 1 1 1) {1}\n"
+			"    │   ├── 2\n"
+			"    │   │   ^ size: 3 3\n"
+			"    │   │   ├── (3 1 2 3) {1}\n"
+			"    │   │   ├── (3 1 2 2) {1}\n"
+			"    │   │   └── (3 1 2 1) {1}\n"
+			"    │   └── 3\n"
+			"    │       ^ size: 3 3\n"
+			"    │       ├── (3 1 3 3) {1}\n"
+			"    │       ├── (3 1 3 2) {1}\n"
+			"    │       └── (3 1 3 1) {1}\n"
+			"    ├── 2\n"
+			"    │   size: 9\n"
+			"    │   keys: 3\n"
+			"    │   ├── 1\n"
+			"    │   │   ^ size: 3 3\n"
+			"    │   │   ├── (3 2 1 3) {1}\n"
+			"    │   │   ├── (3 2 1 2) {1}\n"
+			"    │   │   └── (3 2 1 1) {1}\n"
+			"    │   ├── 2\n"
+			"    │   │   ^ size: 3 3\n"
+			"    │   │   ├── (3 2 2 3) {1}\n"
+			"    │   │   ├── (3 2 2 2) {1}\n"
+			"    │   │   └── (3 2 2 1) {1}\n"
+			"    │   └── 3\n"
+			"    │       ^ size: 3 3\n"
+			"    │       ├── (3 2 3 3) {1}\n"
+			"    │       ├── (3 2 3 2) {1}\n"
+			"    │       └── (3 2 3 1) {1}\n"
+			"    └── 3\n"
+			"        size: 9\n"
+			"        keys: 3\n"
+			"        ├── 1\n"
+			"        │   ^ size: 3 3\n"
+			"        │   ├── (3 3 1 3) {1}\n"
+			"        │   ├── (3 3 1 2) {1}\n"
+			"        │   └── (3 3 1 1) {1}\n"
+			"        ├── 2\n"
+			"        │   ^ size: 3 3\n"
+			"        │   ├── (3 3 2 3) {1}\n"
+			"        │   ├── (3 3 2 2) {1}\n"
+			"        │   └── (3 3 2 1) {1}\n"
+			"        └── 3\n"
+			"            ^ size: 3 3\n"
+			"            ├── (3 3 3 3) {1}\n"
+			"            ├── (3 3 3 2) {1}\n"
+			"            └── (3 3 3 1) {1}\n";
+
+		const std::string print_str = print_string(kd);
+		CHECK_EQ(print_str, kd_str);
+	}
+
+	SUBCASE("Check range iterator bounds (1)")
+	{
+		const auto f1 = [](const int v) -> bool
+		{
+			return v == 2;
+		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return v == 2;
+		};
+		const auto f3 = [](const int v) -> bool
+		{
+			return v == 2;
+		};
+
+		auto it = kd.get_const_range_iterator(f1, f2, f3);
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), true);
+		CHECK_EQ(it.end(), false);
+
+		++it;
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), false);
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), false);
+
+		{
+			const auto& d = (*it).first;
+			CHECK_EQ(d.i, 2);
+			CHECK_EQ(d.j, 2);
+			CHECK_EQ(d.k, 2);
+			CHECK_EQ(d.z, 1);
+		}
+
+		++it;
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), true);
+
+		--it;
+		--it;
+		--it;
+
+		{
+			const auto& d = (*it).first;
+			CHECK_EQ(d.i, 2);
+			CHECK_EQ(d.j, 2);
+			CHECK_EQ(d.k, 2);
+			CHECK_EQ(d.z, 3);
+		}
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), true);
+		CHECK_EQ(it.end(), false);
+
+		--it;
+
+		CHECK_EQ(it.past_begin(), true);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), false);
+	}
+}
+
 int main(int argc, char **argv)
 {
 	doctest::Context context;
