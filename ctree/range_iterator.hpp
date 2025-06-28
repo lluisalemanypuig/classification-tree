@@ -351,6 +351,9 @@ public:
 		}
 		if (shallow_end()) {
 			--m_it;
+			while (not m_func(m_it->first) and m_it != m_tree->begin()) {
+				--m_it;
+			}
 		}
 	}
 
@@ -450,8 +453,6 @@ private:
 			move_tuple_into<i + 1, total_size>(to, std::move(from));
 		}
 	}
-
-private:
 
 	/// Is the iteration of this node at the beginning?
 	[[nodiscard]] bool shallow_begin() const noexcept
