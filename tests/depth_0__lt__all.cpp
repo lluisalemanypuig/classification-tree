@@ -55,14 +55,14 @@ TEST_CASE("All elements")
 	{
 
 		static constexpr std::string_view kd_str = "^ size: 11 11\n"
-												   "├── (1 1 1 2) {1}\n"
 												   "├── (1 1 1 1) {1}\n"
+												   "├── (1 1 1 2) {1}\n"
+												   "├── (1 1 1 2) {1}\n"
 												   "├── (1 1 1 3) {1}\n"
 												   "├── (1 1 1 4) {1}\n"
 												   "├── (1 2 1 1) {1}\n"
 												   "├── (1 2 2 1) {1}\n"
 												   "├── (1 3 5 1) {1}\n"
-												   "├── (1 1 1 2) {1}\n"
 												   "├── (2 2 2 1) {1}\n"
 												   "├── (2 2 2 2) {1}\n"
 												   "└── (2 2 3 2) {1}\n";
@@ -75,14 +75,14 @@ TEST_CASE("All elements")
 	{
 
 		static constexpr std::string_view kd_iter_str = "Iterate:\n"
-														"    (1 1 1 2) {1}\n"
 														"    (1 1 1 1) {1}\n"
+														"    (1 1 1 2) {1}\n"
+														"    (1 1 1 2) {1}\n"
 														"    (1 1 1 3) {1}\n"
 														"    (1 1 1 4) {1}\n"
 														"    (1 2 1 1) {1}\n"
 														"    (1 2 2 1) {1}\n"
 														"    (1 3 5 1) {1}\n"
-														"    (1 1 1 2) {1}\n"
 														"    (2 2 2 1) {1}\n"
 														"    (2 2 2 2) {1}\n"
 														"    (2 2 3 2) {1}\n";
@@ -110,14 +110,14 @@ TEST_CASE("All elements")
 			"    (2 2 3 2) {1}\n"
 			"    (2 2 2 2) {1}\n"
 			"    (2 2 2 1) {1}\n"
-			"    (1 1 1 2) {1}\n"
 			"    (1 3 5 1) {1}\n"
 			"    (1 2 2 1) {1}\n"
 			"    (1 2 1 1) {1}\n"
 			"    (1 1 1 4) {1}\n"
 			"    (1 1 1 3) {1}\n"
-			"    (1 1 1 1) {1}\n"
-			"    (1 1 1 2) {1}\n";
+			"    (1 1 1 2) {1}\n"
+			"    (1 1 1 2) {1}\n"
+			"    (1 1 1 1) {1}\n";
 
 		const std::string iter_str_const = [&]()
 		{
@@ -137,37 +137,37 @@ TEST_CASE("All elements")
 	SUBCASE("Manual iteration")
 	{
 		auto it = kd.get_const_iterator();
+		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		++it;
 		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
-		++it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 3});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
-		--it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		--it;
 		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
-		++it;
+		--it;
 		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		++it;
+		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		--it;
+		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		++it;
 		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
 		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 3});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
 		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 4});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
-		++it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 2, .k = 1, .z = 1});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 	}
 
