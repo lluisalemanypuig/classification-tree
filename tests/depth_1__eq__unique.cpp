@@ -400,7 +400,8 @@ TEST_CASE("Unique elements -- depth 1")
 
 	SUBCASE("Check range iterator bounds (1)")
 	{
-		const auto f1 = [](const int v) -> bool {
+		const auto f1 = [](const int v) -> bool
+		{
 			return v == 1;
 		};
 
@@ -451,7 +452,8 @@ TEST_CASE("Unique elements -- depth 1")
 
 	SUBCASE("Check range iterator bounds (2)")
 	{
-		const auto f1 = [](const int v) -> bool {
+		const auto f1 = [](const int v) -> bool
+		{
 			return v == 1;
 		};
 

@@ -60,25 +60,23 @@ TEST_CASE("All elements")
 
 	SUBCASE("Print entire tree")
 	{
-		static constexpr std::string_view kd_str =
-			"size: 11\n"
-			"keys: 2\n"
-			"├── 1\n"
-			"│   ^ size: 8 8\n"
-			"│   ├── (1 1 1 2) {1}\n"
-			"│   ├── (1 1 1 1) {1}\n"
-			"│   ├── (1 1 1 3) {1}\n"
-			"│   ├── (1 1 1 4) {1}\n"
-			"│   ├── (1 2 1 1) {1}\n"
-			"│   ├── (1 2 2 1) {1}\n"
-			"│   ├── (1 3 5 1) {1}\n"
-			"│   └── (1 1 1 2) {1}\n"
-			"└── 2\n"
-			"    ^ size: 3 3\n"
-			"    ├── (2 2 2 1) {1}\n"
-			"    ├── (2 2 2 2) {1}\n"
-			"    └── (2 2 3 2) {1}\n";
-
+		static constexpr std::string_view kd_str = "size: 11\n"
+												   "keys: 2\n"
+												   "├── 1\n"
+												   "│   ^ size: 8 8\n"
+												   "│   ├── (1 1 1 2) {1}\n"
+												   "│   ├── (1 1 1 1) {1}\n"
+												   "│   ├── (1 1 1 3) {1}\n"
+												   "│   ├── (1 1 1 4) {1}\n"
+												   "│   ├── (1 2 1 1) {1}\n"
+												   "│   ├── (1 2 2 1) {1}\n"
+												   "│   ├── (1 3 5 1) {1}\n"
+												   "│   └── (1 1 1 2) {1}\n"
+												   "└── 2\n"
+												   "    ^ size: 3 3\n"
+												   "    ├── (2 2 2 1) {1}\n"
+												   "    ├── (2 2 2 2) {1}\n"
+												   "    └── (2 2 3 2) {1}\n";
 
 		const std::string print_str = print_string(kd);
 		CHECK_EQ(print_str, kd_str);
