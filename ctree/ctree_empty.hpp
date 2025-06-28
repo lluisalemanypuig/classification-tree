@@ -94,12 +94,22 @@ public:
 	{
 		static_assert(check_types<_value_t, _metadata_t>());
 
-		/* store all objects */
-
 		if constexpr (not unique) {
-			// simply add the object and its metadata -- no need
-			// to check the types.
-			m_data.emplace_back(std::move(val), std::move(meta));
+			// store all objects, regardless of repeats
+
+			if constexpr (LessthanComparable<_value_t>) {
+
+				// do binary search and then add if needed.
+				const auto [i, _] = search(m_data, val);
+				auto it = m_data.begin();
+				std::advance(it, i);
+				m_data.insert(it, {std::move(val), std::move(meta)});
+			}
+			else {
+				// simply add the object and its metadata -- no need
+				// to check the types.
+				m_data.emplace_back(std::move(val), std::move(meta));
+			}
 			return true;
 		}
 
@@ -113,6 +123,8 @@ public:
 		}
 
 		if constexpr (LessthanComparable<_value_t>) {
+			static_assert(LessthanComparable<_value_t>);
+
 			// do binary search and then add if needed.
 			const auto [i, exists] = search(m_data, val);
 			if (exists) {
