@@ -209,7 +209,7 @@ TEST_CASE("Unique elements")
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 	}
 
-	SUBCASE("Iterate over a range forward")
+	SUBCASE("Iterate over a range forward (1)")
 	{
 		static constexpr std::string_view kd_iter_str = "Iterate:\n"
 														"    (1 1 1 2) {2}\n"
@@ -247,7 +247,44 @@ TEST_CASE("Unique elements")
 		CHECK_EQ(kd_iter_str, iter_str);
 	}
 
-	SUBCASE("Iterate over a range backward")
+	SUBCASE("Iterate over a range forward (2)")
+	{
+		static constexpr std::string_view kd_iter_str = "Iterate:\n"
+														"    (1 2 1 1) {1}\n"
+														"    (1 2 2 1) {1}\n"
+														"    (2 2 2 1) {1}\n"
+														"    (2 2 2 2) {1}\n"
+														"    (2 2 3 2) {1}\n";
+
+		const auto f1 = [](const int) -> bool
+		{
+			return true;
+		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return v == 2;
+		};
+		const auto f3 = [](const int) -> bool
+		{
+			return true;
+		};
+
+		const std::string iter_str_const = [&]()
+		{
+			auto it = kd.get_const_range_iterator(f1, f2, f3);
+			return iterate_string(it);
+		}();
+		CHECK_EQ(kd_iter_str, iter_str_const);
+
+		const std::string iter_str = [&]()
+		{
+			auto it = kd.get_range_iterator(f1, f2, f3);
+			return iterate_string(it);
+		}();
+		CHECK_EQ(kd_iter_str, iter_str);
+	}
+
+	SUBCASE("Iterate over a range backward (1)")
 	{
 		static constexpr std::string_view kd_iter_str = "Iterate:\n"
 														"    (1 2 2 1) {1}\n"
@@ -264,6 +301,43 @@ TEST_CASE("Unique elements")
 		const auto f2 = [](const int v) -> bool
 		{
 			return 1 <= v and v <= 2;
+		};
+		const auto f3 = [](const int) -> bool
+		{
+			return true;
+		};
+
+		const std::string iter_str_const = [&]()
+		{
+			auto it = kd.get_const_range_iterator(f1, f2, f3);
+			return range_iterate_string_backward(it);
+		}();
+		CHECK_EQ(kd_iter_str, iter_str_const);
+
+		const std::string iter_str = [&]()
+		{
+			auto it = kd.get_range_iterator(f1, f2, f3);
+			return range_iterate_string_backward(it);
+		}();
+		CHECK_EQ(kd_iter_str, iter_str);
+	}
+
+	SUBCASE("Iterate over a range backward (2)")
+	{
+		static constexpr std::string_view kd_iter_str = "Iterate:\n"
+														"    (2 2 3 2) {1}\n"
+														"    (2 2 2 2) {1}\n"
+														"    (2 2 2 1) {1}\n"
+														"    (1 2 2 1) {1}\n"
+														"    (1 2 1 1) {1}\n";
+
+		const auto f1 = [](const int) -> bool
+		{
+			return true;
+		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return v == 2;
 		};
 		const auto f3 = [](const int) -> bool
 		{
