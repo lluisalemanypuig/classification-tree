@@ -392,8 +392,10 @@ public:
 
 	[[nodiscard]] std::size_t count() noexcept
 	{
+		if (not to_begin()) {
+			return 0;
+		}
 		std::size_t c = 0;
-		[[maybe_unused]] const auto _ = to_begin();
 		while (not shallow_end()) {
 			while (not shallow_end() and not m_func(m_it->first)) {
 				++m_it;

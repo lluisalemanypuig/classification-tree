@@ -219,36 +219,133 @@ public:
 	{
 		iterator<value_t, metadata_t> it;
 		it.set_pointer(this);
+		return it;
+	}
+	/**
+	 * @brief Returns an iterator object over the leaves of this tree.
+	 *
+	 * Starts at the beginning of the iteration.
+	 */
+	[[nodiscard]] iterator<value_t, metadata_t> get_iterator_begin() noexcept
+	{
+		iterator<value_t, metadata_t> it;
+		it.set_pointer(this);
 		it.to_begin();
 		return it;
 	}
-	/// Returns a constant iterator object over the leaves of this tree.
+	/**
+	 * @brief Returns an iterator object over the leaves of this tree.
+	 *
+	 * Starts at the end of the iteration.
+	 */
+	[[nodiscard]] iterator<value_t, metadata_t> get_iterator_end() noexcept
+	{
+		iterator<value_t, metadata_t> it;
+		it.set_pointer(this);
+		it.to_end();
+		return it;
+	}
+	/// Returns an iterator object over the leaves of this tree.
 	[[nodiscard]] const_iterator<value_t, metadata_t>
-	get_const_iterator() const noexcept
+	get_const_iterator() noexcept
+	{
+		const_iterator<value_t, metadata_t> it;
+		it.set_pointer(this);
+		return it;
+	}
+	/**
+	 * @brief Returns a constant iterator object over the leaves of this tree.
+	 *
+	 * Starts at the beginning of the iteration.
+	 */
+	[[nodiscard]] const_iterator<value_t, metadata_t>
+	get_const_iterator_begin() const noexcept
 	{
 		const_iterator<value_t, metadata_t> it;
 		it.set_pointer(this);
 		it.to_begin();
 		return it;
 	}
+	/**
+	 * @brief Returns a constant iterator object over the leaves of this tree.
+	 *
+	 * Starts at the end of the iteration.
+	 */
+	[[nodiscard]] const_iterator<value_t, metadata_t>
+	get_const_iterator_end() const noexcept
+	{
+		const_iterator<value_t, metadata_t> it;
+		it.set_pointer(this);
+		it.to_end();
+		return it;
+	}
 
-	/// Returns a range iterator object over the leaves of this tree.
+	/// Returns an iterator object over the leaves of this tree.
 	[[nodiscard]] range_iterator<value_t, metadata_t>
 	get_range_iterator() noexcept
+	{
+		range_iterator<value_t, metadata_t> it;
+		it.set_pointer(this);
+		return it;
+	}
+	/**
+	 * @brief Returns a range iterator object over the leaves of this tree.
+	 *
+	 * Starts at the beginning of the iteration.
+	 */
+	[[nodiscard]] range_iterator<value_t, metadata_t>
+	get_range_iterator_begin() noexcept
 	{
 		range_iterator<value_t, metadata_t> it;
 		it.set_pointer(this);
 		[[maybe_unused]] const auto _ = it.to_begin();
 		return it;
 	}
-
-	/// Returns a range iterator object over the leaves of this tree.
+	/**
+	 * @brief Returns a range iterator object over the leaves of this tree.
+	 *
+	 * Starts at the end of the iteration.
+	 */
+	[[nodiscard]] range_iterator<value_t, metadata_t>
+	get_range_iterator_end() noexcept
+	{
+		range_iterator<value_t, metadata_t> it;
+		it.set_pointer(this);
+		[[maybe_unused]] const auto _ = it.to_end();
+		return it;
+	}
+	/// Returns an iterator object over the leaves of this tree.
 	[[nodiscard]] const_range_iterator<value_t, metadata_t>
-	get_const_range_iterator() const noexcept
+	get_const_range_iterator() noexcept
+	{
+		const_range_iterator<value_t, metadata_t> it;
+		it.set_pointer(this);
+		return it;
+	}
+	/**
+	 * @brief Returns a range iterator object over the leaves of this tree.
+	 *
+	 * Starts at the beginning of the iteration.
+	 */
+	[[nodiscard]] const_range_iterator<value_t, metadata_t>
+	get_const_range_iterator_begin() const noexcept
 	{
 		const_range_iterator<value_t, metadata_t> it;
 		it.set_pointer(this);
 		[[maybe_unused]] const auto _ = it.to_begin();
+		return it;
+	}
+	/**
+	 * @brief Returns a range iterator object over the leaves of this tree.
+	 *
+	 * Starts at the beginning of the iteration.
+	 */
+	[[nodiscard]] const_range_iterator<value_t, metadata_t>
+	get_const_range_iterator_end() const noexcept
+	{
+		const_range_iterator<value_t, metadata_t> it;
+		it.set_pointer(this);
+		[[maybe_unused]] const auto _ = it.to_end();
 		return it;
 	}
 

@@ -241,26 +241,76 @@ public:
 		return it->second;
 	}
 
-	/// Returns an iterator object over the leaves of this tree.
+	// Returns an iterator object over the leaves of this tree.
 	[[nodiscard]] iterator<value_t, metadata_t, key_t, keys_t...>
 	get_iterator() noexcept
+	{
+		iterator<value_t, metadata_t, key_t, keys_t...> it;
+		it.set_pointer(this);
+		return it;
+	}
+	/**
+	 * @brief Returns an iterator object over the leaves of this tree.
+	 *
+	 * Starts at the beginning of the iteration.
+	 */
+	[[nodiscard]] iterator<value_t, metadata_t, key_t, keys_t...>
+	get_iterator_begin() noexcept
 	{
 		iterator<value_t, metadata_t, key_t, keys_t...> it;
 		it.set_pointer(this);
 		it.to_begin();
 		return it;
 	}
-	/// Returns a constant iterator object over the leaves of this tree.
+	/**
+	 * @brief Returns an iterator object over the leaves of this tree.
+	 *
+	 * Starts at the end of the iteration.
+	 */
+	[[nodiscard]] iterator<value_t, metadata_t, key_t, keys_t...>
+	get_iterator_end() noexcept
+	{
+		iterator<value_t, metadata_t, key_t, keys_t...> it;
+		it.set_pointer(this);
+		it.to_end();
+		return it;
+	}
+	// Returns an iterator object over the leaves of this tree.
 	[[nodiscard]] const_iterator<value_t, metadata_t, key_t, keys_t...>
-	get_const_iterator() const noexcept
+	get_const_iterator() noexcept
+	{
+		const_iterator<value_t, metadata_t, key_t, keys_t...> it;
+		it.set_pointer(this);
+		return it;
+	}
+	/**
+	 * @brief Returns an iterator object over the leaves of this tree.
+	 *
+	 * Starts at the beginning of the iteration.
+	 */
+	[[nodiscard]] const_iterator<value_t, metadata_t, key_t, keys_t...>
+	get_const_iterator_begin() const noexcept
 	{
 		const_iterator<value_t, metadata_t, key_t, keys_t...> it;
 		it.set_pointer(this);
 		it.to_begin();
 		return it;
 	}
+	/**
+	 * @brief Returns an iterator object over the leaves of this tree.
+	 *
+	 * Starts at the end of the iteration.
+	 */
+	[[nodiscard]] const_iterator<value_t, metadata_t, key_t, keys_t...>
+	get_const_iterator_end() const noexcept
+	{
+		const_iterator<value_t, metadata_t, key_t, keys_t...> it;
+		it.set_pointer(this);
+		it.to_end();
+		return it;
+	}
 
-	/// Returns a range iterator object over the leaves of this tree.
+	// Returns a range iterator object over the leaves of this tree.
 	template <typename... Callables>
 	[[nodiscard]] range_iterator<value_t, metadata_t, key_t, keys_t...>
 	get_range_iterator(Callables&&...fs) noexcept
@@ -268,19 +318,74 @@ public:
 		range_iterator<value_t, metadata_t, key_t, keys_t...> it;
 		it.set_functions(std::forward<Callables>(fs)...);
 		it.set_pointer(this);
+		return it;
+	}
+	/**
+	 * @brief Returns a range iterator object over the leaves of this tree.
+	 *
+	 * Starts at the beginning of the iteration.
+	 */
+	template <typename... Callables>
+	[[nodiscard]] range_iterator<value_t, metadata_t, key_t, keys_t...>
+	get_range_iterator_begin(Callables&&...fs) noexcept
+	{
+		range_iterator<value_t, metadata_t, key_t, keys_t...> it;
+		it.set_functions(std::forward<Callables>(fs)...);
+		it.set_pointer(this);
 		[[maybe_unused]] const bool _ = it.to_begin();
 		return it;
 	}
-
-	/// Returns a constant range iterator object over the leaves of this tree.
+	/**
+	 * @brief Returns a range iterator object over the leaves of this tree.
+	 *
+	 * Starts at the end of the iteration.
+	 */
+	template <typename... Callables>
+	[[nodiscard]] range_iterator<value_t, metadata_t, key_t, keys_t...>
+	get_range_iterator_end(Callables&&...fs) noexcept
+	{
+		range_iterator<value_t, metadata_t, key_t, keys_t...> it;
+		it.set_functions(std::forward<Callables>(fs)...);
+		it.set_pointer(this);
+		[[maybe_unused]] const bool _ = it.to_end();
+		return it;
+	}
+	// Returns a const range iterator object over the leaves of this tree.
+	[[nodiscard]] const_range_iterator<value_t, metadata_t, key_t, keys_t...>
+	get_const_range_iterator() noexcept
+	{
+		range_iterator<value_t, metadata_t, key_t, keys_t...> it;
+		it.set_pointer(this);
+		return it;
+	}
+	/**
+	 * @brief Returns a constant range iterator object over the leaves of this tree.
+	 *
+	 * Starts at the beginning of the iteration.
+	 */
 	template <typename... Callables>
 	[[nodiscard]] const_range_iterator<value_t, metadata_t, key_t, keys_t...>
-	get_const_range_iterator(Callables&&...fs) const noexcept
+	get_const_range_iterator_begin(Callables&&...fs) const noexcept
 	{
 		const_range_iterator<value_t, metadata_t, key_t, keys_t...> it;
 		it.set_functions(std::forward<Callables>(fs)...);
 		it.set_pointer(this);
 		[[maybe_unused]] const bool _ = it.to_begin();
+		return it;
+	}
+	/**
+	 * @brief Returns a constant range iterator object over the leaves of this tree.
+	 *
+	 * Starts at the end of the iteration.
+	 */
+	template <typename... Callables>
+	[[nodiscard]] const_range_iterator<value_t, metadata_t, key_t, keys_t...>
+	get_const_range_iterator_end(Callables&&...fs) const noexcept
+	{
+		const_range_iterator<value_t, metadata_t, key_t, keys_t...> it;
+		it.set_functions(std::forward<Callables>(fs)...);
+		it.set_pointer(this);
+		[[maybe_unused]] const bool _ = it.to_end();
 		return it;
 	}
 
