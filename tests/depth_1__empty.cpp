@@ -53,14 +53,14 @@ TEST_CASE("Empty tree")
 
 		const std::string iter_str_const = [&]()
 		{
-			auto it = kd.get_const_iterator();
+			auto it = kd.get_const_iterator_begin();
 			return iterate_string(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str_const);
 
 		const std::string iter_str = [&]()
 		{
-			auto it = kd.get_iterator();
+			auto it = kd.get_iterator_begin();
 			return iterate_string(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str);
@@ -72,14 +72,14 @@ TEST_CASE("Empty tree")
 
 		const std::string iter_str_fb_const = [&]()
 		{
-			auto it = kd.get_const_iterator();
+			auto it = kd.get_const_iterator_end();
 			return iterate_string_backward(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str_fb_const);
 
 		const std::string iter_str_fb = [&]()
 		{
-			auto it = kd.get_iterator();
+			auto it = kd.get_iterator_end();
 			return iterate_string_backward(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str_fb);
@@ -96,14 +96,14 @@ TEST_CASE("Empty tree")
 
 		const std::string iter_str_const = [&]()
 		{
-			auto it = kd.get_const_range_iterator(f1);
+			auto it = kd.get_const_range_iterator_begin(f1);
 			return iterate_string(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str_const);
 
 		const std::string iter_str = [&]()
 		{
-			auto it = kd.get_range_iterator(f1);
+			auto it = kd.get_range_iterator_begin(f1);
 			return iterate_string(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str);
@@ -120,14 +120,14 @@ TEST_CASE("Empty tree")
 
 		const std::string iter_str_const = [&]()
 		{
-			auto it = kd.get_const_range_iterator(f1);
+			auto it = kd.get_const_range_iterator_end(f1);
 			return range_iterate_string_backward(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str_const);
 
 		const std::string iter_str = [&]()
 		{
-			auto it = kd.get_range_iterator(f1);
+			auto it = kd.get_range_iterator_end(f1);
 			return range_iterate_string_backward(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str);
@@ -147,7 +147,7 @@ TEST_CASE("Empty tree")
 
 	SUBCASE("Check iterator bounds")
 	{
-		auto it = kd.get_const_iterator();
+		auto it = kd.get_const_iterator_begin();
 		CHECK_EQ(it.end(), true);
 		CHECK_EQ(it.past_begin(), true);
 	}
@@ -159,7 +159,7 @@ TEST_CASE("Empty tree")
 			return v == 1;
 		};
 
-		auto it = kd.get_const_range_iterator(f1);
+		auto it = kd.get_const_range_iterator_begin(f1);
 		CHECK_EQ(it.end(), true);
 		CHECK_EQ(it.past_begin(), true);
 	}

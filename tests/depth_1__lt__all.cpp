@@ -99,14 +99,14 @@ TEST_CASE("All elements")
 
 		const std::string iter_str_const = [&]()
 		{
-			auto it = kd.get_const_iterator();
+			auto it = kd.get_const_iterator_begin();
 			return iterate_string(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str_const);
 
 		const std::string iter_str = [&]()
 		{
-			auto it = kd.get_iterator();
+			auto it = kd.get_iterator_begin();
 			return iterate_string(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str);
@@ -129,14 +129,14 @@ TEST_CASE("All elements")
 
 		const std::string iter_str_const = [&]()
 		{
-			auto it = kd.get_const_iterator();
+			auto it = kd.get_const_iterator_end();
 			return iterate_string_backward(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str_const);
 
 		const std::string iter_str = [&]()
 		{
-			auto it = kd.get_iterator();
+			auto it = kd.get_iterator_end();
 			return iterate_string_backward(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str);
@@ -144,7 +144,7 @@ TEST_CASE("All elements")
 
 	SUBCASE("Manual iteration")
 	{
-		auto it = kd.get_const_iterator();
+		auto it = kd.get_const_iterator_begin();
 		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
@@ -210,14 +210,14 @@ TEST_CASE("All elements")
 
 		const std::string iter_str_const = [&]()
 		{
-			auto it = kd.get_const_range_iterator(f1);
+			auto it = kd.get_const_range_iterator_begin(f1);
 			return iterate_string(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str_const);
 
 		const std::string iter_str = [&]()
 		{
-			auto it = kd.get_range_iterator(f1);
+			auto it = kd.get_range_iterator_begin(f1);
 			return iterate_string(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str);
@@ -237,14 +237,14 @@ TEST_CASE("All elements")
 
 		const std::string iter_str_const = [&]()
 		{
-			auto it = kd.get_const_range_iterator(f1);
+			auto it = kd.get_const_range_iterator_begin(f1);
 			return iterate_string(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str_const);
 
 		const std::string iter_str = [&]()
 		{
-			auto it = kd.get_range_iterator(f1);
+			auto it = kd.get_range_iterator_begin(f1);
 			return iterate_string(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str);
@@ -269,14 +269,14 @@ TEST_CASE("All elements")
 
 		const std::string iter_str_const = [&]()
 		{
-			auto it = kd.get_const_range_iterator(f1);
+			auto it = kd.get_const_range_iterator_end(f1);
 			return range_iterate_string_backward(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str_const);
 
 		const std::string iter_str = [&]()
 		{
-			auto it = kd.get_range_iterator(f1);
+			auto it = kd.get_range_iterator_end(f1);
 			return range_iterate_string_backward(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str);
@@ -296,14 +296,14 @@ TEST_CASE("All elements")
 
 		const std::string iter_str_const = [&]()
 		{
-			auto it = kd.get_const_range_iterator(f1);
+			auto it = kd.get_const_range_iterator_end(f1);
 			return range_iterate_string_backward(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str_const);
 
 		const std::string iter_str = [&]()
 		{
-			auto it = kd.get_range_iterator(f1);
+			auto it = kd.get_range_iterator_end(f1);
 			return range_iterate_string_backward(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str);
@@ -359,7 +359,7 @@ TEST_CASE("All elements")
 
 	SUBCASE("Check iterator bounds (1)")
 	{
-		auto it = kd.get_const_iterator();
+		auto it = kd.get_const_iterator_begin();
 
 		CHECK_EQ(it.past_begin(), false);
 		CHECK_EQ(it.begin(), true);
@@ -406,7 +406,7 @@ TEST_CASE("All elements")
 
 	SUBCASE("Check iterator bounds (2)")
 	{
-		auto it = kd.get_const_iterator();
+		auto it = kd.get_const_iterator_begin();
 
 		CHECK_EQ(it.past_begin(), false);
 		CHECK_EQ(it.begin(), true);
@@ -484,7 +484,7 @@ TEST_CASE("All elements")
 			return v == 1;
 		};
 
-		auto it = kd.get_const_range_iterator(f1);
+		auto it = kd.get_const_range_iterator_begin(f1);
 
 		CHECK_EQ(it.past_begin(), false);
 		CHECK_EQ(it.begin(), true);
@@ -536,7 +536,7 @@ TEST_CASE("All elements")
 			return v == 1;
 		};
 
-		auto it = kd.get_const_range_iterator(f1);
+		auto it = kd.get_const_range_iterator_begin(f1);
 
 		CHECK_EQ(it.past_begin(), false);
 		CHECK_EQ(it.begin(), true);
@@ -608,7 +608,7 @@ TEST_CASE("All elements")
 			return v == 2;
 		};
 
-		auto it = kd.get_const_range_iterator(f1);
+		auto it = kd.get_const_range_iterator_begin(f1);
 
 		CHECK_EQ(it.past_begin(), false);
 		CHECK_EQ(it.begin(), true);
