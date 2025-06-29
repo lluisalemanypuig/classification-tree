@@ -277,7 +277,7 @@ public:
 	}
 	// Returns an iterator object over the leaves of this tree.
 	[[nodiscard]] const_iterator<value_t, metadata_t, key_t, keys_t...>
-	get_const_iterator() noexcept
+	get_const_iterator() const noexcept
 	{
 		const_iterator<value_t, metadata_t, key_t, keys_t...> it;
 		it.set_pointer(this);
@@ -351,10 +351,12 @@ public:
 		return it;
 	}
 	// Returns a const range iterator object over the leaves of this tree.
+	template <typename... Callables>
 	[[nodiscard]] const_range_iterator<value_t, metadata_t, key_t, keys_t...>
-	get_const_range_iterator() noexcept
+	get_const_range_iterator(Callables&&...fs) const noexcept
 	{
-		range_iterator<value_t, metadata_t, key_t, keys_t...> it;
+		const_range_iterator<value_t, metadata_t, key_t, keys_t...> it;
+		it.set_functions(std::forward<Callables>(fs)...);
 		it.set_pointer(this);
 		return it;
 	}

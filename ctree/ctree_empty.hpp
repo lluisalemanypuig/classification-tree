@@ -247,7 +247,7 @@ public:
 	}
 	/// Returns an iterator object over the leaves of this tree.
 	[[nodiscard]] const_iterator<value_t, metadata_t>
-	get_const_iterator() noexcept
+	get_const_iterator() const noexcept
 	{
 		const_iterator<value_t, metadata_t> it;
 		it.set_pointer(this);
@@ -316,7 +316,7 @@ public:
 	}
 	/// Returns an iterator object over the leaves of this tree.
 	[[nodiscard]] const_range_iterator<value_t, metadata_t>
-	get_const_range_iterator() noexcept
+	get_const_range_iterator() const noexcept
 	{
 		const_range_iterator<value_t, metadata_t> it;
 		it.set_pointer(this);
