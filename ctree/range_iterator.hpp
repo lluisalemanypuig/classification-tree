@@ -143,8 +143,14 @@ public:
 	}
 
 	void set_functions() noexcept { }
+	void initialize_first_and_last() noexcept { }
 
-	/// Place the iterator at the beginning.
+	/**
+	 * @brief Place the iterator at the beginning of the iteration.
+	 * @returns True if an element that meets the criteria specified by @ref m_func
+	 * was found in this node and down to the leaves of the tree. Returns false
+	 * if no element was found.
+	 */
 	[[nodiscard]] bool to_begin() noexcept
 	{
 		if (m_tree->size() == 0) [[unlikely]] {
@@ -157,7 +163,12 @@ public:
 		m_it = m_tree->begin();
 		return true;
 	}
-	/// Place the iterator at the end.
+	/**
+	 * @brief Place the iterator at the end of the iteration.
+	 * @returns True if an element that meets the criteria specified by @ref m_func
+	 * was found in this node and down to the leaves of the tree. Returns false
+	 * if no element was found.
+	 */
 	[[nodiscard]] bool to_end() noexcept
 	{
 		if (m_tree->size() == 0) [[unlikely]] {
@@ -289,31 +300,49 @@ public:
 		m_subtree_iterator.set_functions(std::forward<Callables>(fs)...);
 	}
 
-	/// Place the iterator at the beginning.
+	/**
+	 * @brief Place the iterator at the beginning of the iteration.
+	 * @returns True if an element that meets the criteria specified by @ref m_func
+	 * was found in this node and down to the leaves of the tree. Returns false
+	 * if no element was found.
+	 */
 	[[nodiscard]] bool to_begin() noexcept
 	{
 		if (m_tree->size() == 0) [[unlikely]] {
 			m_past_begin = true;
 			m_it = m_tree->end();
+			m_it_idx = 1;
 			return false;
 		}
 
+		initialize_first_and_last();
+
 		m_past_begin = false;
 		m_it = m_tree->begin();
+		m_it_idx = 0;
 		return next();
 	}
-	/// Place the iterator at the end.
+	/**
+	 * @brief Place the iterator at the end of the iteration.
+	 * @returns True if an element that meets the criteria specified by @ref m_func
+	 * was found in this node and down to the leaves of the tree. Returns false
+	 * if no element was found.
+	 */
 	[[nodiscard]] bool to_end() noexcept
 	{
 		if (m_tree->size() == 0) [[unlikely]] {
 			m_past_begin = true;
 			m_it = m_tree->end();
+			m_it_idx = 1;
 			return false;
 		}
+
+		initialize_first_and_last();
 
 		m_past_begin = false;
 		m_it = m_tree->end();
 		--m_it;
+		m_it_idx = m_tree->size() - 1;
 		return previous();
 	}
 
@@ -324,6 +353,7 @@ public:
 		++m_subtree_iterator;
 		if (m_subtree_iterator.end()) {
 			++m_it;
+			++m_it_idx;
 			if (not shallow_end()) [[likely]] {
 				[[maybe_unused]] const bool _ = next();
 			}
@@ -346,13 +376,16 @@ public:
 			}
 			else [[likely]] {
 				--m_it;
+				--m_it_idx;
 				[[maybe_unused]] const bool _ = previous();
 			}
 		}
 		if (shallow_end()) {
 			--m_it;
+			--m_it_idx;
 			while (not m_func(m_it->first) and m_it != m_tree->begin()) {
 				--m_it;
+				--m_it_idx;
 			}
 		}
 	}
@@ -364,12 +397,14 @@ public:
 		while (not shallow_end()) {
 			while (not shallow_end() and not m_func(m_it->first)) {
 				++m_it;
+				++m_it_idx;
 			}
 
 			if (not shallow_end()) {
 				m_subtree_iterator.set_pointer(&m_it->second);
 				c += m_subtree_iterator.count();
 				++m_it;
+				++m_it_idx;
 			}
 		}
 		return c;
@@ -433,6 +468,41 @@ public:
 		return current;
 	}
 
+	/**
+	 * @brief Finds the first and last+1 valid positions in this node.
+	 *
+	 * Sets the pointers @ref m_begin_ptr and @ref m_last_ptr.
+	 */
+	void initialize_first_and_last() noexcept
+	{
+		m_it = m_tree->begin();
+		m_it_idx = 0;
+		m_end_idx = m_tree->size() + 3;
+		const bool found_begin = next();
+		if (not found_begin) {
+			m_begin_idx = m_tree->size();
+			m_end_idx = m_tree->size();
+			return;
+		}
+
+		m_begin_idx = m_it_idx;
+
+		m_end_idx = m_tree->size();
+
+		m_past_begin = false;
+		m_it = m_tree->end();
+		--m_it;
+		m_it_idx = m_tree->size() - 1;
+
+		[[maybe_unused]] const bool found_end = previous();
+#if defined DEBUG
+		assert(found_end);
+#endif
+
+		m_end_idx = m_it_idx;
+		m_end_idx += (m_it_idx != m_tree->size());
+	}
+
 private:
 
 	/**
@@ -457,7 +527,8 @@ private:
 	/// Is the iteration of this node at the beginning?
 	[[nodiscard]] bool shallow_begin() const noexcept
 	{
-		return not shallow_past_begin() and m_it == m_tree->begin();
+		return not shallow_past_begin() and
+			   (m_it == m_tree->begin() or m_it_idx == m_begin_idx);
 	}
 	/// Is the iteration of this node past the beginning?
 	[[nodiscard]] bool shallow_past_begin() const noexcept
@@ -467,7 +538,7 @@ private:
 	/// Is the iteration of this node at the end?
 	[[nodiscard]] bool shallow_end() const noexcept
 	{
-		return m_it == m_tree->end();
+		return m_it == m_tree->end() or m_it_idx == m_end_idx;
 	}
 
 	/**
@@ -481,6 +552,7 @@ private:
 		while (not stop) {
 			while (not shallow_end() and not m_func(m_it->first)) {
 				++m_it;
+				++m_it_idx;
 			}
 			if (shallow_end()) {
 				return false;
@@ -491,6 +563,7 @@ private:
 
 			if (not stop) {
 				++m_it;
+				++m_it_idx;
 			}
 		}
 		return true;
@@ -501,10 +574,10 @@ private:
 	{
 		if (shallow_begin()) [[unlikely]] {
 			m_past_begin = true;
+			return;
 		}
-		else [[likely]] {
-			--m_it;
-		}
+		--m_it;
+		--m_it_idx;
 	}
 
 	/// Find the previous element according to function @ref m_func.
@@ -524,7 +597,7 @@ private:
 
 			if (not stop) {
 				simple_move_back();
-				stop = m_past_begin;
+				stop = shallow_past_begin();
 			}
 		}
 		return true;
@@ -540,6 +613,13 @@ private:
 
 	/// Iterator to the key of @ref m_tree currently being iterated.
 	container_iterator_t m_it;
+	/// The index of @ref m_it within the container.
+	std::size_t m_it_idx;
+
+	/// Pointer to the first valid position of this node.
+	std::size_t m_begin_idx;
+	/// Pointer to the last + 1 valid position of this node.
+	std::size_t m_end_idx;
 
 	/// Has the iterator reached the beginning and tried to move back?
 	bool m_past_begin = false;
