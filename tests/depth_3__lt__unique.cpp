@@ -936,6 +936,16 @@ TEST_CASE("All elements (2)")
 			CHECK_EQ(d.i, 2);
 			CHECK_EQ(d.j, 2);
 			CHECK_EQ(d.k, 2);
+			CHECK_EQ(d.z, 2);
+		}
+
+		++it;
+
+		{
+			const auto& d = (*it).first;
+			CHECK_EQ(d.i, 2);
+			CHECK_EQ(d.j, 2);
+			CHECK_EQ(d.k, 2);
 			CHECK_EQ(d.z, 3);
 		}
 
