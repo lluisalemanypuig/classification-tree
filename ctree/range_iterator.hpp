@@ -392,9 +392,11 @@ public:
 
 	[[nodiscard]] std::size_t count() noexcept
 	{
-		if (not to_begin()) {
-			return 0;
-		}
+		m_it = m_tree->begin();
+		m_it_idx = 0;
+		m_begin_idx = 0;
+		m_end_idx = m_tree->size();
+
 		std::size_t c = 0;
 		while (not shallow_end()) {
 			while (not shallow_end() and not m_func(m_it->first)) {
