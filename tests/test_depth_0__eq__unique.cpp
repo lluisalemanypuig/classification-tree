@@ -31,38 +31,37 @@
 #include <ctree/range_iterator.hpp>
 
 // custom includes
-#include "test_definitions.hpp"
+#include "definitions.hpp"
 
-TEST_CASE("All elements")
+TEST_CASE("Unique elements")
 {
 	classtree::ctree<data_eq, meta_incr> kd;
 
-	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1});
-	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 1}, {.num_occs = 1});
-	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 3}, {.num_occs = 1});
-	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 4}, {.num_occs = 1});
-	kd.add<false>({.i = 1, .j = 2, .k = 1, .z = 1}, {.num_occs = 1});
-	kd.add<false>({.i = 1, .j = 2, .k = 2, .z = 1}, {.num_occs = 1});
-	kd.add<false>({.i = 1, .j = 3, .k = 5, .z = 1}, {.num_occs = 1});
-	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1}); // *
-	kd.add<false>({.i = 2, .j = 2, .k = 2, .z = 1}, {.num_occs = 1});
-	kd.add<false>({.i = 2, .j = 2, .k = 2, .z = 2}, {.num_occs = 1});
-	kd.add<false>({.i = 2, .j = 2, .k = 3, .z = 2}, {.num_occs = 1});
+	kd.add({.i = 1, .j = 1, .k = 1, .z = 1}, {.num_occs = 1});
+	kd.add({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1});
+	kd.add({.i = 1, .j = 1, .k = 1, .z = 3}, {.num_occs = 1});
+	kd.add({.i = 1, .j = 1, .k = 1, .z = 4}, {.num_occs = 1});
+	kd.add({.i = 1, .j = 2, .k = 1, .z = 1}, {.num_occs = 1});
+	kd.add({.i = 1, .j = 2, .k = 2, .z = 1}, {.num_occs = 1});
+	kd.add({.i = 1, .j = 3, .k = 5, .z = 1}, {.num_occs = 1});
+	kd.add({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1});
+	kd.add({.i = 2, .j = 2, .k = 2, .z = 1}, {.num_occs = 1});
+	kd.add({.i = 2, .j = 2, .k = 2, .z = 2}, {.num_occs = 1});
+	kd.add({.i = 2, .j = 2, .k = 3, .z = 2}, {.num_occs = 1});
 
-	CHECK_EQ(kd.size(), 11);
+	CHECK_EQ(kd.size(), 10);
 
 	SUBCASE("Print entire tree")
 	{
 
-		static constexpr std::string_view kd_str = "^ size: 11 11\n"
-												   "├── (1 1 1 2) {1}\n"
+		static constexpr std::string_view kd_str = "^ size: 10 10\n"
 												   "├── (1 1 1 1) {1}\n"
+												   "├── (1 1 1 2) {2}\n"
 												   "├── (1 1 1 3) {1}\n"
 												   "├── (1 1 1 4) {1}\n"
 												   "├── (1 2 1 1) {1}\n"
 												   "├── (1 2 2 1) {1}\n"
 												   "├── (1 3 5 1) {1}\n"
-												   "├── (1 1 1 2) {1}\n"
 												   "├── (2 2 2 1) {1}\n"
 												   "├── (2 2 2 2) {1}\n"
 												   "└── (2 2 3 2) {1}\n";
@@ -75,14 +74,13 @@ TEST_CASE("All elements")
 	{
 
 		static constexpr std::string_view kd_iter_str = "Iterate:\n"
-														"    (1 1 1 2) {1}\n"
 														"    (1 1 1 1) {1}\n"
+														"    (1 1 1 2) {2}\n"
 														"    (1 1 1 3) {1}\n"
 														"    (1 1 1 4) {1}\n"
 														"    (1 2 1 1) {1}\n"
 														"    (1 2 2 1) {1}\n"
 														"    (1 3 5 1) {1}\n"
-														"    (1 1 1 2) {1}\n"
 														"    (2 2 2 1) {1}\n"
 														"    (2 2 2 2) {1}\n"
 														"    (2 2 3 2) {1}\n";
@@ -104,62 +102,59 @@ TEST_CASE("All elements")
 
 	SUBCASE("Iterate entire tree backward")
 	{
+		static constexpr std::string_view kd_iter_str = "Iterate:\n"
+														"    (2 2 3 2) {1}\n"
+														"    (2 2 2 2) {1}\n"
+														"    (2 2 2 1) {1}\n"
+														"    (1 3 5 1) {1}\n"
+														"    (1 2 2 1) {1}\n"
+														"    (1 2 1 1) {1}\n"
+														"    (1 1 1 4) {1}\n"
+														"    (1 1 1 3) {1}\n"
+														"    (1 1 1 2) {2}\n"
+														"    (1 1 1 1) {1}\n";
 
-		static constexpr std::string_view kd_iter_str_fb =
-			"Iterate:\n"
-			"    (2 2 3 2) {1}\n"
-			"    (2 2 2 2) {1}\n"
-			"    (2 2 2 1) {1}\n"
-			"    (1 1 1 2) {1}\n"
-			"    (1 3 5 1) {1}\n"
-			"    (1 2 2 1) {1}\n"
-			"    (1 2 1 1) {1}\n"
-			"    (1 1 1 4) {1}\n"
-			"    (1 1 1 3) {1}\n"
-			"    (1 1 1 1) {1}\n"
-			"    (1 1 1 2) {1}\n";
-
-		const std::string iter_str_const = [&]()
+		const std::string iter_str_fb_const = [&]()
 		{
 			auto it = kd.get_const_iterator_end();
 			return iterate_string_backward(it);
 		}();
-		CHECK_EQ(kd_iter_str_fb, iter_str_const);
+		CHECK_EQ(kd_iter_str, iter_str_fb_const);
 
-		const std::string iter_str = [&]()
+		const std::string iter_str_fb = [&]()
 		{
 			auto it = kd.get_iterator_end();
 			return iterate_string_backward(it);
 		}();
-		CHECK_EQ(kd_iter_str_fb, iter_str);
+		CHECK_EQ(kd_iter_str, iter_str_fb);
 	}
 
 	SUBCASE("Manual iteration")
 	{
 		auto it = kd.get_const_iterator_begin();
-		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
-		++it;
 		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		++it;
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 2});
 		++it;
 		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 3});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
-		--it;
 		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 2});
+		--it;
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
-		--it;
 		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 2});
+		--it;
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 2});
 		++it;
 		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 3});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
@@ -174,7 +169,6 @@ TEST_CASE("All elements")
 	SUBCASE("Check iterator bounds")
 	{
 		auto it = kd.get_const_iterator_begin();
-
 		CHECK_EQ(it.past_begin(), false);
 		CHECK_EQ(it.begin(), true);
 		CHECK_EQ(it.end(), false);

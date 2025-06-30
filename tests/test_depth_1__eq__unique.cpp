@@ -32,46 +32,42 @@
 #include <ctree/range_iterator.hpp>
 
 // custom includes
-#include "test_definitions.hpp"
+#include "definitions.hpp"
 
-TEST_CASE("All elements -- depth 1")
+TEST_CASE("Unique elements -- depth 1")
 {
 	typedef classtree::ctree<data_eq, meta_incr, int> my_tree;
 	classtree::ctree<data_eq, meta_incr, int> kd;
 	static_assert(std::is_nothrow_move_constructible_v<my_tree>);
 	static_assert(std::is_move_constructible_v<my_tree>);
 
-	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1}, 1);
-	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 1}, {.num_occs = 1}, 1);
-	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 3}, {.num_occs = 1}, 1);
-	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 4}, {.num_occs = 1}, 1);
-	kd.add<false>({.i = 1, .j = 2, .k = 1, .z = 1}, {.num_occs = 1}, 1);
-	kd.add<false>({.i = 1, .j = 2, .k = 2, .z = 1}, {.num_occs = 1}, 1);
-	kd.add<false>({.i = 1, .j = 3, .k = 5, .z = 1}, {.num_occs = 1}, 1);
-	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1}, 1);
-	kd.add<false>({.i = 2, .j = 2, .k = 2, .z = 1}, {.num_occs = 1}, 2);
-	kd.add<false>({.i = 2, .j = 2, .k = 2, .z = 2}, {.num_occs = 1}, 2);
-	kd.add<false>({.i = 2, .j = 2, .k = 3, .z = 2}, {.num_occs = 1}, 2);
+	kd.add({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1}, 1);
+	kd.add({.i = 1, .j = 1, .k = 1, .z = 1}, {.num_occs = 1}, 1);
+	kd.add({.i = 1, .j = 1, .k = 1, .z = 3}, {.num_occs = 1}, 1);
+	kd.add({.i = 1, .j = 1, .k = 1, .z = 4}, {.num_occs = 1}, 1);
+	kd.add({.i = 1, .j = 2, .k = 1, .z = 1}, {.num_occs = 1}, 1);
+	kd.add({.i = 1, .j = 2, .k = 2, .z = 1}, {.num_occs = 1}, 1);
+	kd.add({.i = 1, .j = 3, .k = 5, .z = 1}, {.num_occs = 1}, 1);
+	kd.add({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1}, 1); // *
+	kd.add({.i = 2, .j = 2, .k = 2, .z = 1}, {.num_occs = 1}, 2);
+	kd.add({.i = 2, .j = 2, .k = 2, .z = 2}, {.num_occs = 1}, 2);
+	kd.add({.i = 2, .j = 2, .k = 3, .z = 2}, {.num_occs = 1}, 2);
 
-	CHECK_EQ(kd.size(), 11);
-
-	std::ofstream fout("here.txt");
-	kd.print(fout);
+	CHECK_EQ(kd.size(), 10);
 
 	SUBCASE("Print entire tree")
 	{
-		static constexpr std::string_view kd_str = "size: 11\n"
+		static constexpr std::string_view kd_str = "size: 10\n"
 												   "keys: 2\n"
 												   "├── 1\n"
-												   "│   ^ size: 8 8\n"
-												   "│   ├── (1 1 1 2) {1}\n"
+												   "│   ^ size: 7 7\n"
+												   "│   ├── (1 1 1 2) {2}\n"
 												   "│   ├── (1 1 1 1) {1}\n"
 												   "│   ├── (1 1 1 3) {1}\n"
 												   "│   ├── (1 1 1 4) {1}\n"
 												   "│   ├── (1 2 1 1) {1}\n"
 												   "│   ├── (1 2 2 1) {1}\n"
-												   "│   ├── (1 3 5 1) {1}\n"
-												   "│   └── (1 1 1 2) {1}\n"
+												   "│   └── (1 3 5 1) {1}\n"
 												   "└── 2\n"
 												   "    ^ size: 3 3\n"
 												   "    ├── (2 2 2 1) {1}\n"
@@ -85,14 +81,13 @@ TEST_CASE("All elements -- depth 1")
 	SUBCASE("Iterate entire tree forward")
 	{
 		static constexpr std::string_view kd_iter_str = "Iterate:\n"
-														"    (1 1 1 2) {1}\n"
+														"    (1 1 1 2) {2}\n"
 														"    (1 1 1 1) {1}\n"
 														"    (1 1 1 3) {1}\n"
 														"    (1 1 1 4) {1}\n"
 														"    (1 2 1 1) {1}\n"
 														"    (1 2 2 1) {1}\n"
 														"    (1 3 5 1) {1}\n"
-														"    (1 1 1 2) {1}\n"
 														"    (2 2 2 1) {1}\n"
 														"    (2 2 2 2) {1}\n"
 														"    (2 2 3 2) {1}\n";
@@ -118,14 +113,13 @@ TEST_CASE("All elements -- depth 1")
 														"    (2 2 3 2) {1}\n"
 														"    (2 2 2 2) {1}\n"
 														"    (2 2 2 1) {1}\n"
-														"    (1 1 1 2) {1}\n"
 														"    (1 3 5 1) {1}\n"
 														"    (1 2 2 1) {1}\n"
 														"    (1 2 1 1) {1}\n"
 														"    (1 1 1 4) {1}\n"
 														"    (1 1 1 3) {1}\n"
 														"    (1 1 1 1) {1}\n"
-														"    (1 1 1 2) {1}\n";
+														"    (1 1 1 2) {2}\n";
 
 		const std::string iter_str_const = [&]()
 		{
@@ -146,7 +140,7 @@ TEST_CASE("All elements -- depth 1")
 	{
 		auto it = kd.get_const_iterator_begin();
 		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 2});
 		++it;
 		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
@@ -158,13 +152,13 @@ TEST_CASE("All elements -- depth 1")
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		--it;
 		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 2});
 		++it;
 		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		--it;
 		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 2});
 		++it;
 		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
@@ -180,28 +174,24 @@ TEST_CASE("All elements -- depth 1")
 		++it;
 		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 2, .k = 2, .z = 1});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
-		++it;
-		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 3, .k = 5, .z = 1});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
-		--it;
-		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 2, .k = 2, .z = 1});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		--it;
 		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 2, .k = 1, .z = 1});
+		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		--it;
+		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 4});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 	}
 
 	SUBCASE("Iterate over a range forward (1)")
 	{
 		static constexpr std::string_view kd_iter_str = "Iterate:\n"
-														"    (1 1 1 2) {1}\n"
+														"    (1 1 1 2) {2}\n"
 														"    (1 1 1 1) {1}\n"
 														"    (1 1 1 3) {1}\n"
 														"    (1 1 1 4) {1}\n"
 														"    (1 2 1 1) {1}\n"
 														"    (1 2 2 1) {1}\n"
-														"    (1 3 5 1) {1}\n"
-														"    (1 1 1 2) {1}\n";
+														"    (1 3 5 1) {1}\n";
 
 		const auto f1 = [](const int v) -> bool
 		{
@@ -253,14 +243,13 @@ TEST_CASE("All elements -- depth 1")
 	SUBCASE("Iterate over a range backward (1)")
 	{
 		static constexpr std::string_view kd_iter_str = "Iterate:\n"
-														"    (1 1 1 2) {1}\n"
 														"    (1 3 5 1) {1}\n"
 														"    (1 2 2 1) {1}\n"
 														"    (1 2 1 1) {1}\n"
 														"    (1 1 1 4) {1}\n"
 														"    (1 1 1 3) {1}\n"
 														"    (1 1 1 1) {1}\n"
-														"    (1 1 1 2) {1}\n";
+														"    (1 1 1 2) {2}\n";
 
 		const auto f1 = [](const int v) -> bool
 		{
@@ -318,7 +307,7 @@ TEST_CASE("All elements -- depth 1")
 
 		auto it = kd.get_range_iterator(f1);
 		const std::size_t c = it.count();
-		CHECK_EQ(c, 8);
+		CHECK_EQ(c, 7);
 	}
 
 	SUBCASE("Count elements (2)")
@@ -426,7 +415,6 @@ TEST_CASE("All elements -- depth 1")
 		++it;
 		++it;
 		++it;
-		++it;
 
 		CHECK_EQ(it.past_begin(), false);
 		CHECK_EQ(it.begin(), false);
@@ -446,7 +434,6 @@ TEST_CASE("All elements -- depth 1")
 		CHECK_EQ(it.begin(), false);
 		CHECK_EQ(it.end(), true);
 
-		--it;
 		--it;
 		--it;
 		--it;
@@ -502,7 +489,7 @@ TEST_CASE("All elements -- depth 1")
 			CHECK_EQ(it.end(), false);
 		}
 
-		for (std::size_t i = 0; i < 8; ++i) {
+		for (std::size_t i = 0; i < 7; ++i) {
 			CHECK_EQ(it.past_begin(), false);
 			if (i > 0) {
 				CHECK_EQ(it.begin(), false);
@@ -553,7 +540,6 @@ TEST_CASE("All elements -- depth 1")
 		++it;
 		++it;
 		++it;
-		++it;
 
 		CHECK_EQ(it.past_begin(), false);
 		CHECK_EQ(it.begin(), false);
@@ -562,9 +548,9 @@ TEST_CASE("All elements -- depth 1")
 		{
 			const auto& d = (*it).first;
 			CHECK_EQ(d.i, 1);
-			CHECK_EQ(d.j, 1);
-			CHECK_EQ(d.k, 1);
-			CHECK_EQ(d.z, 2);
+			CHECK_EQ(d.j, 3);
+			CHECK_EQ(d.k, 5);
+			CHECK_EQ(d.z, 1);
 		}
 
 		++it;
@@ -573,7 +559,6 @@ TEST_CASE("All elements -- depth 1")
 		CHECK_EQ(it.begin(), false);
 		CHECK_EQ(it.end(), true);
 
-		--it;
 		--it;
 		--it;
 		--it;

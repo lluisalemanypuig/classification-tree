@@ -31,7 +31,7 @@
 #include <ctree/range_iterator.hpp>
 
 // custom includes
-#include "test_definitions.hpp"
+#include "definitions.hpp"
 
 TEST_CASE("Empty tree")
 {

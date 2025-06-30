@@ -32,17 +32,17 @@
 #include <ctree/range_iterator.hpp>
 
 // custom includes
-#include "test_definitions.hpp"
+#include "definitions.hpp"
 
-TEST_CASE("All elements (1)")
+TEST_CASE("All elements")
 {
-	typedef classtree::ctree<data_eq, meta_incr, int, int, int> my_tree;
-	classtree::ctree<data_eq, meta_incr, int, int, int> kd;
+	typedef classtree::ctree<data_lt, meta_incr, int, int, int> my_tree;
+	classtree::ctree<data_lt, meta_incr, int, int, int> kd;
 	static_assert(std::is_nothrow_move_constructible_v<my_tree>);
 	static_assert(std::is_move_constructible_v<my_tree>);
 
-	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1}, 1, 1, 1);
 	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 1}, {.num_occs = 1}, 1, 1, 1);
+	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1}, 1, 1, 1);
 	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 3}, {.num_occs = 1}, 1, 1, 1);
 	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 4}, {.num_occs = 1}, 1, 1, 1);
 	kd.add<false>({.i = 1, .j = 2, .k = 1, .z = 1}, {.num_occs = 1}, 1, 2, 1);
@@ -68,11 +68,11 @@ TEST_CASE("All elements (1)")
 			"│   │   keys: 1\n"
 			"│   │   └── 1\n"
 			"│   │       ^ size: 5 5\n"
-			"│   │       ├── (1 1 1 2) {1}\n"
 			"│   │       ├── (1 1 1 1) {1}\n"
+			"│   │       ├── (1 1 1 2) {1}\n"
+			"│   │       ├── (1 1 1 2) {1}\n"
 			"│   │       ├── (1 1 1 3) {1}\n"
-			"│   │       ├── (1 1 1 4) {1}\n"
-			"│   │       └── (1 1 1 2) {1}\n"
+			"│   │       └── (1 1 1 4) {1}\n"
 			"│   ├── 2\n"
 			"│   │   size: 2\n"
 			"│   │   keys: 2\n"
@@ -109,11 +109,11 @@ TEST_CASE("All elements (1)")
 	SUBCASE("Iterate entire tree forward")
 	{
 		static constexpr std::string_view kd_iter_str = "Iterate:\n"
-														"    (1 1 1 2) {1}\n"
 														"    (1 1 1 1) {1}\n"
+														"    (1 1 1 2) {1}\n"
+														"    (1 1 1 2) {1}\n"
 														"    (1 1 1 3) {1}\n"
 														"    (1 1 1 4) {1}\n"
-														"    (1 1 1 2) {1}\n"
 														"    (1 2 1 1) {1}\n"
 														"    (1 2 2 1) {1}\n"
 														"    (1 3 5 1) {1}\n"
@@ -145,11 +145,11 @@ TEST_CASE("All elements (1)")
 														"    (1 3 5 1) {1}\n"
 														"    (1 2 2 1) {1}\n"
 														"    (1 2 1 1) {1}\n"
-														"    (1 1 1 2) {1}\n"
 														"    (1 1 1 4) {1}\n"
 														"    (1 1 1 3) {1}\n"
-														"    (1 1 1 1) {1}\n"
-														"    (1 1 1 2) {1}\n";
+														"    (1 1 1 2) {1}\n"
+														"    (1 1 1 2) {1}\n"
+														"    (1 1 1 1) {1}\n";
 
 		const std::string iter_str_const = [&]()
 		{
@@ -169,60 +169,60 @@ TEST_CASE("All elements (1)")
 	SUBCASE("Manual iteration")
 	{
 		auto it = kd.get_const_iterator_begin();
-		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 3});
+		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 3});
+		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 4});
+		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 3});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 4});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 2, .k = 1, .z = 1});
+		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 2, .k = 1, .z = 1});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 2, .k = 2, .z = 1});
+		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 2, .k = 2, .z = 1});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 2, .k = 1, .z = 1});
+		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 2, .k = 1, .z = 1});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, data_eq{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 4});
 		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
 	}
 
 	SUBCASE("Iterate over a range forward (1)")
 	{
 		static constexpr std::string_view kd_iter_str = "Iterate:\n"
-														"    (1 1 1 2) {1}\n"
 														"    (1 1 1 1) {1}\n"
+														"    (1 1 1 2) {1}\n"
+														"    (1 1 1 2) {1}\n"
 														"    (1 1 1 3) {1}\n"
 														"    (1 1 1 4) {1}\n"
-														"    (1 1 1 2) {1}\n"
 														"    (1 2 1 1) {1}\n"
 														"    (1 2 2 1) {1}\n";
 
@@ -296,11 +296,11 @@ TEST_CASE("All elements (1)")
 		static constexpr std::string_view kd_iter_str = "Iterate:\n"
 														"    (1 2 2 1) {1}\n"
 														"    (1 2 1 1) {1}\n"
-														"    (1 1 1 2) {1}\n"
 														"    (1 1 1 4) {1}\n"
 														"    (1 1 1 3) {1}\n"
-														"    (1 1 1 1) {1}\n"
-														"    (1 1 1 2) {1}\n";
+														"    (1 1 1 2) {1}\n"
+														"    (1 1 1 2) {1}\n"
+														"    (1 1 1 1) {1}\n";
 
 		const auto f1 = [](const int v) -> bool
 		{
@@ -553,7 +553,7 @@ TEST_CASE("All elements (1)")
 			CHECK_EQ(d.i, 1);
 			CHECK_EQ(d.j, 1);
 			CHECK_EQ(d.k, 1);
-			CHECK_EQ(d.z, 2);
+			CHECK_EQ(d.z, 1);
 		}
 
 		CHECK_EQ(it.past_begin(), false);
@@ -691,7 +691,7 @@ TEST_CASE("All elements (1)")
 			CHECK_EQ(d.i, 1);
 			CHECK_EQ(d.j, 1);
 			CHECK_EQ(d.k, 1);
-			CHECK_EQ(d.z, 2);
+			CHECK_EQ(d.z, 1);
 		}
 
 		CHECK_EQ(it.past_begin(), false);
@@ -708,8 +708,8 @@ TEST_CASE("All elements (1)")
 
 TEST_CASE("All elements (2)")
 {
-	typedef classtree::ctree<data_eq, meta_incr, int, int, int> my_tree;
-	classtree::ctree<data_eq, meta_incr, int, int, int> kd;
+	typedef classtree::ctree<data_lt, meta_incr, int, int, int> my_tree;
+	classtree::ctree<data_lt, meta_incr, int, int, int> kd;
 	static_assert(std::is_nothrow_move_constructible_v<my_tree>);
 	static_assert(std::is_move_constructible_v<my_tree>);
 
@@ -744,55 +744,55 @@ TEST_CASE("All elements (2)")
 			"│   │   keys: 3\n"
 			"│   │   ├── 1\n"
 			"│   │   │   ^ size: 3 3\n"
-			"│   │   │   ├── (1 1 1 3) {1}\n"
+			"│   │   │   ├── (1 1 1 1) {1}\n"
 			"│   │   │   ├── (1 1 1 2) {1}\n"
-			"│   │   │   └── (1 1 1 1) {1}\n"
+			"│   │   │   └── (1 1 1 3) {1}\n"
 			"│   │   ├── 2\n"
 			"│   │   │   ^ size: 3 3\n"
-			"│   │   │   ├── (1 1 2 3) {1}\n"
+			"│   │   │   ├── (1 1 2 1) {1}\n"
 			"│   │   │   ├── (1 1 2 2) {1}\n"
-			"│   │   │   └── (1 1 2 1) {1}\n"
+			"│   │   │   └── (1 1 2 3) {1}\n"
 			"│   │   └── 3\n"
 			"│   │       ^ size: 3 3\n"
-			"│   │       ├── (1 1 3 3) {1}\n"
+			"│   │       ├── (1 1 3 1) {1}\n"
 			"│   │       ├── (1 1 3 2) {1}\n"
-			"│   │       └── (1 1 3 1) {1}\n"
+			"│   │       └── (1 1 3 3) {1}\n"
 			"│   ├── 2\n"
 			"│   │   size: 9\n"
 			"│   │   keys: 3\n"
 			"│   │   ├── 1\n"
 			"│   │   │   ^ size: 3 3\n"
-			"│   │   │   ├── (1 2 1 3) {1}\n"
+			"│   │   │   ├── (1 2 1 1) {1}\n"
 			"│   │   │   ├── (1 2 1 2) {1}\n"
-			"│   │   │   └── (1 2 1 1) {1}\n"
+			"│   │   │   └── (1 2 1 3) {1}\n"
 			"│   │   ├── 2\n"
 			"│   │   │   ^ size: 3 3\n"
-			"│   │   │   ├── (1 2 2 3) {1}\n"
+			"│   │   │   ├── (1 2 2 1) {1}\n"
 			"│   │   │   ├── (1 2 2 2) {1}\n"
-			"│   │   │   └── (1 2 2 1) {1}\n"
+			"│   │   │   └── (1 2 2 3) {1}\n"
 			"│   │   └── 3\n"
 			"│   │       ^ size: 3 3\n"
-			"│   │       ├── (1 2 3 3) {1}\n"
+			"│   │       ├── (1 2 3 1) {1}\n"
 			"│   │       ├── (1 2 3 2) {1}\n"
-			"│   │       └── (1 2 3 1) {1}\n"
+			"│   │       └── (1 2 3 3) {1}\n"
 			"│   └── 3\n"
 			"│       size: 9\n"
 			"│       keys: 3\n"
 			"│       ├── 1\n"
 			"│       │   ^ size: 3 3\n"
-			"│       │   ├── (1 3 1 3) {1}\n"
+			"│       │   ├── (1 3 1 1) {1}\n"
 			"│       │   ├── (1 3 1 2) {1}\n"
-			"│       │   └── (1 3 1 1) {1}\n"
+			"│       │   └── (1 3 1 3) {1}\n"
 			"│       ├── 2\n"
 			"│       │   ^ size: 3 3\n"
-			"│       │   ├── (1 3 2 3) {1}\n"
+			"│       │   ├── (1 3 2 1) {1}\n"
 			"│       │   ├── (1 3 2 2) {1}\n"
-			"│       │   └── (1 3 2 1) {1}\n"
+			"│       │   └── (1 3 2 3) {1}\n"
 			"│       └── 3\n"
 			"│           ^ size: 3 3\n"
-			"│           ├── (1 3 3 3) {1}\n"
+			"│           ├── (1 3 3 1) {1}\n"
 			"│           ├── (1 3 3 2) {1}\n"
-			"│           └── (1 3 3 1) {1}\n"
+			"│           └── (1 3 3 3) {1}\n"
 			"├── 2\n"
 			"│   size: 27\n"
 			"│   keys: 3\n"
@@ -801,55 +801,55 @@ TEST_CASE("All elements (2)")
 			"│   │   keys: 3\n"
 			"│   │   ├── 1\n"
 			"│   │   │   ^ size: 3 3\n"
-			"│   │   │   ├── (2 1 1 3) {1}\n"
+			"│   │   │   ├── (2 1 1 1) {1}\n"
 			"│   │   │   ├── (2 1 1 2) {1}\n"
-			"│   │   │   └── (2 1 1 1) {1}\n"
+			"│   │   │   └── (2 1 1 3) {1}\n"
 			"│   │   ├── 2\n"
 			"│   │   │   ^ size: 3 3\n"
-			"│   │   │   ├── (2 1 2 3) {1}\n"
+			"│   │   │   ├── (2 1 2 1) {1}\n"
 			"│   │   │   ├── (2 1 2 2) {1}\n"
-			"│   │   │   └── (2 1 2 1) {1}\n"
+			"│   │   │   └── (2 1 2 3) {1}\n"
 			"│   │   └── 3\n"
 			"│   │       ^ size: 3 3\n"
-			"│   │       ├── (2 1 3 3) {1}\n"
+			"│   │       ├── (2 1 3 1) {1}\n"
 			"│   │       ├── (2 1 3 2) {1}\n"
-			"│   │       └── (2 1 3 1) {1}\n"
+			"│   │       └── (2 1 3 3) {1}\n"
 			"│   ├── 2\n"
 			"│   │   size: 9\n"
 			"│   │   keys: 3\n"
 			"│   │   ├── 1\n"
 			"│   │   │   ^ size: 3 3\n"
-			"│   │   │   ├── (2 2 1 3) {1}\n"
+			"│   │   │   ├── (2 2 1 1) {1}\n"
 			"│   │   │   ├── (2 2 1 2) {1}\n"
-			"│   │   │   └── (2 2 1 1) {1}\n"
+			"│   │   │   └── (2 2 1 3) {1}\n"
 			"│   │   ├── 2\n"
 			"│   │   │   ^ size: 3 3\n"
-			"│   │   │   ├── (2 2 2 3) {1}\n"
+			"│   │   │   ├── (2 2 2 1) {1}\n"
 			"│   │   │   ├── (2 2 2 2) {1}\n"
-			"│   │   │   └── (2 2 2 1) {1}\n"
+			"│   │   │   └── (2 2 2 3) {1}\n"
 			"│   │   └── 3\n"
 			"│   │       ^ size: 3 3\n"
-			"│   │       ├── (2 2 3 3) {1}\n"
+			"│   │       ├── (2 2 3 1) {1}\n"
 			"│   │       ├── (2 2 3 2) {1}\n"
-			"│   │       └── (2 2 3 1) {1}\n"
+			"│   │       └── (2 2 3 3) {1}\n"
 			"│   └── 3\n"
 			"│       size: 9\n"
 			"│       keys: 3\n"
 			"│       ├── 1\n"
 			"│       │   ^ size: 3 3\n"
-			"│       │   ├── (2 3 1 3) {1}\n"
+			"│       │   ├── (2 3 1 1) {1}\n"
 			"│       │   ├── (2 3 1 2) {1}\n"
-			"│       │   └── (2 3 1 1) {1}\n"
+			"│       │   └── (2 3 1 3) {1}\n"
 			"│       ├── 2\n"
 			"│       │   ^ size: 3 3\n"
-			"│       │   ├── (2 3 2 3) {1}\n"
+			"│       │   ├── (2 3 2 1) {1}\n"
 			"│       │   ├── (2 3 2 2) {1}\n"
-			"│       │   └── (2 3 2 1) {1}\n"
+			"│       │   └── (2 3 2 3) {1}\n"
 			"│       └── 3\n"
 			"│           ^ size: 3 3\n"
-			"│           ├── (2 3 3 3) {1}\n"
+			"│           ├── (2 3 3 1) {1}\n"
 			"│           ├── (2 3 3 2) {1}\n"
-			"│           └── (2 3 3 1) {1}\n"
+			"│           └── (2 3 3 3) {1}\n"
 			"└── 3\n"
 			"    size: 27\n"
 			"    keys: 3\n"
@@ -858,55 +858,55 @@ TEST_CASE("All elements (2)")
 			"    │   keys: 3\n"
 			"    │   ├── 1\n"
 			"    │   │   ^ size: 3 3\n"
-			"    │   │   ├── (3 1 1 3) {1}\n"
+			"    │   │   ├── (3 1 1 1) {1}\n"
 			"    │   │   ├── (3 1 1 2) {1}\n"
-			"    │   │   └── (3 1 1 1) {1}\n"
+			"    │   │   └── (3 1 1 3) {1}\n"
 			"    │   ├── 2\n"
 			"    │   │   ^ size: 3 3\n"
-			"    │   │   ├── (3 1 2 3) {1}\n"
+			"    │   │   ├── (3 1 2 1) {1}\n"
 			"    │   │   ├── (3 1 2 2) {1}\n"
-			"    │   │   └── (3 1 2 1) {1}\n"
+			"    │   │   └── (3 1 2 3) {1}\n"
 			"    │   └── 3\n"
 			"    │       ^ size: 3 3\n"
-			"    │       ├── (3 1 3 3) {1}\n"
+			"    │       ├── (3 1 3 1) {1}\n"
 			"    │       ├── (3 1 3 2) {1}\n"
-			"    │       └── (3 1 3 1) {1}\n"
+			"    │       └── (3 1 3 3) {1}\n"
 			"    ├── 2\n"
 			"    │   size: 9\n"
 			"    │   keys: 3\n"
 			"    │   ├── 1\n"
 			"    │   │   ^ size: 3 3\n"
-			"    │   │   ├── (3 2 1 3) {1}\n"
+			"    │   │   ├── (3 2 1 1) {1}\n"
 			"    │   │   ├── (3 2 1 2) {1}\n"
-			"    │   │   └── (3 2 1 1) {1}\n"
+			"    │   │   └── (3 2 1 3) {1}\n"
 			"    │   ├── 2\n"
 			"    │   │   ^ size: 3 3\n"
-			"    │   │   ├── (3 2 2 3) {1}\n"
+			"    │   │   ├── (3 2 2 1) {1}\n"
 			"    │   │   ├── (3 2 2 2) {1}\n"
-			"    │   │   └── (3 2 2 1) {1}\n"
+			"    │   │   └── (3 2 2 3) {1}\n"
 			"    │   └── 3\n"
 			"    │       ^ size: 3 3\n"
-			"    │       ├── (3 2 3 3) {1}\n"
+			"    │       ├── (3 2 3 1) {1}\n"
 			"    │       ├── (3 2 3 2) {1}\n"
-			"    │       └── (3 2 3 1) {1}\n"
+			"    │       └── (3 2 3 3) {1}\n"
 			"    └── 3\n"
 			"        size: 9\n"
 			"        keys: 3\n"
 			"        ├── 1\n"
 			"        │   ^ size: 3 3\n"
-			"        │   ├── (3 3 1 3) {1}\n"
+			"        │   ├── (3 3 1 1) {1}\n"
 			"        │   ├── (3 3 1 2) {1}\n"
-			"        │   └── (3 3 1 1) {1}\n"
+			"        │   └── (3 3 1 3) {1}\n"
 			"        ├── 2\n"
 			"        │   ^ size: 3 3\n"
-			"        │   ├── (3 3 2 3) {1}\n"
+			"        │   ├── (3 3 2 1) {1}\n"
 			"        │   ├── (3 3 2 2) {1}\n"
-			"        │   └── (3 3 2 1) {1}\n"
+			"        │   └── (3 3 2 3) {1}\n"
 			"        └── 3\n"
 			"            ^ size: 3 3\n"
-			"            ├── (3 3 3 3) {1}\n"
+			"            ├── (3 3 3 1) {1}\n"
 			"            ├── (3 3 3 2) {1}\n"
-			"            └── (3 3 3 1) {1}\n";
+			"            └── (3 3 3 3) {1}\n";
 
 		const std::string print_str = print_string(kd);
 		CHECK_EQ(print_str, kd_str);
@@ -943,14 +943,6 @@ TEST_CASE("All elements (2)")
 		CHECK_EQ(it.begin(), false);
 		CHECK_EQ(it.end(), false);
 
-		{
-			const auto& d = (*it).first;
-			CHECK_EQ(d.i, 2);
-			CHECK_EQ(d.j, 2);
-			CHECK_EQ(d.k, 2);
-			CHECK_EQ(d.z, 2);
-		}
-
 		++it;
 
 		{
@@ -958,7 +950,7 @@ TEST_CASE("All elements (2)")
 			CHECK_EQ(d.i, 2);
 			CHECK_EQ(d.j, 2);
 			CHECK_EQ(d.k, 2);
-			CHECK_EQ(d.z, 1);
+			CHECK_EQ(d.z, 3);
 		}
 
 		++it;
@@ -976,7 +968,7 @@ TEST_CASE("All elements (2)")
 			CHECK_EQ(d.i, 2);
 			CHECK_EQ(d.j, 2);
 			CHECK_EQ(d.k, 2);
-			CHECK_EQ(d.z, 3);
+			CHECK_EQ(d.z, 1);
 		}
 
 		CHECK_EQ(it.past_begin(), false);

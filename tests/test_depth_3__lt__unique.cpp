@@ -32,47 +32,74 @@
 #include <ctree/range_iterator.hpp>
 
 // custom includes
-#include "test_definitions.hpp"
+#include "definitions.hpp"
 
-TEST_CASE("Unique elements -- depth 1")
+TEST_CASE("Unique elements -- depth 3")
 {
-	typedef classtree::ctree<data_lt, meta_incr, int> my_tree;
-	classtree::ctree<data_lt, meta_incr, int> kd;
+	typedef classtree::ctree<data_lt, meta_incr, int, int, int> my_tree;
+	classtree::ctree<data_lt, meta_incr, int, int, int> kd;
 	static_assert(std::is_nothrow_move_constructible_v<my_tree>);
 	static_assert(std::is_move_constructible_v<my_tree>);
 
-	kd.add({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1}, 1);
-	kd.add({.i = 1, .j = 1, .k = 1, .z = 1}, {.num_occs = 1}, 1);
-	kd.add({.i = 1, .j = 1, .k = 1, .z = 3}, {.num_occs = 1}, 1);
-	kd.add({.i = 1, .j = 1, .k = 1, .z = 4}, {.num_occs = 1}, 1);
-	kd.add({.i = 1, .j = 2, .k = 1, .z = 1}, {.num_occs = 1}, 1);
-	kd.add({.i = 1, .j = 2, .k = 2, .z = 1}, {.num_occs = 1}, 1);
-	kd.add({.i = 1, .j = 3, .k = 5, .z = 1}, {.num_occs = 1}, 1);
-	kd.add({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1}, 1); // *
-	kd.add({.i = 2, .j = 2, .k = 2, .z = 1}, {.num_occs = 1}, 2);
-	kd.add({.i = 2, .j = 2, .k = 2, .z = 2}, {.num_occs = 1}, 2);
-	kd.add({.i = 2, .j = 2, .k = 3, .z = 2}, {.num_occs = 1}, 2);
+	kd.add({.i = 1, .j = 3, .k = 5, .z = 1}, {.num_occs = 1}, 1, 3, 5);
+	kd.add({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1}, 1, 1, 1);
+	kd.add({.i = 1, .j = 1, .k = 1, .z = 1}, {.num_occs = 1}, 1, 1, 1);
+	kd.add({.i = 1, .j = 1, .k = 1, .z = 3}, {.num_occs = 1}, 1, 1, 1);
+	kd.add({.i = 1, .j = 1, .k = 1, .z = 4}, {.num_occs = 1}, 1, 1, 1);
+	kd.add({.i = 1, .j = 2, .k = 1, .z = 1}, {.num_occs = 1}, 1, 2, 1);
+	kd.add({.i = 1, .j = 2, .k = 2, .z = 1}, {.num_occs = 1}, 1, 2, 2);
+	kd.add({.i = 2, .j = 2, .k = 2, .z = 1}, {.num_occs = 1}, 2, 2, 2);
+	kd.add({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1}, 1, 1, 1);
+	kd.add({.i = 2, .j = 2, .k = 3, .z = 2}, {.num_occs = 1}, 2, 2, 3);
+	kd.add({.i = 2, .j = 2, .k = 2, .z = 2}, {.num_occs = 1}, 2, 2, 2);
 
 	CHECK_EQ(kd.size(), 10);
 
 	SUBCASE("Print entire tree")
 	{
-		static constexpr std::string_view kd_str = "size: 10\n"
-												   "keys: 2\n"
-												   "├── 1\n"
-												   "│   ^ size: 7 7\n"
-												   "│   ├── (1 1 1 1) {1}\n"
-												   "│   ├── (1 1 1 2) {2}\n"
-												   "│   ├── (1 1 1 3) {1}\n"
-												   "│   ├── (1 1 1 4) {1}\n"
-												   "│   ├── (1 2 1 1) {1}\n"
-												   "│   ├── (1 2 2 1) {1}\n"
-												   "│   └── (1 3 5 1) {1}\n"
-												   "└── 2\n"
-												   "    ^ size: 3 3\n"
-												   "    ├── (2 2 2 1) {1}\n"
-												   "    ├── (2 2 2 2) {1}\n"
-												   "    └── (2 2 3 2) {1}\n";
+		static constexpr std::string_view kd_str =
+			"size: 10\n"
+			"keys: 2\n"
+			"├── 1\n"
+			"│   size: 7\n"
+			"│   keys: 3\n"
+			"│   ├── 1\n"
+			"│   │   size: 4\n"
+			"│   │   keys: 1\n"
+			"│   │   └── 1\n"
+			"│   │       ^ size: 4 4\n"
+			"│   │       ├── (1 1 1 1) {1}\n"
+			"│   │       ├── (1 1 1 2) {2}\n"
+			"│   │       ├── (1 1 1 3) {1}\n"
+			"│   │       └── (1 1 1 4) {1}\n"
+			"│   ├── 2\n"
+			"│   │   size: 2\n"
+			"│   │   keys: 2\n"
+			"│   │   ├── 1\n"
+			"│   │   │   ^ size: 1 1\n"
+			"│   │   │   └── (1 2 1 1) {1}\n"
+			"│   │   └── 2\n"
+			"│   │       ^ size: 1 1\n"
+			"│   │       └── (1 2 2 1) {1}\n"
+			"│   └── 3\n"
+			"│       size: 1\n"
+			"│       keys: 1\n"
+			"│       └── 5\n"
+			"│           ^ size: 1 1\n"
+			"│           └── (1 3 5 1) {1}\n"
+			"└── 2\n"
+			"    size: 3\n"
+			"    keys: 1\n"
+			"    └── 2\n"
+			"        size: 3\n"
+			"        keys: 2\n"
+			"        ├── 2\n"
+			"        │   ^ size: 2 2\n"
+			"        │   ├── (2 2 2 1) {1}\n"
+			"        │   └── (2 2 2 2) {1}\n"
+			"        └── 3\n"
+			"            ^ size: 1 1\n"
+			"            └── (2 2 3 2) {1}\n";
 
 		const std::string print_str = print_string(kd);
 		CHECK_EQ(print_str, kd_str);
@@ -190,24 +217,31 @@ TEST_CASE("Unique elements -- depth 1")
 														"    (1 1 1 3) {1}\n"
 														"    (1 1 1 4) {1}\n"
 														"    (1 2 1 1) {1}\n"
-														"    (1 2 2 1) {1}\n"
-														"    (1 3 5 1) {1}\n";
+														"    (1 2 2 1) {1}\n";
 
 		const auto f1 = [](const int v) -> bool
 		{
 			return v == 1;
 		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return 1 <= v and v <= 2;
+		};
+		const auto f3 = [](const int) -> bool
+		{
+			return true;
+		};
 
 		const std::string iter_str_const = [&]()
 		{
-			auto it = kd.get_const_range_iterator_begin(f1);
+			auto it = kd.get_const_range_iterator_begin(f1, f2, f3);
 			return iterate_string(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str_const);
 
 		const std::string iter_str = [&]()
 		{
-			auto it = kd.get_range_iterator_begin(f1);
+			auto it = kd.get_range_iterator_begin(f1, f2, f3);
 			return iterate_string(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str);
@@ -216,25 +250,35 @@ TEST_CASE("Unique elements -- depth 1")
 	SUBCASE("Iterate over a range forward (2)")
 	{
 		static constexpr std::string_view kd_iter_str = "Iterate:\n"
+														"    (1 2 1 1) {1}\n"
+														"    (1 2 2 1) {1}\n"
 														"    (2 2 2 1) {1}\n"
 														"    (2 2 2 2) {1}\n"
 														"    (2 2 3 2) {1}\n";
 
-		const auto f1 = [](const int v) -> bool
+		const auto f1 = [](const int) -> bool
+		{
+			return true;
+		};
+		const auto f2 = [](const int v) -> bool
 		{
 			return v == 2;
+		};
+		const auto f3 = [](const int) -> bool
+		{
+			return true;
 		};
 
 		const std::string iter_str_const = [&]()
 		{
-			auto it = kd.get_const_range_iterator_begin(f1);
+			auto it = kd.get_const_range_iterator_begin(f1, f2, f3);
 			return iterate_string(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str_const);
 
 		const std::string iter_str = [&]()
 		{
-			auto it = kd.get_range_iterator_begin(f1);
+			auto it = kd.get_range_iterator_begin(f1, f2, f3);
 			return iterate_string(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str);
@@ -243,7 +287,6 @@ TEST_CASE("Unique elements -- depth 1")
 	SUBCASE("Iterate over a range backward (1)")
 	{
 		static constexpr std::string_view kd_iter_str = "Iterate:\n"
-														"    (1 3 5 1) {1}\n"
 														"    (1 2 2 1) {1}\n"
 														"    (1 2 1 1) {1}\n"
 														"    (1 1 1 4) {1}\n"
@@ -255,17 +298,25 @@ TEST_CASE("Unique elements -- depth 1")
 		{
 			return v == 1;
 		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return 1 <= v and v <= 2;
+		};
+		const auto f3 = [](const int) -> bool
+		{
+			return true;
+		};
 
 		const std::string iter_str_const = [&]()
 		{
-			auto it = kd.get_const_range_iterator_end(f1);
+			auto it = kd.get_const_range_iterator_end(f1, f2, f3);
 			return range_iterate_string_backward(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str_const);
 
 		const std::string iter_str = [&]()
 		{
-			auto it = kd.get_range_iterator_end(f1);
+			auto it = kd.get_range_iterator_end(f1, f2, f3);
 			return range_iterate_string_backward(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str);
@@ -276,23 +327,33 @@ TEST_CASE("Unique elements -- depth 1")
 		static constexpr std::string_view kd_iter_str = "Iterate:\n"
 														"    (2 2 3 2) {1}\n"
 														"    (2 2 2 2) {1}\n"
-														"    (2 2 2 1) {1}\n";
+														"    (2 2 2 1) {1}\n"
+														"    (1 2 2 1) {1}\n"
+														"    (1 2 1 1) {1}\n";
 
-		const auto f1 = [](const int v) -> bool
+		const auto f1 = [](const int) -> bool
+		{
+			return true;
+		};
+		const auto f2 = [](const int v) -> bool
 		{
 			return v == 2;
+		};
+		const auto f3 = [](const int) -> bool
+		{
+			return true;
 		};
 
 		const std::string iter_str_const = [&]()
 		{
-			auto it = kd.get_const_range_iterator_end(f1);
+			auto it = kd.get_const_range_iterator_end(f1, f2, f3);
 			return range_iterate_string_backward(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str_const);
 
 		const std::string iter_str = [&]()
 		{
-			auto it = kd.get_range_iterator_end(f1);
+			auto it = kd.get_range_iterator_end(f1, f2, f3);
 			return range_iterate_string_backward(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str);
@@ -304,10 +365,18 @@ TEST_CASE("Unique elements -- depth 1")
 		{
 			return v == 1;
 		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return 1 <= v and v <= 2;
+		};
+		const auto f3 = [](const int) -> bool
+		{
+			return true;
+		};
 
-		auto it = kd.get_range_iterator(f1);
+		auto it = kd.get_range_iterator(f1, f2, f3);
 		const std::size_t c = it.count();
-		CHECK_EQ(c, 7);
+		CHECK_EQ(c, 6);
 	}
 
 	SUBCASE("Count elements (2)")
@@ -316,8 +385,16 @@ TEST_CASE("Unique elements -- depth 1")
 		{
 			return v == 10;
 		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return 1 <= v and v <= 2;
+		};
+		const auto f3 = [](const int) -> bool
+		{
+			return true;
+		};
 
-		auto it = kd.get_range_iterator(f1);
+		auto it = kd.get_range_iterator(f1, f2, f3);
 		const std::size_t c = it.count();
 		CHECK_EQ(c, 0);
 	}
@@ -328,8 +405,16 @@ TEST_CASE("Unique elements -- depth 1")
 		{
 			return true;
 		};
+		const auto f2 = [](const int) -> bool
+		{
+			return true;
+		};
+		const auto f3 = [](const int) -> bool
+		{
+			return true;
+		};
 
-		auto it = kd.get_range_iterator(f1);
+		auto it = kd.get_range_iterator(f1, f2, f3);
 		const std::size_t c = it.count();
 		CHECK_EQ(c, kd.size());
 	}
@@ -340,8 +425,16 @@ TEST_CASE("Unique elements -- depth 1")
 		{
 			return false;
 		};
+		const auto f2 = [](const int) -> bool
+		{
+			return false;
+		};
+		const auto f3 = [](const int) -> bool
+		{
+			return false;
+		};
 
-		auto it = kd.get_range_iterator(f1);
+		auto it = kd.get_range_iterator(f1, f2, f3);
 		const std::size_t c = it.count();
 		CHECK_EQ(c, 0);
 	}
@@ -470,8 +563,16 @@ TEST_CASE("Unique elements -- depth 1")
 		{
 			return v == 1;
 		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return 1 <= v and v <= 2;
+		};
+		const auto f3 = [](const int) -> bool
+		{
+			return true;
+		};
 
-		auto it = kd.get_const_range_iterator_begin(f1);
+		auto it = kd.get_const_range_iterator_begin(f1, f2, f3);
 
 		CHECK_EQ(it.past_begin(), false);
 		CHECK_EQ(it.begin(), true);
@@ -489,7 +590,7 @@ TEST_CASE("Unique elements -- depth 1")
 			CHECK_EQ(it.end(), false);
 		}
 
-		for (std::size_t i = 0; i < 7; ++i) {
+		for (std::size_t i = 0; i < 6; ++i) {
 			CHECK_EQ(it.past_begin(), false);
 			if (i > 0) {
 				CHECK_EQ(it.begin(), false);
@@ -522,8 +623,16 @@ TEST_CASE("Unique elements -- depth 1")
 		{
 			return v == 1;
 		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return 1 <= v and v <= 2;
+		};
+		const auto f3 = [](const int) -> bool
+		{
+			return true;
+		};
 
-		auto it = kd.get_const_range_iterator_begin(f1);
+		auto it = kd.get_const_range_iterator_begin(f1, f2, f3);
 
 		CHECK_EQ(it.past_begin(), false);
 		CHECK_EQ(it.begin(), true);
@@ -539,7 +648,6 @@ TEST_CASE("Unique elements -- depth 1")
 		++it;
 		++it;
 		++it;
-		++it;
 
 		CHECK_EQ(it.past_begin(), false);
 		CHECK_EQ(it.begin(), false);
@@ -548,8 +656,8 @@ TEST_CASE("Unique elements -- depth 1")
 		{
 			const auto& d = (*it).first;
 			CHECK_EQ(d.i, 1);
-			CHECK_EQ(d.j, 3);
-			CHECK_EQ(d.k, 5);
+			CHECK_EQ(d.j, 2);
+			CHECK_EQ(d.k, 2);
 			CHECK_EQ(d.z, 1);
 		}
 
@@ -559,7 +667,6 @@ TEST_CASE("Unique elements -- depth 1")
 		CHECK_EQ(it.begin(), false);
 		CHECK_EQ(it.end(), true);
 
-		--it;
 		--it;
 		--it;
 		--it;
@@ -585,22 +692,240 @@ TEST_CASE("Unique elements -- depth 1")
 		CHECK_EQ(it.begin(), false);
 		CHECK_EQ(it.end(), false);
 	}
+}
 
-	SUBCASE("Check range iterator bounds (3)")
+TEST_CASE("All elements (2)")
+{
+	typedef classtree::ctree<data_lt, meta_incr, int, int, int> my_tree;
+	classtree::ctree<data_lt, meta_incr, int, int, int> kd;
+	static_assert(std::is_nothrow_move_constructible_v<my_tree>);
+	static_assert(std::is_move_constructible_v<my_tree>);
+
+	for (int i = 1; i <= 3; ++i) {
+		for (int j = 1; j <= 3; ++j) {
+			for (int k = 1; k <= 3; ++k) {
+				kd.add(
+					{.i = i, .j = j, .k = k, .z = 3}, {.num_occs = 1}, i, j, k
+				);
+				kd.add(
+					{.i = i, .j = j, .k = k, .z = 2}, {.num_occs = 1}, i, j, k
+				);
+				kd.add(
+					{.i = i, .j = j, .k = k, .z = 1}, {.num_occs = 1}, i, j, k
+				);
+			}
+		}
+	}
+
+	CHECK_EQ(kd.size(), 81);
+
+	SUBCASE("Print entire tree")
+	{
+		static constexpr std::string_view kd_str =
+			"size: 81\n"
+			"keys: 3\n"
+			"├── 1\n"
+			"│   size: 27\n"
+			"│   keys: 3\n"
+			"│   ├── 1\n"
+			"│   │   size: 9\n"
+			"│   │   keys: 3\n"
+			"│   │   ├── 1\n"
+			"│   │   │   ^ size: 3 3\n"
+			"│   │   │   ├── (1 1 1 1) {1}\n"
+			"│   │   │   ├── (1 1 1 2) {1}\n"
+			"│   │   │   └── (1 1 1 3) {1}\n"
+			"│   │   ├── 2\n"
+			"│   │   │   ^ size: 3 3\n"
+			"│   │   │   ├── (1 1 2 1) {1}\n"
+			"│   │   │   ├── (1 1 2 2) {1}\n"
+			"│   │   │   └── (1 1 2 3) {1}\n"
+			"│   │   └── 3\n"
+			"│   │       ^ size: 3 3\n"
+			"│   │       ├── (1 1 3 1) {1}\n"
+			"│   │       ├── (1 1 3 2) {1}\n"
+			"│   │       └── (1 1 3 3) {1}\n"
+			"│   ├── 2\n"
+			"│   │   size: 9\n"
+			"│   │   keys: 3\n"
+			"│   │   ├── 1\n"
+			"│   │   │   ^ size: 3 3\n"
+			"│   │   │   ├── (1 2 1 1) {1}\n"
+			"│   │   │   ├── (1 2 1 2) {1}\n"
+			"│   │   │   └── (1 2 1 3) {1}\n"
+			"│   │   ├── 2\n"
+			"│   │   │   ^ size: 3 3\n"
+			"│   │   │   ├── (1 2 2 1) {1}\n"
+			"│   │   │   ├── (1 2 2 2) {1}\n"
+			"│   │   │   └── (1 2 2 3) {1}\n"
+			"│   │   └── 3\n"
+			"│   │       ^ size: 3 3\n"
+			"│   │       ├── (1 2 3 1) {1}\n"
+			"│   │       ├── (1 2 3 2) {1}\n"
+			"│   │       └── (1 2 3 3) {1}\n"
+			"│   └── 3\n"
+			"│       size: 9\n"
+			"│       keys: 3\n"
+			"│       ├── 1\n"
+			"│       │   ^ size: 3 3\n"
+			"│       │   ├── (1 3 1 1) {1}\n"
+			"│       │   ├── (1 3 1 2) {1}\n"
+			"│       │   └── (1 3 1 3) {1}\n"
+			"│       ├── 2\n"
+			"│       │   ^ size: 3 3\n"
+			"│       │   ├── (1 3 2 1) {1}\n"
+			"│       │   ├── (1 3 2 2) {1}\n"
+			"│       │   └── (1 3 2 3) {1}\n"
+			"│       └── 3\n"
+			"│           ^ size: 3 3\n"
+			"│           ├── (1 3 3 1) {1}\n"
+			"│           ├── (1 3 3 2) {1}\n"
+			"│           └── (1 3 3 3) {1}\n"
+			"├── 2\n"
+			"│   size: 27\n"
+			"│   keys: 3\n"
+			"│   ├── 1\n"
+			"│   │   size: 9\n"
+			"│   │   keys: 3\n"
+			"│   │   ├── 1\n"
+			"│   │   │   ^ size: 3 3\n"
+			"│   │   │   ├── (2 1 1 1) {1}\n"
+			"│   │   │   ├── (2 1 1 2) {1}\n"
+			"│   │   │   └── (2 1 1 3) {1}\n"
+			"│   │   ├── 2\n"
+			"│   │   │   ^ size: 3 3\n"
+			"│   │   │   ├── (2 1 2 1) {1}\n"
+			"│   │   │   ├── (2 1 2 2) {1}\n"
+			"│   │   │   └── (2 1 2 3) {1}\n"
+			"│   │   └── 3\n"
+			"│   │       ^ size: 3 3\n"
+			"│   │       ├── (2 1 3 1) {1}\n"
+			"│   │       ├── (2 1 3 2) {1}\n"
+			"│   │       └── (2 1 3 3) {1}\n"
+			"│   ├── 2\n"
+			"│   │   size: 9\n"
+			"│   │   keys: 3\n"
+			"│   │   ├── 1\n"
+			"│   │   │   ^ size: 3 3\n"
+			"│   │   │   ├── (2 2 1 1) {1}\n"
+			"│   │   │   ├── (2 2 1 2) {1}\n"
+			"│   │   │   └── (2 2 1 3) {1}\n"
+			"│   │   ├── 2\n"
+			"│   │   │   ^ size: 3 3\n"
+			"│   │   │   ├── (2 2 2 1) {1}\n"
+			"│   │   │   ├── (2 2 2 2) {1}\n"
+			"│   │   │   └── (2 2 2 3) {1}\n"
+			"│   │   └── 3\n"
+			"│   │       ^ size: 3 3\n"
+			"│   │       ├── (2 2 3 1) {1}\n"
+			"│   │       ├── (2 2 3 2) {1}\n"
+			"│   │       └── (2 2 3 3) {1}\n"
+			"│   └── 3\n"
+			"│       size: 9\n"
+			"│       keys: 3\n"
+			"│       ├── 1\n"
+			"│       │   ^ size: 3 3\n"
+			"│       │   ├── (2 3 1 1) {1}\n"
+			"│       │   ├── (2 3 1 2) {1}\n"
+			"│       │   └── (2 3 1 3) {1}\n"
+			"│       ├── 2\n"
+			"│       │   ^ size: 3 3\n"
+			"│       │   ├── (2 3 2 1) {1}\n"
+			"│       │   ├── (2 3 2 2) {1}\n"
+			"│       │   └── (2 3 2 3) {1}\n"
+			"│       └── 3\n"
+			"│           ^ size: 3 3\n"
+			"│           ├── (2 3 3 1) {1}\n"
+			"│           ├── (2 3 3 2) {1}\n"
+			"│           └── (2 3 3 3) {1}\n"
+			"└── 3\n"
+			"    size: 27\n"
+			"    keys: 3\n"
+			"    ├── 1\n"
+			"    │   size: 9\n"
+			"    │   keys: 3\n"
+			"    │   ├── 1\n"
+			"    │   │   ^ size: 3 3\n"
+			"    │   │   ├── (3 1 1 1) {1}\n"
+			"    │   │   ├── (3 1 1 2) {1}\n"
+			"    │   │   └── (3 1 1 3) {1}\n"
+			"    │   ├── 2\n"
+			"    │   │   ^ size: 3 3\n"
+			"    │   │   ├── (3 1 2 1) {1}\n"
+			"    │   │   ├── (3 1 2 2) {1}\n"
+			"    │   │   └── (3 1 2 3) {1}\n"
+			"    │   └── 3\n"
+			"    │       ^ size: 3 3\n"
+			"    │       ├── (3 1 3 1) {1}\n"
+			"    │       ├── (3 1 3 2) {1}\n"
+			"    │       └── (3 1 3 3) {1}\n"
+			"    ├── 2\n"
+			"    │   size: 9\n"
+			"    │   keys: 3\n"
+			"    │   ├── 1\n"
+			"    │   │   ^ size: 3 3\n"
+			"    │   │   ├── (3 2 1 1) {1}\n"
+			"    │   │   ├── (3 2 1 2) {1}\n"
+			"    │   │   └── (3 2 1 3) {1}\n"
+			"    │   ├── 2\n"
+			"    │   │   ^ size: 3 3\n"
+			"    │   │   ├── (3 2 2 1) {1}\n"
+			"    │   │   ├── (3 2 2 2) {1}\n"
+			"    │   │   └── (3 2 2 3) {1}\n"
+			"    │   └── 3\n"
+			"    │       ^ size: 3 3\n"
+			"    │       ├── (3 2 3 1) {1}\n"
+			"    │       ├── (3 2 3 2) {1}\n"
+			"    │       └── (3 2 3 3) {1}\n"
+			"    └── 3\n"
+			"        size: 9\n"
+			"        keys: 3\n"
+			"        ├── 1\n"
+			"        │   ^ size: 3 3\n"
+			"        │   ├── (3 3 1 1) {1}\n"
+			"        │   ├── (3 3 1 2) {1}\n"
+			"        │   └── (3 3 1 3) {1}\n"
+			"        ├── 2\n"
+			"        │   ^ size: 3 3\n"
+			"        │   ├── (3 3 2 1) {1}\n"
+			"        │   ├── (3 3 2 2) {1}\n"
+			"        │   └── (3 3 2 3) {1}\n"
+			"        └── 3\n"
+			"            ^ size: 3 3\n"
+			"            ├── (3 3 3 1) {1}\n"
+			"            ├── (3 3 3 2) {1}\n"
+			"            └── (3 3 3 3) {1}\n";
+
+		const std::string print_str = print_string(kd);
+		CHECK_EQ(print_str, kd_str);
+	}
+
+	SUBCASE("Check range iterator bounds (1)")
 	{
 		const auto f1 = [](const int v) -> bool
 		{
 			return v == 2;
 		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return v == 2;
+		};
+		const auto f3 = [](const int v) -> bool
+		{
+			return v == 2;
+		};
 
-		auto it = kd.get_const_range_iterator_begin(f1);
+		auto it = kd.get_const_range_iterator_begin(f1, f2, f3);
 
 		CHECK_EQ(it.past_begin(), false);
 		CHECK_EQ(it.begin(), true);
 		CHECK_EQ(it.end(), false);
 
 		++it;
-		++it;
+
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), false);
 
 		CHECK_EQ(it.past_begin(), false);
 		CHECK_EQ(it.begin(), false);
@@ -610,8 +935,18 @@ TEST_CASE("Unique elements -- depth 1")
 			const auto& d = (*it).first;
 			CHECK_EQ(d.i, 2);
 			CHECK_EQ(d.j, 2);
-			CHECK_EQ(d.k, 3);
+			CHECK_EQ(d.k, 2);
 			CHECK_EQ(d.z, 2);
+		}
+
+		++it;
+
+		{
+			const auto& d = (*it).first;
+			CHECK_EQ(d.i, 2);
+			CHECK_EQ(d.j, 2);
+			CHECK_EQ(d.k, 2);
+			CHECK_EQ(d.z, 3);
 		}
 
 		++it;
