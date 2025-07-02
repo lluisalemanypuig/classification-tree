@@ -129,8 +129,8 @@ add_subdirectory(tests)
 # *******************************************************************************
 # Other
 
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-	file(COPY_FILE build-debug/compile_commands.json compile_commands.json)
-else()
-	file(COPY_FILE build-release/compile_commands.json compile_commands.json)
+set(COMMANDS_FILE_ORIG ${CMAKE_BUILD_TYPE}/compile_commands.json)
+set(COMMANDS_FILE_DEST compile_commands.json)
+if(EXISTS "${COMMANDS_FILE_ORIG}")
+	file(COPY_FILE "${COMMANDS_FILE_ORIG}" "${COMMANDS_FILE_DEST}")
 endif()
