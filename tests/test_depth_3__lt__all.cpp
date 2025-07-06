@@ -1115,6 +1115,98 @@ TEST_CASE("All elements (2)")
 	}
 }
 
+TEST_CASE("All elements (3)")
+{
+	typedef classtree::ctree<data_lt, meta_incr, int, int, int> my_tree;
+	classtree::ctree<data_lt, meta_incr, int, int, int> kd;
+	static_assert(std::is_nothrow_move_constructible_v<my_tree>);
+	static_assert(std::is_move_constructible_v<my_tree>);
+
+	for (int z = 1; z <= 10; ++z) {
+		kd.add<false>(
+			{.i = z, .j = z, .k = z, .z = 1}, {.num_occs = 1}, z, z, z
+		);
+	}
+
+	SUBCASE("Check range iterator bounds (1)")
+	{
+		const auto f1 = [](const int v) -> bool
+		{
+			return v % 2 == 0;
+		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return v % 2 == 0;
+		};
+		const auto f3 = [](const int v) -> bool
+		{
+			return v % 2 == 0;
+		};
+
+		auto it = kd.get_const_range_iterator(f1, f2, f3);
+		CHECK_EQ(it.count(), 5);
+
+		[[maybe_unused]] const bool _ = it.to_begin();
+
+		CHECK_EQ(it.begin(), true);
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.end(), false);
+
+		int i = 0;
+
+		while (not it.end()) {
+			++it;
+			++i;
+		}
+		CHECK_EQ(i, 5);
+
+		while (not it.past_begin()) {
+			--it;
+			--i;
+		}
+		CHECK_EQ(i, -1);
+	}
+
+	SUBCASE("Check range iterator bounds (2)")
+	{
+		const auto f1 = [](const int v) -> bool
+		{
+			return v % 2 == 0;
+		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return v % 2 == 0;
+		};
+		const auto f3 = [](const int v) -> bool
+		{
+			return v == 4;
+		};
+
+		auto it = kd.get_const_range_iterator(f1, f2, f3);
+		CHECK_EQ(it.count(), 1);
+
+		[[maybe_unused]] const bool _ = it.to_begin();
+
+		CHECK_EQ(it.begin(), true);
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.end(), false);
+
+		int i = 0;
+
+		while (not it.end()) {
+			++it;
+			++i;
+		}
+		CHECK_EQ(i, 1);
+
+		while (not it.past_begin()) {
+			--it;
+			--i;
+		}
+		CHECK_EQ(i, -1);
+	}
+}
+
 int main(int argc, char **argv)
 {
 	doctest::Context context;
