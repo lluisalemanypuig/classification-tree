@@ -153,6 +153,10 @@ public:
 	 */
 	[[nodiscard]] bool to_begin() noexcept
 	{
+#if defined DEBUG
+		assert(m_tree != nullptr);
+#endif
+
 		if (m_tree->size() == 0) [[unlikely]] {
 			m_past_begin = true;
 			m_it = m_tree->end();
@@ -171,6 +175,10 @@ public:
 	 */
 	[[nodiscard]] bool to_end() noexcept
 	{
+#if defined DEBUG
+		assert(m_tree != nullptr);
+#endif
+
 		if (m_tree->size() == 0) [[unlikely]] {
 			m_past_begin = true;
 			m_it = m_tree->end();
@@ -211,23 +219,40 @@ public:
 
 	[[nodiscard]] std::size_t count() const noexcept
 	{
+#if defined DEBUG
+		assert(m_tree != nullptr);
+#endif
+
 		return m_tree->size();
 	}
 
-	/// Is the iteration at the beginning?
+	/**
+	 * @brief Is the iteration at the beginning?
+	 *
+	 * If so, the iterator can be incremented (++) and decremented (--).
+	 */
 	[[nodiscard]] bool begin() const noexcept
 	{
-		return not m_past_begin and (m_it == m_tree->begin());
+		return m_tree != nullptr and not m_past_begin and
+			   m_it == m_tree->begin();
 	}
-	/// Is the iteration past the beginning?
+	/**
+	 * @brief Is the iteration past the beginning?
+	 *
+	 * If so, the iterator cannot be decremented (--).
+	 */
 	[[nodiscard]] bool past_begin() const noexcept
 	{
-		return m_past_begin;
+		return m_tree == nullptr or m_past_begin;
 	}
-	/// Is the iteration at the end?
+	/**
+	 * @brief Is the iteration past the end?
+	 *
+	 * If so, the iterator cannot be incremented (++).
+	 */
 	[[nodiscard]] bool end() const noexcept
 	{
-		return m_it == m_tree->end();
+		return m_tree == nullptr or m_it == m_tree->end();
 	}
 
 	/// Returns the current value of the iteration.
@@ -255,7 +280,7 @@ public:
 private:
 
 	/// Pointer over the tree iterated on.
-	tree_pointer_t m_tree;
+	tree_pointer_t m_tree = nullptr;
 
 	/// Iterator over the child of @ref m_tree currently being iterated.
 	container_iterator_t m_it;
@@ -308,6 +333,10 @@ public:
 	 */
 	[[nodiscard]] bool to_begin() noexcept
 	{
+#if defined DEBUG
+		assert(m_tree != nullptr);
+#endif
+
 		if (m_tree->size() == 0) [[unlikely]] {
 			m_past_begin = true;
 			m_it = m_tree->end();
@@ -315,13 +344,17 @@ public:
 			return false;
 		}
 
-		initialize_first_and_last();
+		const bool r = initialize_first_and_last();
+		if (not r) {
+			return false;
+		}
 
 		m_past_begin = false;
 		m_it = m_tree->begin();
 		m_it_idx = 0;
 		return next();
 	}
+
 	/**
 	 * @brief Place the iterator at the end of the iteration.
 	 * @returns True if an element that meets the criteria specified by @ref m_func
@@ -330,6 +363,10 @@ public:
 	 */
 	[[nodiscard]] bool to_end() noexcept
 	{
+#if defined DEBUG
+		assert(m_tree != nullptr);
+#endif
+
 		if (m_tree->size() == 0) [[unlikely]] {
 			m_past_begin = true;
 			m_it = m_tree->end();
@@ -337,13 +374,16 @@ public:
 			return false;
 		}
 
-		initialize_first_and_last();
+		const bool r = initialize_first_and_last();
+		if (not r) {
+			return false;
+		}
 
 		m_past_begin = false;
 		m_it = m_tree->end();
 		--m_it;
 		m_it_idx = m_tree->size() - 1;
-		return previous();
+		return true;
 	}
 
 	/// Advance one value in the iteration.
@@ -368,6 +408,10 @@ public:
 	 */
 	void operator-- () noexcept
 	{
+#if defined DEBUG
+		assert(m_tree != nullptr);
+#endif
+
 		--m_subtree_iterator;
 		if (m_subtree_iterator.past_begin()) [[unlikely]] {
 
@@ -392,6 +436,10 @@ public:
 
 	[[nodiscard]] std::size_t count() noexcept
 	{
+#if defined DEBUG
+		assert(m_tree != nullptr);
+#endif
+
 		m_it = m_tree->begin();
 		m_it_idx = 0;
 		m_begin_idx = 0;
@@ -414,26 +462,38 @@ public:
 		return c;
 	}
 
-	/// Is the iteration at the beginning?
+	/**
+	 * @brief Is the iteration at the beginning?
+	 *
+	 * If so, the iterator can be incremented (++) and decremented (--).
+	 */
 	[[nodiscard]] bool begin() const noexcept
 	{
-		if (m_tree->size() == 0) [[unlikely]] {
-			return true;
+		if (m_tree == nullptr or m_tree->size() == 0) [[unlikely]] {
+			return false;
 		}
 		return shallow_begin() and m_subtree_iterator.begin();
 	}
-	/// Is the iteration past the beginning?
+	/**
+	 * @brief Is the iteration past the beginning?
+	 *
+	 * If so, the iterator cannot be decremented (--).
+	 */
 	[[nodiscard]] bool past_begin() const noexcept
 	{
-		if (m_tree->size() == 0) [[unlikely]] {
+		if (m_tree == nullptr or m_tree->size() == 0) [[unlikely]] {
 			return true;
 		}
 		return shallow_past_begin() and m_subtree_iterator.past_begin();
 	}
-	/// Is the iteration at the end?
+	/**
+	 * @brief Is the iteration past the end?
+	 *
+	 * If so, the iterator cannot be incremented (++).
+	 */
 	[[nodiscard]] bool end() const noexcept
 	{
-		if (m_tree->size() == 0) [[unlikely]] {
+		if (m_tree == nullptr or m_tree->size() == 0) [[unlikely]] {
 			return true;
 		}
 		return shallow_end() and m_subtree_iterator.end();
@@ -477,16 +537,23 @@ public:
 	 *
 	 * Sets the pointers @ref m_begin_ptr and @ref m_last_ptr.
 	 */
-	void initialize_first_and_last() noexcept
+	[[nodiscard]] bool initialize_first_and_last() noexcept
 	{
+#if defined DEBUG
+		assert(m_tree != nullptr);
+#endif
+
 		m_it = m_tree->begin();
 		m_it_idx = 0;
-		m_end_idx = m_tree->size() + 3;
+		m_end_idx = m_tree->size();
 		const bool found_begin = next();
 		if (not found_begin) {
+			m_it = m_tree->begin();
+			m_it_idx = m_tree->size();
 			m_begin_idx = m_tree->size();
 			m_end_idx = m_tree->size();
-			return;
+			m_past_begin = true;
+			return false;
 		}
 
 		m_begin_idx = m_it_idx;
@@ -505,6 +572,7 @@ public:
 
 		m_end_idx = m_it_idx;
 		m_end_idx += (m_it_idx != m_tree->size());
+		return true;
 	}
 
 private:
@@ -531,17 +599,25 @@ private:
 	/// Is the iteration of this node at the beginning?
 	[[nodiscard]] bool shallow_begin() const noexcept
 	{
+#if defined DEBUG
+		assert(m_tree != nullptr);
+#endif
+
 		return not shallow_past_begin() and
 			   (m_it == m_tree->begin() or m_it_idx == m_begin_idx);
 	}
 	/// Is the iteration of this node past the beginning?
 	[[nodiscard]] bool shallow_past_begin() const noexcept
 	{
-		return m_past_begin;
+		return m_tree == nullptr or m_past_begin;
 	}
 	/// Is the iteration of this node at the end?
 	[[nodiscard]] bool shallow_end() const noexcept
 	{
+#if defined DEBUG
+		assert(m_tree != nullptr);
+#endif
+
 		return m_it == m_tree->end() or m_it_idx == m_end_idx;
 	}
 
@@ -613,7 +689,7 @@ private:
 	std::function<bool(const key_t&)> m_func;
 
 	/// Pointer to the tree iterated on.
-	tree_pointer_t m_tree;
+	tree_pointer_t m_tree = nullptr;
 
 	/// Iterator to the key of @ref m_tree currently being iterated.
 	container_iterator_t m_it;
