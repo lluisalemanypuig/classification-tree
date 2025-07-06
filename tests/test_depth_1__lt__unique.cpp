@@ -34,7 +34,7 @@
 // custom includes
 #include "definitions.hpp"
 
-TEST_CASE("Unique elements -- depth 1")
+TEST_CASE("Unique elements")
 {
 	typedef classtree::ctree<data_lt, meta_incr, int> my_tree;
 	classtree::ctree<data_lt, meta_incr, int> kd;

@@ -34,7 +34,7 @@
 // custom includes
 #include "definitions.hpp"
 
-TEST_CASE("All elements")
+TEST_CASE("All elements (1)")
 {
 	typedef classtree::ctree<data_lt, meta_incr, int, int, int> my_tree;
 	classtree::ctree<data_lt, meta_incr, int, int, int> kd;
