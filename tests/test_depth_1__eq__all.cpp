@@ -657,6 +657,20 @@ TEST_CASE("All elements -- depth 1")
 		CHECK_EQ(it.begin(), false);
 		CHECK_EQ(it.end(), false);
 	}
+
+	SUBCASE("Check range iterator bounds (4)")
+	{
+		const auto f1 = [](const int v) -> bool
+		{
+			return v == 3;
+		};
+
+		auto it = kd.get_const_range_iterator_begin(f1);
+
+		CHECK_EQ(it.past_begin(), true);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), true);
+	}
 }
 
 int main(int argc, char **argv)

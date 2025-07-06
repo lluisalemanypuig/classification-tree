@@ -692,6 +692,72 @@ TEST_CASE("Unique elements -- depth 3")
 		CHECK_EQ(it.begin(), false);
 		CHECK_EQ(it.end(), false);
 	}
+
+	SUBCASE("Check range iterator bounds (3)")
+	{
+		const auto f1 = [](const int v) -> bool
+		{
+			return v == 4;
+		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return v == 2;
+		};
+		const auto f3 = [](const int v) -> bool
+		{
+			return v == 2;
+		};
+
+		auto it = kd.get_const_range_iterator_begin(f1, f2, f3);
+
+		CHECK_EQ(it.past_begin(), true);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), true);
+	}
+
+	SUBCASE("Check range iterator bounds (4)")
+	{
+		const auto f1 = [](const int v) -> bool
+		{
+			return v == 2;
+		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return v == 4;
+		};
+		const auto f3 = [](const int v) -> bool
+		{
+			return v == 2;
+		};
+
+		auto it = kd.get_const_range_iterator_begin(f1, f2, f3);
+
+		CHECK_EQ(it.past_begin(), true);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), true);
+	}
+
+	SUBCASE("Check range iterator bounds (5)")
+	{
+		const auto f1 = [](const int v) -> bool
+		{
+			return v == 2;
+		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return v == 2;
+		};
+		const auto f3 = [](const int v) -> bool
+		{
+			return v == 4;
+		};
+
+		auto it = kd.get_const_range_iterator_begin(f1, f2, f3);
+
+		CHECK_EQ(it.past_begin(), true);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), true);
+	}
 }
 
 TEST_CASE("All elements (2)")
@@ -976,6 +1042,72 @@ TEST_CASE("All elements (2)")
 		CHECK_EQ(it.past_begin(), true);
 		CHECK_EQ(it.begin(), false);
 		CHECK_EQ(it.end(), false);
+	}
+
+	SUBCASE("Check range iterator bounds (2)")
+	{
+		const auto f1 = [](const int v) -> bool
+		{
+			return v == 4;
+		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return v == 2;
+		};
+		const auto f3 = [](const int v) -> bool
+		{
+			return v == 2;
+		};
+
+		auto it = kd.get_const_range_iterator_begin(f1, f2, f3);
+
+		CHECK_EQ(it.past_begin(), true);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), true);
+	}
+
+	SUBCASE("Check range iterator bounds (3)")
+	{
+		const auto f1 = [](const int v) -> bool
+		{
+			return v == 2;
+		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return v == 4;
+		};
+		const auto f3 = [](const int v) -> bool
+		{
+			return v == 2;
+		};
+
+		auto it = kd.get_const_range_iterator_begin(f1, f2, f3);
+
+		CHECK_EQ(it.past_begin(), true);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), true);
+	}
+
+	SUBCASE("Check range iterator bounds (4)")
+	{
+		const auto f1 = [](const int v) -> bool
+		{
+			return v == 2;
+		};
+		const auto f2 = [](const int v) -> bool
+		{
+			return v == 2;
+		};
+		const auto f3 = [](const int v) -> bool
+		{
+			return v == 4;
+		};
+
+		auto it = kd.get_const_range_iterator_begin(f1, f2, f3);
+
+		CHECK_EQ(it.past_begin(), true);
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.end(), true);
 	}
 }
 
