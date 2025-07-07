@@ -143,7 +143,7 @@ public:
 	}
 
 	void set_functions() noexcept { }
-	void initialize_first_and_last() noexcept { }
+	void initialize_limits() noexcept { }
 
 	/**
 	 * @brief Place the iterator at the beginning of the iteration.
@@ -157,7 +157,7 @@ public:
 		assert(m_tree != nullptr);
 #endif
 
-		if (m_tree->size() == 0) [[unlikely]] {
+		if (m_tree->num_keys() == 0) [[unlikely]] {
 			m_past_begin = true;
 			m_it = m_tree->end();
 			return false;
@@ -179,7 +179,7 @@ public:
 		assert(m_tree != nullptr);
 #endif
 
-		if (m_tree->size() == 0) [[unlikely]] {
+		if (m_tree->num_keys() == 0) [[unlikely]] {
 			m_past_begin = true;
 			m_it = m_tree->end();
 			return false;
@@ -337,22 +337,24 @@ public:
 		assert(m_tree != nullptr);
 #endif
 
-		if (m_tree->size() == 0) [[unlikely]] {
+		if (m_tree->num_keys() == 0) [[unlikely]] {
 			m_past_begin = true;
 			m_it = m_tree->end();
 			m_it_idx = 1;
 			return false;
 		}
 
-		const bool r = initialize_first_and_last();
+		const bool r = initialize_limits();
 		if (not r) {
 			return false;
 		}
 
 		m_past_begin = false;
 		m_it = m_tree->begin();
-		m_it_idx = 0;
-		return next();
+		std::advance(m_it, m_begin_idx);
+		m_it_idx = m_begin_idx;
+		m_subtree_iterator.set_pointer(&m_it->second);
+		return m_subtree_iterator.to_begin();
 	}
 
 	/**
@@ -367,22 +369,24 @@ public:
 		assert(m_tree != nullptr);
 #endif
 
-		if (m_tree->size() == 0) [[unlikely]] {
+		if (m_tree->num_keys() == 0) [[unlikely]] {
 			m_past_begin = true;
 			m_it = m_tree->end();
 			m_it_idx = 1;
 			return false;
 		}
 
-		const bool r = initialize_first_and_last();
+		const bool r = initialize_limits();
 		if (not r) {
 			return false;
 		}
 
 		m_past_begin = false;
-		m_it = m_tree->end();
-		--m_it;
-		m_it_idx = m_tree->size() - 1;
+		m_it = m_tree->begin();
+		std::advance(m_it, m_end_idx - 1);
+		m_it_idx = m_end_idx - 1;
+		// no need to set the subtree iterator because this has already been
+		// done by the initialize_limits function.
 		return true;
 	}
 
@@ -443,7 +447,7 @@ public:
 		m_it = m_tree->begin();
 		m_it_idx = 0;
 		m_begin_idx = 0;
-		m_end_idx = m_tree->size();
+		m_end_idx = m_tree->num_keys();
 
 		std::size_t c = 0;
 		while (not shallow_end()) {
@@ -469,7 +473,7 @@ public:
 	 */
 	[[nodiscard]] bool begin() const noexcept
 	{
-		if (m_tree == nullptr or m_tree->size() == 0) [[unlikely]] {
+		if (m_tree == nullptr or m_tree->num_keys() == 0) [[unlikely]] {
 			return false;
 		}
 		return shallow_begin() and m_subtree_iterator.begin();
@@ -481,7 +485,7 @@ public:
 	 */
 	[[nodiscard]] bool past_begin() const noexcept
 	{
-		if (m_tree == nullptr or m_tree->size() == 0) [[unlikely]] {
+		if (m_tree == nullptr or m_tree->num_keys() == 0) [[unlikely]] {
 			return true;
 		}
 		return shallow_past_begin() and m_subtree_iterator.past_begin();
@@ -493,7 +497,7 @@ public:
 	 */
 	[[nodiscard]] bool end() const noexcept
 	{
-		if (m_tree == nullptr or m_tree->size() == 0) [[unlikely]] {
+		if (m_tree == nullptr or m_tree->num_keys() == 0) [[unlikely]] {
 			return true;
 		}
 		return shallow_end() and m_subtree_iterator.end();
@@ -537,7 +541,7 @@ public:
 	 *
 	 * Sets the pointers @ref m_begin_ptr and @ref m_last_ptr.
 	 */
-	[[nodiscard]] bool initialize_first_and_last() noexcept
+	[[nodiscard]] bool initialize_limits() noexcept
 	{
 #if defined DEBUG
 		assert(m_tree != nullptr);
@@ -545,25 +549,25 @@ public:
 
 		m_it = m_tree->begin();
 		m_it_idx = 0;
-		m_end_idx = m_tree->size();
+		m_end_idx = m_tree->num_keys();
 		const bool found_begin = next();
 		if (not found_begin) {
 			m_it = m_tree->begin();
-			m_it_idx = m_tree->size();
-			m_begin_idx = m_tree->size();
-			m_end_idx = m_tree->size();
+			m_it_idx = m_tree->num_keys();
+			m_begin_idx = m_tree->num_keys();
+			m_end_idx = m_tree->num_keys();
 			m_past_begin = true;
 			return false;
 		}
 
 		m_begin_idx = m_it_idx;
 
-		m_end_idx = m_tree->size();
+		m_end_idx = m_tree->num_keys();
 
 		m_past_begin = false;
 		m_it = m_tree->end();
 		--m_it;
-		m_it_idx = m_tree->size() - 1;
+		m_it_idx = m_tree->num_keys() - 1;
 
 		[[maybe_unused]] const bool found_end = previous();
 #if defined DEBUG
@@ -571,7 +575,10 @@ public:
 #endif
 
 		m_end_idx = m_it_idx;
-		m_end_idx += (m_it_idx != m_tree->size());
+		m_end_idx += (m_it_idx != m_tree->num_keys());
+#if defined DEBUG
+		assert(m_begin_idx < m_end_idx);
+#endif
 		return true;
 	}
 
