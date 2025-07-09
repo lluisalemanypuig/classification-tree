@@ -65,7 +65,7 @@ template <
 	Comparable... keys_t>
 struct sub_range_iterator {
 
-	/// Is @e tree_pointer_t constant?
+	/// Is @e tree_pointer_t const-qualified?
 	static constexpr bool is_constant = std::is_same_v<
 		tree_pointer_t,
 		const_pointer_t<value_t, metadata_t, key_t, keys_t...>>;
@@ -119,6 +119,8 @@ using sub_range_iterator_t =
 
 /**
  * @brief Partial template specialization of the @ref iterator_ class.
+ *
+ * This class iterates over leaf nodes.
  * @tparam tree_pointer_t Type of the pointer to the tree iterated on.
  * @tparam container_iterator_t Type of the iterator over the keys of the tree iterated on.
  * @tparam value_t Type of the values to add.
@@ -142,14 +144,25 @@ public:
 		m_tree = tree;
 	}
 
+	/**
+	 * @brief Set the search functions that describe the search criteria.
+	 *
+	 * No functions are needed for a leaf iterator.
+	 */
 	void set_functions() noexcept { }
+	/**
+	 * @brief Initialize the beginning and ending limits of this iterator.
+	 *
+	 * Since this iterator iterates over leaf nodes, there are no limits
+	 * to specify.
+	 */
 	void initialize_limits() noexcept { }
 
 	/**
 	 * @brief Place the iterator at the beginning of the iteration.
 	 * @returns True if an element that meets the criteria specified by @ref m_func
 	 * was found in this node and down to the leaves of the tree. Returns false
-	 * if no element was found.
+	 * if no element was found to match the search criteria in this leaf node.
 	 */
 	[[nodiscard]] bool to_begin() noexcept
 	{
@@ -171,7 +184,7 @@ public:
 	 * @brief Place the iterator at the end of the iteration.
 	 * @returns True if an element that meets the criteria specified by @ref m_func
 	 * was found in this node and down to the leaves of the tree. Returns false
-	 * if no element was found.
+	 * if no element was found to match the search criteria in this leaf node.
 	 */
 	[[nodiscard]] bool to_end() noexcept
 	{
@@ -204,7 +217,7 @@ public:
 	 * @brief Move back one value in the iteration.
 	 *
 	 * In case the iterator is at the beginning of the iteration (see
-	 * @ref begin) a flag (see @ref m_past_begin) is activated to detect a
+	 * @ref begin) a flag (see @ref past_begin) is activated to detect a
 	 * 'past begin' situation.
 	 */
 	void operator-- () noexcept
@@ -217,6 +230,7 @@ public:
 		}
 	}
 
+	/// Count the number of elements that match the search criteria.
 	[[nodiscard]] std::size_t count() const noexcept
 	{
 #if defined DEBUG
@@ -291,6 +305,10 @@ private:
 
 /**
  * @brief Partial template specialization of the @ref range_iterator class.
+ *
+ * This iterator iterates over internal nodes. This class contains a subtree
+ * iterator, which is just another iterator over the nodes of the next level
+ * of the tree.
  * @tparam value_t Type of the values to add.
  * @tparam metadata_t Type of the metadata associated to the values.
  * @tparam key_t Type of the first key.
@@ -318,6 +336,12 @@ public:
 		m_tree = tree;
 	}
 
+	/**
+	 * @brief Set the search functions that describe the search criteria.
+	 *
+	 * The first function is assigned to this node. The second and the remaining
+	 * functions are assigned to the remaining iterators.
+	 */
 	template <typename F, typename... Callables>
 	void set_functions(F&& f, Callables&&...fs) noexcept
 	{
@@ -329,7 +353,7 @@ public:
 	 * @brief Place the iterator at the beginning of the iteration.
 	 * @returns True if an element that meets the criteria specified by @ref m_func
 	 * was found in this node and down to the leaves of the tree. Returns false
-	 * if no element was found.
+	 * if no element was found to match the search criteria in this internal node.
 	 */
 	[[nodiscard]] bool to_begin() noexcept
 	{
@@ -361,7 +385,7 @@ public:
 	 * @brief Place the iterator at the end of the iteration.
 	 * @returns True if an element that meets the criteria specified by @ref m_func
 	 * was found in this node and down to the leaves of the tree. Returns false
-	 * if no element was found.
+	 * if no element was found to match the search criteria in this internal node.
 	 */
 	[[nodiscard]] bool to_end() noexcept
 	{
@@ -390,7 +414,7 @@ public:
 		return true;
 	}
 
-	/// Advance one value in the iteration.
+	/// Advance one step in the iteration.
 	void operator++ () noexcept
 	{
 		m_past_begin = false;
@@ -404,7 +428,7 @@ public:
 		}
 	}
 	/**
-	 * @brief Move back one value in the iteration.
+	 * @brief Move back one step in the iteration.
 	 *
 	 * In case the iterator is at the beginning of the iteration (see
 	 * @ref begin) a flag (see @ref m_past_begin) is activated to detect a
@@ -438,6 +462,7 @@ public:
 		}
 	}
 
+	/// Count the number of elements that match the search criteria.
 	[[nodiscard]] std::size_t count() noexcept
 	{
 #if defined DEBUG
@@ -536,10 +561,17 @@ public:
 		return current;
 	}
 
+private:
+
 	/**
 	 * @brief Finds the first and last+1 valid positions in this node.
 	 *
-	 * Sets the pointers @ref m_begin_ptr and @ref m_last_ptr.
+	 * Sets the pointers @ref m_begin_ptr and @ref m_last_ptr of this iterator.
+	 * Sets the pointers @ref m_begin_ptr and @ref m_last_ptr of the subtree iterator
+	 * as well.
+	 * @post The current iterator @ref m_it is set to the last value in the
+	 * iteration. The subtree iterator is also initialized to its corresponding
+	 * end of the iteration.
 	 */
 	[[nodiscard]] bool initialize_limits() noexcept
 	{
@@ -562,8 +594,6 @@ public:
 
 		m_begin_idx = m_it_idx;
 
-		m_end_idx = m_tree->num_keys();
-
 		m_past_begin = false;
 		m_it = m_tree->end();
 		--m_it;
@@ -581,8 +611,6 @@ public:
 #endif
 		return true;
 	}
-
-private:
 
 	/**
 	 * @brief Move a tuple into another.
@@ -632,6 +660,8 @@ private:
 	 * @brief Find the next element according to function @ref m_func.
 	 * @returns True if a valid element (according to the functions) was
 	 * found, or false if otherwise.
+	 * @post If the function returned true, the iterator over the subtree is
+	 * initialized to the beginning of its iteration.
 	 */
 	[[nodiscard]] bool next() noexcept
 	{
@@ -667,7 +697,13 @@ private:
 		--m_it_idx;
 	}
 
-	/// Find the previous element according to function @ref m_func.
+	/**
+	 * @brief Find the previous element according to function @ref m_func.
+	 * @returns True if a valid element (according to the functions) was
+	 * found, or false if otherwise.
+	 * @post If the function returned true, the iterator over the subtree is
+	 * initialized to the end of its iteration.
+	 */
 	[[nodiscard]] bool previous() noexcept
 	{
 		bool stop = false;
