@@ -117,7 +117,7 @@ void profiling_0(const uint64_t n, const uint64_t _N)
 		const auto end = now();
 		total_time += elapsed_time(begin, end);
 
-		if (N % step == 0) {
+		if (N % step == 0) [[unlikely]] {
 			std::cout << n << '\t' << N << '\t' << "0" << '\t';
 			std::cout << total_time / static_cast<double>(N) << '\t'
 					  << ir.size() << std::endl;
@@ -155,7 +155,7 @@ void profiling_1_Dminpl(const uint64_t n, const uint64_t _N)
 		const auto end = now();
 		total_time += elapsed_time(begin, end);
 
-		if (N % step == 0) {
+		if (N % step == 0) [[unlikely]] {
 			std::cout << n << '\t' << N << '\t' << "1_Dminpl" << '\t';
 			std::cout << total_time / static_cast<double>(N) << '\t'
 					  << ir.size() << std::endl;
@@ -194,7 +194,7 @@ void profiling_2_Dminpl_Cexp(const uint64_t n, const uint64_t _N)
 		const auto end = now();
 		total_time += elapsed_time(begin, end);
 
-		if (N % step == 0) {
+		if (N % step == 0) [[unlikely]] {
 			std::cout << n << '\t' << N << '\t' << "2_Dminpl_Cexp" << '\t';
 			std::cout << total_time / static_cast<double>(N) << '\t'
 					  << ir.size() << std::endl;
@@ -233,7 +233,7 @@ void profiling_2_Dminpl_Cvar(const uint64_t n, const uint64_t _N)
 		const auto end = now();
 		total_time += elapsed_time(begin, end);
 
-		if (N % step == 0) {
+		if (N % step == 0) [[unlikely]] {
 			std::cout << n << '\t' << N << '\t' << "2_Dminpl_Cvar" << '\t';
 			std::cout << total_time / static_cast<double>(N) << '\t'
 					  << ir.size() << std::endl;
@@ -280,7 +280,7 @@ void profiling_3_Dminpl_Cexp_Cvar(const uint64_t n, const uint64_t _N)
 		const auto end = now();
 		total_time += elapsed_time(begin, end);
 
-		if (N % step == 0) {
+		if (N % step == 0) [[unlikely]] {
 			std::cout << n << '\t' << N << '\t' << "3_Dminpl_Cexp_Cvar" << '\t';
 			std::cout << total_time / static_cast<double>(N) << '\t'
 					  << ir.size() << '\t' << std::endl;
