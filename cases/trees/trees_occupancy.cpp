@@ -1,22 +1,22 @@
 /**
  * Case study of the Isomorphic Representatives Tree
  * Copyright (C) 2025  Lluís Alemany Puig
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
  * by the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- * 
+ *
  * Contact:
- * 
+ *
  *     Lluís Alemany Puig
  *     https://github.com/lluisalemanypuig
  */
@@ -34,8 +34,8 @@
 #include <lal/detail/linarr/D/Dmin/Planar_AEF.hpp>
 #include <lal/detail/linarr/D/DMax/Planar_AEF.hpp>
 
-// isorepr includes
-#include <isorepr/ir_tree.hpp>
+// ctree includes
+#include <ctree/ctree.hpp>
 
 inline std::ostream& operator<< (std::ostream& os, const std::vector<double>& v)
 {
@@ -83,7 +83,7 @@ struct metadata {
 
 void occupancy_0(const uint64_t n, const uint64_t _N)
 {
-	isorepr::ir_tree<equal_comparable_tree, metadata> ir;
+	classtree::ctree<equal_comparable_tree, metadata> ir;
 
 	uint64_t step = 100;
 	lal::generate::rand_ulab_free_trees gen(n, 1234);
@@ -110,7 +110,7 @@ void occupancy_0(const uint64_t n, const uint64_t _N)
 
 void occupancy_1(const uint64_t n, const uint64_t _N)
 {
-	isorepr::ir_tree<equal_comparable_tree, metadata, uint64_t> ir;
+	classtree::ctree<equal_comparable_tree, metadata, uint64_t> ir;
 
 	uint64_t step = 100;
 	lal::generate::rand_ulab_free_trees gen(n, 1234);
@@ -140,7 +140,7 @@ void occupancy_1(const uint64_t n, const uint64_t _N)
 
 void occupancy_2(const uint64_t n, const uint64_t _N)
 {
-	isorepr::ir_tree<equal_comparable_tree, metadata, uint64_t, double> ir;
+	classtree::ctree<equal_comparable_tree, metadata, uint64_t, double> ir;
 
 	uint64_t step = 100;
 	lal::generate::rand_ulab_free_trees gen(n, 1234);
@@ -176,7 +176,7 @@ void occupancy_2(const uint64_t n, const uint64_t _N)
 
 void occupancy_3(const uint64_t n, const uint64_t _N)
 {
-	isorepr::ir_tree<equal_comparable_tree, metadata, uint64_t, double, double>
+	classtree::ctree<equal_comparable_tree, metadata, uint64_t, double, double>
 		ir;
 
 	uint64_t step = 100;

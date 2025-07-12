@@ -34,8 +34,8 @@
 #include <lal/detail/linarr/D/Dmin/Planar_AEF.hpp>
 #include <lal/detail/linarr/D/DMax/Planar_AEF.hpp>
 
-// isorepr includes
-#include <isorepr/ir_tree.hpp>
+// ctree includes
+#include <ctree/ctree.hpp>
 
 typedef std::chrono::high_resolution_clock::time_point time_point;
 
@@ -101,7 +101,7 @@ struct metadata {
 
 void profiling_0(const uint64_t n, const uint64_t _N)
 {
-	isorepr::ir_tree<equal_comparable_tree, metadata> ir;
+	classtree::ctree<equal_comparable_tree, metadata> ir;
 
 	double total_time = 0;
 
@@ -126,7 +126,7 @@ void profiling_0(const uint64_t n, const uint64_t _N)
 			}
 		}
 
-#if defined IR_DEBUG
+#if defined CTREE_DEBUG
 		if (not ir.check_sorted_keys()) {
 			std::cout << "ERROR!\n";
 		}
@@ -136,7 +136,7 @@ void profiling_0(const uint64_t n, const uint64_t _N)
 
 void profiling_1_Dminpl(const uint64_t n, const uint64_t _N)
 {
-	isorepr::ir_tree<equal_comparable_tree, metadata, uint64_t> ir;
+	classtree::ctree<equal_comparable_tree, metadata, uint64_t> ir;
 
 	double total_time = 0;
 
@@ -162,7 +162,7 @@ void profiling_1_Dminpl(const uint64_t n, const uint64_t _N)
 			}
 		}
 
-#if defined IR_DEBUG
+#if defined CTREE_DEBUG
 		if (not ir.check_sorted_keys()) {
 			std::cout << "ERROR!\n";
 		}
@@ -172,7 +172,7 @@ void profiling_1_Dminpl(const uint64_t n, const uint64_t _N)
 
 void profiling_2_Dminpl_Cexp(const uint64_t n, const uint64_t _N)
 {
-	isorepr::ir_tree<equal_comparable_tree, metadata, uint64_t, double> ir;
+	classtree::ctree<equal_comparable_tree, metadata, uint64_t, double> ir;
 
 	double total_time = 0;
 
@@ -200,7 +200,7 @@ void profiling_2_Dminpl_Cexp(const uint64_t n, const uint64_t _N)
 			}
 		}
 
-#if defined IR_DEBUG
+#if defined CTREE_DEBUG
 		if (not ir.check_sorted_keys()) {
 			std::cout << "ERROR!\n";
 		}
@@ -210,7 +210,7 @@ void profiling_2_Dminpl_Cexp(const uint64_t n, const uint64_t _N)
 
 void profiling_2_Dminpl_Cvar(const uint64_t n, const uint64_t _N)
 {
-	isorepr::ir_tree<equal_comparable_tree, metadata, uint64_t, double> ir;
+	classtree::ctree<equal_comparable_tree, metadata, uint64_t, double> ir;
 
 	double total_time = 0;
 
@@ -237,7 +237,7 @@ void profiling_2_Dminpl_Cvar(const uint64_t n, const uint64_t _N)
 			}
 		}
 
-#if defined IR_DEBUG
+#if defined CTREE_DEBUG
 		if (not ir.check_sorted_keys()) {
 			std::cout << "ERROR!\n";
 		}
@@ -247,7 +247,7 @@ void profiling_2_Dminpl_Cvar(const uint64_t n, const uint64_t _N)
 
 void profiling_3_Dminpl_Cexp_Cvar(const uint64_t n, const uint64_t _N)
 {
-	isorepr::ir_tree<equal_comparable_tree, metadata, uint64_t, double, double>
+	classtree::ctree<equal_comparable_tree, metadata, uint64_t, double, double>
 		ir;
 
 	double total_time = 0;
@@ -282,7 +282,7 @@ void profiling_3_Dminpl_Cexp_Cvar(const uint64_t n, const uint64_t _N)
 			}
 		}
 
-#if defined IR_DEBUG
+#if defined CTREE_DEBUG
 		if (not ir.check_sorted_keys()) {
 			std::cout << "ERROR!\n";
 		}
