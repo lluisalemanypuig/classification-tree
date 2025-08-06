@@ -66,5 +66,5 @@ By default, this object stores unique instances. Call it with `<false>` to allow
 
 In this repository you will find several cases in which this data structure can provide significant speed up:
 
--   Store trees (undirected, acyclic graphs) unique under graph isomorphism [here](/blob/main/cases/trees/README.md).
+-   Store trees (undirected, acyclic graphs) unique under graph isomorphism [here](/cases/trees/README.md).
 -   A chess puzzle database explorer (in [another repository](https://github.com/lluisalemanypuig/chesspebase.git)).
