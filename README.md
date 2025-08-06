@@ -58,7 +58,6 @@ To add a new object, simply call `add`:
 
 ```cpp
 kd.add(std::move(o), {.num_occs = 1}, 1, 0.5, "a");
-// no need to std::move
 ```
 
 By default, this object stores unique instances. Call it with `<false>` to allow repeats in the tree. If repeats are allowed, then they are simply added to the tree with no ordering whatsoever.
