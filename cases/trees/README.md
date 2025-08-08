@@ -157,10 +157,10 @@ more features the situation does not improve much more.
 
 ### 20 vertices
 
-#### No features
-
 But the above is not very impressive, let's look at what happens if we increase
 the size of the trees to $20$ vertices.
+
+#### No features
 
 When using no features at all, we get:
 
@@ -174,7 +174,7 @@ n	N		time		unique
 ```
 
 The execution time has increased by, approximately, a factor of $3$ with respect
-to $A.1$.
+to $A.0$.
 
 #### One feature: the minimum planar sum of edge lengths
 
@@ -189,7 +189,7 @@ n	N		time		unique
 20	10000	0.0266108	9932
 ```
 
-The speed up factor is almost $10$. But here we can use more features.
+The speed up factor is almost $10$ from $B.0$ to $B.1$. But here we can use more features.
 
 #### Two features: the minimum planar sum of edge lengths and the expected number of edge crossings
 
@@ -203,6 +203,8 @@ n	N		time		unique
 20	9000	0.0177087	8944
 20	10000	0.0166533	9932
 ```
+
+We get a speedup factor of about $1.5$ from $B.1$ to $B.2$.
 
 #### Two features: the minimum planar sum of edge lengths and the variance of the number of edge crossings
 
