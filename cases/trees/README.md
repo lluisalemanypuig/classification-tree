@@ -10,18 +10,18 @@ in the vector.
 ```c++
 std::vector<tree> unique;
 for (int i = 0; i < N; ++i) {
-	tree new = generate_tree();
+	tree new_tree = generate_tree();
 	
 	bool exists = false;
 	for (int j = 0; j < unique.size(); ++j) {
-		if (isomorphic(new, unique[j])) {
+		if (isomorphic(new_tree, unique[j])) {
 			exists = true;
 			break;
 		}
 	}
 	
 	if (not exists) {
-		unique.push_back(tree);
+		unique.push_back(new_tree);
 	}
 }
 ```
@@ -42,7 +42,7 @@ not necessarily imply that the trees are isomorphic.
 ```c++
 std::vector< group<int, tree> > classes;
 for (int i = 0; i < N; ++i) {
-	tree new = generate_tree();
+	tree new_tree = generate_tree();
 	
 	// assume, w.l.o.g., that the feature is an integer value
 	int f = feature(tree);
@@ -52,13 +52,13 @@ for (int i = 0; i < N; ++i) {
 	
 	bool exists = false;
 	for (int j = 0; j < g.size(); ++j) {
-		if (isomorphic(new, g[j])) {
+		if (isomorphic(new_tree, g[j])) {
 			exists = true;
 			break;
 		}
 	}
 	if (not exists) {
-		g.push_back(tree);
+		g.push_back(new_tree);
 	}
 }
 ```
@@ -69,8 +69,8 @@ isomorphism, but up to equality of the feature value.
 ## Using the classification tree
 
 The classification tree in this repository is perfectly suitable for this task.
-Each level of the tree classifies the trees using a different feature without much
-effort in nesting deeper layers of features.
+Each level of the classification tree classifies the input trees using a different
+feature without much effort in nesting deeper layers of features.
 
 This is in contrast with what we can do with arrays. When using a single feature
 (as in the illustrative example above) it is sort of easy to sort the vector to
@@ -95,7 +95,7 @@ Using these features, one can obtain speed up values up to 100x.
 ## Running the examples
 
 After compiling the sources (you will need to have the [Linear Arrangement Library](https://github.com/LAL-project/linear-arrangement-library)
-installed), run the `profiling` program to see the effects of the speed up. This
+installed), run the `profiling` program to see the effects of the speed up. This is
 the usage message:
 
 ```
@@ -117,6 +117,12 @@ $ ./trees_profiling 100 10000 2_Dminpl_Cvar
 ```
 
 ## Some numbers
+
+Below are highlighted some of the results that can be obtained when using the
+classification tree compared to a simple vector. All the data can be found in
+the [data/](https://github.com/lluisalemanypuig/classification-tree/tree/main/cases/trees/data)
+directory, and the plots of the execution times and speedup values in
+[this pdf](https://github.com/lluisalemanypuig/classification-tree/blob/main/cases/trees/data/full.pdf).
 
 ### 15 vertices
 
