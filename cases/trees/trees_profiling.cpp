@@ -135,6 +135,43 @@ void profiling_0(const uint64_t n, const uint64_t _N)
 	}
 }
 
+void profiling_1_Cexp(const uint64_t n, const uint64_t _N)
+{
+	classtree::ctree<equal_comparable_tree, metadata, double> ir;
+
+	double total_time = 0;
+
+	uint64_t step = 100;
+	lal::generate::rand_ulab_free_trees gen(n, 1234);
+	for (std::size_t N = 1; N <= _N; ++N) {
+		lal::graphs::free_tree t = gen.yield_tree();
+
+		const auto begin = now();
+		{
+			const auto C_exp = lal::properties::exp_num_crossings(t);
+			ir.add({.tree = std::move(t)}, {.num_occs = 1}, C_exp);
+		}
+		const auto end = now();
+		total_time += elapsed_time(begin, end);
+
+		if (N % step == 0) [[unlikely]] {
+			std::cout << n << '\t' << N << '\t' << "1_Cexp" << '\t';
+			std::cout << total_time << '\t' << ir.size() << std::endl;
+			total_time = 0;
+
+			if (is_power_10(N)) {
+				step = N;
+			}
+		}
+
+#if defined CTREE_DEBUG
+		if (not ir.check_sorted_keys()) {
+			std::cout << "ERROR!\n";
+		}
+#endif
+	}
+}
+
 void profiling_1_Dminpl(const uint64_t n, const uint64_t _N)
 {
 	classtree::ctree<equal_comparable_tree, metadata, uint64_t> ir;
@@ -302,6 +339,7 @@ int main(int argc, char *argv[])
 		std::cerr << "    N: number of trees to generate\n";
 		std::cerr << "    t: test to profile\n";
 		std::cerr << "        0\n";
+		std::cerr << "        1_Cexp\n";
 		std::cerr << "        1_Dminpl\n";
 		std::cerr << "        2_Dminpl_Cexp\n";
 		std::cerr << "        2_Dminpl_Cvar\n";
@@ -315,10 +353,13 @@ int main(int argc, char *argv[])
 	const std::size_t N = static_cast<std::size_t>(atoi(argv[2]));
 	const std::string t(argv[3]);
 
-	std::cout << "n\tN\tir_type\ttime\tunique\n";
+	std::cout << "n\tN\tfeature_type\ttime\tunique\n";
 
 	if (t == "0") {
 		profiling_0(n, N);
+	}
+	else if (t == "1_Cexp") {
+		profiling_1_Cexp(n, N);
 	}
 	else if (t == "1_Dminpl") {
 		profiling_1_Dminpl(n, N);
