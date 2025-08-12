@@ -99,9 +99,15 @@ struct metadata {
 	}
 };
 
-void profiling_0(const uint64_t n, const uint64_t _N)
+template <typename... TreeTypes, typename... Funcs>
+void profiling(
+	const uint64_t n,
+	const uint64_t _N,
+	const std::string_view& name,
+	Funcs&&...fs
+)
 {
-	classtree::ctree<equal_comparable_tree, metadata> ir;
+	classtree::ctree<equal_comparable_tree, metadata, TreeTypes...> ctree;
 
 	double total_time = 0;
 
@@ -112,210 +118,14 @@ void profiling_0(const uint64_t n, const uint64_t _N)
 
 		const auto begin = now();
 		{
-			ir.add({.tree = std::move(t)}, {.num_occs = 1});
+			ctree.add({.tree = std::move(t)}, {.num_occs = 1}, fs(t)...);
 		}
 		const auto end = now();
 		total_time += elapsed_time(begin, end);
 
 		if (N % step == 0) [[unlikely]] {
-			std::cout << n << '\t' << N << '\t' << "0" << '\t';
-			std::cout << total_time << '\t' << ir.size() << std::endl;
-			total_time = 0;
-
-			if (is_power_10(N)) {
-				step = N;
-			}
-		}
-
-#if defined CTREE_DEBUG
-		if (not ir.check_sorted_keys()) {
-			std::cout << "ERROR!\n";
-		}
-#endif
-	}
-}
-
-void profiling_1_Cexp(const uint64_t n, const uint64_t _N)
-{
-	classtree::ctree<equal_comparable_tree, metadata, double> ir;
-
-	double total_time = 0;
-
-	uint64_t step = 100;
-	lal::generate::rand_ulab_free_trees gen(n, 1234);
-	for (std::size_t N = 1; N <= _N; ++N) {
-		lal::graphs::free_tree t = gen.yield_tree();
-
-		const auto begin = now();
-		{
-			const auto C_exp = lal::properties::exp_num_crossings(t);
-			ir.add({.tree = std::move(t)}, {.num_occs = 1}, C_exp);
-		}
-		const auto end = now();
-		total_time += elapsed_time(begin, end);
-
-		if (N % step == 0) [[unlikely]] {
-			std::cout << n << '\t' << N << '\t' << "1_Cexp" << '\t';
-			std::cout << total_time << '\t' << ir.size() << std::endl;
-			total_time = 0;
-
-			if (is_power_10(N)) {
-				step = N;
-			}
-		}
-
-#if defined CTREE_DEBUG
-		if (not ir.check_sorted_keys()) {
-			std::cout << "ERROR!\n";
-		}
-#endif
-	}
-}
-
-void profiling_1_Dminpl(const uint64_t n, const uint64_t _N)
-{
-	classtree::ctree<equal_comparable_tree, metadata, uint64_t> ir;
-
-	double total_time = 0;
-
-	uint64_t step = 100;
-	lal::generate::rand_ulab_free_trees gen(n, 1234);
-	for (std::size_t N = 1; N <= _N; ++N) {
-		lal::graphs::free_tree t = gen.yield_tree();
-
-		const auto begin = now();
-		{
-			const auto Dmin_planar = lal::detail::Dmin::planar::AEF<false>(t);
-			ir.add({.tree = std::move(t)}, {.num_occs = 1}, Dmin_planar);
-		}
-		const auto end = now();
-		total_time += elapsed_time(begin, end);
-
-		if (N % step == 0) [[unlikely]] {
-			std::cout << n << '\t' << N << '\t' << "1_Dminpl" << '\t';
-			std::cout << total_time << '\t' << ir.size() << std::endl;
-			total_time = 0;
-
-			if (is_power_10(N)) {
-				step = N;
-			}
-		}
-
-#if defined CTREE_DEBUG
-		if (not ir.check_sorted_keys()) {
-			std::cout << "ERROR!\n";
-		}
-#endif
-	}
-}
-
-void profiling_2_Dminpl_Cexp(const uint64_t n, const uint64_t _N)
-{
-	classtree::ctree<equal_comparable_tree, metadata, uint64_t, double> ir;
-
-	double total_time = 0;
-
-	uint64_t step = 100;
-	lal::generate::rand_ulab_free_trees gen(n, 1234);
-	for (std::size_t N = 1; N <= _N; ++N) {
-		lal::graphs::free_tree t = gen.yield_tree();
-
-		const auto begin = now();
-		{
-			const auto Dmin_planar = lal::detail::Dmin::planar::AEF<false>(t);
-			const auto C_exp = lal::properties::exp_num_crossings(t);
-			ir.add({.tree = std::move(t)}, {.num_occs = 1}, Dmin_planar, C_exp);
-		}
-		const auto end = now();
-		total_time += elapsed_time(begin, end);
-
-		if (N % step == 0) [[unlikely]] {
-			std::cout << n << '\t' << N << '\t' << "2_Dminpl_Cexp" << '\t';
-			std::cout << total_time << '\t' << ir.size() << std::endl;
-			total_time = 0;
-
-			if (is_power_10(N)) {
-				step = N;
-			}
-		}
-
-#if defined CTREE_DEBUG
-		if (not ir.check_sorted_keys()) {
-			std::cout << "ERROR!\n";
-		}
-#endif
-	}
-}
-
-void profiling_2_Dminpl_Cvar(const uint64_t n, const uint64_t _N)
-{
-	classtree::ctree<equal_comparable_tree, metadata, uint64_t, double> ir;
-
-	double total_time = 0;
-
-	uint64_t step = 100;
-	lal::generate::rand_ulab_free_trees gen(n, 1234);
-	for (std::size_t N = 1; N <= _N; ++N) {
-		lal::graphs::free_tree t = gen.yield_tree();
-
-		const auto begin = now();
-		{
-			const auto Dmin_planar = lal::detail::Dmin::planar::AEF<false>(t);
-			const auto C_var = lal::properties::var_num_crossings_tree(t);
-			ir.add({.tree = std::move(t)}, {.num_occs = 1}, Dmin_planar, C_var);
-		}
-		const auto end = now();
-		total_time += elapsed_time(begin, end);
-
-		if (N % step == 0) [[unlikely]] {
-			std::cout << n << '\t' << N << '\t' << "2_Dminpl_Cvar" << '\t';
-			std::cout << total_time << '\t' << ir.size() << std::endl;
-			total_time = 0;
-
-			if (is_power_10(N)) {
-				step = N;
-			}
-		}
-
-#if defined CTREE_DEBUG
-		if (not ir.check_sorted_keys()) {
-			std::cout << "ERROR!\n";
-		}
-#endif
-	}
-}
-
-void profiling_3_Dminpl_Cexp_Cvar(const uint64_t n, const uint64_t _N)
-{
-	classtree::ctree<equal_comparable_tree, metadata, uint64_t, double, double>
-		ir;
-
-	double total_time = 0;
-
-	uint64_t step = 100;
-	lal::generate::rand_ulab_free_trees gen(n, 1234);
-	for (std::size_t N = 1; N <= _N; ++N) {
-		lal::graphs::free_tree t = gen.yield_tree();
-
-		const auto begin = now();
-		{
-			const auto Dmin_planar = lal::detail::Dmin::planar::AEF<false>(t);
-			const auto C_exp = lal::properties::exp_num_crossings(t);
-			const auto C_var = lal::properties::var_num_crossings_tree(t);
-			ir.add(
-				{.tree = std::move(t)},
-				{.num_occs = 1},
-				Dmin_planar,
-				C_exp,
-				C_var
-			);
-		}
-		const auto end = now();
-		total_time += elapsed_time(begin, end);
-
-		if (N % step == 0) [[unlikely]] {
-			std::cout << n << '\t' << N << '\t' << "3_Dminpl_Cexp_Cvar" << '\t';
-			std::cout << total_time << '\t' << ir.size() << std::endl;
+			std::cout << n << '\t' << N << '\t' << name << '\t';
+			std::cout << total_time << '\t' << ctree.size() << '\n';
 			total_time = 0;
 
 			if (is_power_10(N)) {
@@ -351,26 +161,39 @@ int main(int argc, char *argv[])
 
 	const uint64_t n = static_cast<uint64_t>(atoi(argv[1]));
 	const std::size_t N = static_cast<std::size_t>(atoi(argv[2]));
-	const std::string t(argv[3]);
+	const std::string_view t(argv[3]);
 
 	std::cout << "n\tN\tfeature_type\ttime\tunique\n";
 
+	const auto Dminpl = [](const lal::graphs::free_tree& T) -> uint64_t
+	{
+		return lal::detail::Dmin::planar::AEF<false>(T);
+	};
+	const auto Cexp = [](const lal::graphs::free_tree& T) -> double
+	{
+		return lal::properties::exp_num_crossings(T);
+	};
+	const auto Cvar = [](const lal::graphs::free_tree& T) -> double
+	{
+		return lal::properties::var_num_crossings(T);
+	};
+
 	if (t == "0") {
-		profiling_0(n, N);
+		profiling<>(n, N, t);
 	}
 	else if (t == "1_Cexp") {
-		profiling_1_Cexp(n, N);
+		profiling<double>(n, N, t, Cexp);
 	}
 	else if (t == "1_Dminpl") {
-		profiling_1_Dminpl(n, N);
+		profiling<uint64_t>(n, N, t, Dminpl);
 	}
 	else if (t == "2_Dminpl_Cexp") {
-		profiling_2_Dminpl_Cexp(n, N);
+		profiling<uint64_t, double>(n, N, t, Dminpl, Cexp);
 	}
 	else if (t == "2_Dminpl_Cvar") {
-		profiling_2_Dminpl_Cvar(n, N);
+		profiling<uint64_t, double>(n, N, t, Dminpl, Cvar);
 	}
 	else if (t == "3_Dminpl_Cexp_Cvar") {
-		profiling_3_Dminpl_Cexp_Cvar(n, N);
+		profiling<uint64_t, double, double>(n, N, t, Dminpl, Cexp, Cvar);
 	}
 }
