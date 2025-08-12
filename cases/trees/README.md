@@ -142,7 +142,7 @@ n	N		time		unique
 
 The execution time in one row is the time needed to add the amount of trees to go
 from the row above to that row, given in milliseconds. `702.9` milliseconds is not
-that much, is it?
+that much, is it? (Check the plots [here](https://github.com/lluisalemanypuig/classification-tree/blob/main/cases/trees/data/full.pdf)).
 
 #### One feature: the minimum planar sum of edge lengths
 
@@ -161,7 +161,7 @@ n	N		time		unique
 The execution time now also measures the time needed to calculate the features
 used to classify the trees. Notice that the execution time has been divided
 approximately by $5$ from $A.0$ to $A.1$. Using more features the situation
-does not improve much more.
+does not improve much more. (Check the plots [here](https://github.com/lluisalemanypuig/classification-tree/blob/main/cases/trees/data/full.pdf)).
 
 ### 20 vertices
 
@@ -182,7 +182,7 @@ n	N		time		unique
 ```
 
 The execution time has increased by, approximately, a factor of $3$ with respect
-to $A.0$.
+to $A.0$. (Check the plots [here](https://github.com/lluisalemanypuig/classification-tree/blob/main/cases/trees/data/full.pdf)).
 
 #### One feature: the minimum planar sum of edge lengths
 
@@ -198,6 +198,7 @@ n	N		time		unique
 ```
 
 The speed up factor is almost $10$ from $B.0$ to $B.1$. But here we can use more features.
+(Check the plots [here](https://github.com/lluisalemanypuig/classification-tree/blob/main/cases/trees/data/full.pdf)).
 
 #### Two features: the minimum planar sum of edge lengths and the expected number of edge crossings
 
@@ -212,7 +213,7 @@ n	N		time		unique
 20	10000	162.069		9932
 ```
 
-We get a speedup factor of about $1.5$ from $B.1$ to $B.2$.
+We get a speedup factor of about $1.5$ from $B.1$ to $B.2$. (Check the plots [here](https://github.com/lluisalemanypuig/classification-tree/blob/main/cases/trees/data/full.pdf)).
 
 #### Two features: the minimum planar sum of edge lengths and the variance of the number of edge crossings
 
@@ -229,7 +230,7 @@ n	N		time		unique
 20	10000	7.7867		9932
 ```
 
-Now, this is what I call a speed up factor.
+Now, this is what I call a speed up factor. (Check the plots [here](https://github.com/lluisalemanypuig/classification-tree/blob/main/cases/trees/data/full.pdf)).
 
 ### 100 vertices
 
@@ -247,6 +248,7 @@ n	N		time		unique
 100	9000	4129.44		9000
 100	10000	4627.05		10000
 ```
+(Check the plots [here](https://github.com/lluisalemanypuig/classification-tree/blob/main/cases/trees/data/full.pdf)).
 
 #### One feature: the minimum planar sum of edge lengths
 
@@ -259,7 +261,7 @@ n	N		time		unique
 100	10000	123.245		10000
 ```
 
-Yes, a speed up factor of approximately $35$.
+Yes, a speed up factor of approximately $35$. (Check the plots [here](https://github.com/lluisalemanypuig/classification-tree/blob/main/cases/trees/data/full.pdf)).
 
 #### Two features: the minimum planar sum of edge lengths and the expected number of edge crossings
 
@@ -272,7 +274,7 @@ n	N		time		unique
 100	10000	30.2547		10000
 ```
 
-The speed up factor is now around $150$.
+The speed up factor is now around $150$. (Check the plots [here](https://github.com/lluisalemanypuig/classification-tree/blob/main/cases/trees/data/full.pdf)).
 
 #### Two features: the minimum planar sum of edge lengths and the variance of the number of edge crossings
 
@@ -285,7 +287,7 @@ n	N		time		unique
 100	10000	22.0889		10000
 ```
 
-That is even nicer speed up factor around $200$.
+That is even nicer speed up factor around $200$. (Check the plots [here](https://github.com/lluisalemanypuig/classification-tree/blob/main/cases/trees/data/full.pdf)).
 
 #### All features
 
