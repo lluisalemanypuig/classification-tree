@@ -128,14 +128,14 @@ features at all:
 ```
 A.0)
 n	N		time		unique
-15	7000	0.0893925	4575
-15	8000	0.0819467	4969
-15	9000	0.0785779	5316
-15	10000	0.0695515	5582
+15	7000	626.9	4575
+15	8000	654.474	4969
+15	9000	702.876	5316
+15	10000	702.882	5582
 ```
 
 The execution time in one row is the time needed to add the amount of trees to go
-from the row above to that row, given in milliseconds. `0.07` milliseconds is not
+from the row above to that row, given in milliseconds. `702.9` milliseconds is not
 that much, is it?
 
 #### One feature: the minimum planar sum of edge lengths
@@ -146,14 +146,16 @@ arrangements:
 ```
 A.1)
 n	N		time		unique
-15	7000	0.0188527	4575
-15	8000	0.0177275	4969
-15	9000	0.0164189	5316
-15	10000	0.0141344	5582
+15	7000	122.76		4575
+15	8000	129.601		4969
+15	9000	138.738		5316
+15	10000	141.943		5582
 ```
 
-The execution time has been divided approximately by $5$ from $A.0$ to $A.1$. Using
-more features the situation does not improve much more.
+The execution time now also measures the time needed to calculate the features
+used to classify the trees. Notice that the execution time has been divided
+approximately by $5$ from $A.0$ to $A.1$. Using more features the situation
+does not improve much more.
 
 ### 20 vertices
 
@@ -167,10 +169,10 @@ When using no features at all, we get:
 ```
 B.0)
 n	N		time		unique
-20	7000	0.183725	6969
-20	8000	0.190024	7961
-20	9000	0.201414	8944
-20	10000	0.201053	9932
+20	7000	1336.2		6969
+20	8000	1579.58		7961
+20	9000	1838.99		8944
+20	10000	2063.48		9932
 ```
 
 The execution time has increased by, approximately, a factor of $3$ with respect
@@ -183,10 +185,10 @@ When using the same single feature we get:
 ```
 B.1)
 n	N		time		unique
-20	7000	0.0247538	6969
-20	8000	0.0252308	7961
-20	9000	0.0274791	8944
-20	10000	0.0266108	9932
+20	7000	160.05		6969
+20	8000	182.69		7961
+20	9000	220.459		8944
+20	10000	240.633		9932
 ```
 
 The speed up factor is almost $10$ from $B.0$ to $B.1$. But here we can use more features.
@@ -198,10 +200,10 @@ When using option `2_Dminpl_Cexp` of the profiler:
 ```
 B.2)
 n	N		time		unique
-20	7000	0.016175	6969
-20	8000	0.0162552	7961
-20	9000	0.0177087	8944
-20	10000	0.0166533	9932
+20	7000	108.953		6969
+20	8000	126.401		7961
+20	9000	151.888		8944
+20	10000	162.069		9932
 ```
 
 We get a speedup factor of about $1.5$ from $B.1$ to $B.2$.
@@ -215,10 +217,10 @@ accessed via option $2$ we get:
 ```
 B.3)
 n	N		time		unique
-20	7000	0.00117218	6969
-20	8000	0.00100462	7961
-20	9000	0.000917103	8944
-20	10000	0.000870462	9932
+20	7000	7.42983		6969
+20	8000	7.45234		7961
+20	9000	7.47187		8944
+20	10000	7.7867		9932
 ```
 
 Now, this is what I call a speed up factor.
@@ -234,10 +236,10 @@ generating at most 10'000 trees.
 ```
 C.0)
 n	N		time		unique
-100	7000	0.431311	7000
-100	8000	0.446041	8000
-100	9000	0.453749	9000
-100	10000	0.457856	10000
+100	7000	3154.04		7000
+100	8000	3652.79		8000
+100	9000	4129.44		9000
+100	10000	4627.05		10000
 ```
 
 #### One feature: the minimum planar sum of edge lengths
@@ -245,10 +247,10 @@ n	N		time		unique
 ```
 C.1)
 n	N		time		unique
-100	7000	0.0125705	7000
-100	8000	0.0123177	8000
-100	9000	0.0122726	9000
-100	10000	0.0123329	10000
+100	7000	86.5208		7000
+100	8000	97.9543		8000
+100	9000	108.36		9000
+100	10000	123.245		10000
 ```
 
 Yes, a speed up factor of approximately $35$.
@@ -258,10 +260,10 @@ Yes, a speed up factor of approximately $35$.
 ```
 C.1)
 n	N		time		unique
-100	7000	0.00388976	7000
-100	8000	0.00347707	8000
-100	9000	0.00319991	9000
-100	10000	0.00313089	10000
+100	7000	26.1793		7000
+100	8000	27.19		8000
+100	9000	27.6609		9000
+100	10000	30.2547		10000
 ```
 
 The speed up factor is now around $150$.
@@ -271,13 +273,13 @@ The speed up factor is now around $150$.
 ```
 C.2)
 n	N		time		unique
-100	7000	0.00348374	7000
-100	8000	0.00305745	8000
-100	9000	0.00271777	9000
-100	10000	0.00244529	10000
+100	7000	22.2746		7000
+100	8000	22.3222		8000
+100	9000	22.1965		9000
+100	10000	22.0889		10000
 ```
 
-That is even nicer speed up factor around $180$.
+That is even nicer speed up factor around $200$.
 
 #### All features
 
