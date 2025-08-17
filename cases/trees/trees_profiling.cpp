@@ -149,8 +149,9 @@ int main(int argc, char *argv[])
 		std::cerr << "    N: number of trees to generate\n";
 		std::cerr << "    t: test to profile\n";
 		std::cerr << "        0\n";
-		std::cerr << "        1_Cexp\n";
 		std::cerr << "        1_Dminpl\n";
+		std::cerr << "        1_Cexp\n";
+		std::cerr << "        1_Cvar\n";
 		std::cerr << "        2_Dminpl_Cexp\n";
 		std::cerr << "        2_Dminpl_Cvar\n";
 		std::cerr << "        3_Dminpl_Cexp_Cvar\n";
@@ -181,11 +182,14 @@ int main(int argc, char *argv[])
 	if (t == "0") {
 		profiling<>(n, N, t);
 	}
+	else if (t == "1_Dminpl") {
+		profiling<uint64_t>(n, N, t, Dminpl);
+	}
 	else if (t == "1_Cexp") {
 		profiling<double>(n, N, t, Cexp);
 	}
-	else if (t == "1_Dminpl") {
-		profiling<uint64_t>(n, N, t, Dminpl);
+	else if (t == "1_Cvar") {
+		profiling<double>(n, N, t, Cvar);
 	}
 	else if (t == "2_Dminpl_Cexp") {
 		profiling<uint64_t, double>(n, N, t, Dminpl, Cexp);
