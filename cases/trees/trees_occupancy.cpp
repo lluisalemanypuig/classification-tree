@@ -37,7 +37,8 @@
 // ctree includes
 #include <ctree/ctree.hpp>
 
-inline std::ostream& operator<< (std::ostream& os, const std::vector<double>& v)
+template <typename T>
+inline std::ostream& operator<< (std::ostream& os, const std::vector<T>& v)
 {
 	for (const auto s : v) {
 		os << s << ' ';
@@ -83,7 +84,7 @@ struct metadata {
 
 void occupancy_0(const uint64_t n, const uint64_t _N)
 {
-	classtree::ctree<equal_comparable_tree, metadata> ir;
+	classtree::ctree<equal_comparable_tree, metadata> ctree;
 
 	uint64_t step = 100;
 	lal::generate::rand_ulab_free_trees gen(n, 1234);
@@ -91,7 +92,7 @@ void occupancy_0(const uint64_t n, const uint64_t _N)
 		lal::graphs::free_tree t = gen.yield_tree();
 
 		{
-			ir.add({.tree = std::move(t)}, {.num_occs = 1});
+			ctree.add({.tree = std::move(t)}, {.num_occs = 1});
 		}
 
 		if (N % step == 0) {
@@ -100,8 +101,8 @@ void occupancy_0(const uint64_t n, const uint64_t _N)
 			}
 		}
 
-#if defined IR_DEBUG
-		if (not ir.check_sorted_keys()) {
+#if defined CTREE_DEBUG
+		if (not ctree.check_sorted_keys()) {
 			std::cout << "ERROR!\n";
 		}
 #endif
@@ -111,25 +112,25 @@ void occupancy_0(const uint64_t n, const uint64_t _N)
 template <typename T, typename Fn>
 void occupancy_1(const uint64_t n, const uint64_t _N, const Fn& f)
 {
-	classtree::ctree<equal_comparable_tree, metadata, T> ir;
+	classtree::ctree<equal_comparable_tree, metadata, T> ctree;
 
 	uint64_t step = 100;
 	lal::generate::rand_ulab_free_trees gen(n, 1234);
 	for (std::size_t N = 1; N <= _N; ++N) {
 		lal::graphs::free_tree t = gen.yield_tree();
 
-		ir.add({.tree = std::move(t)}, {.num_occs = 1}, f(t));
+		ctree.add({.tree = std::move(t)}, {.num_occs = 1}, f(t));
 
 		if (N % step == 0) {
 			std::cout << "--------------------\n";
-			std::cout << ir.sizes() << '\n';
+			std::cout << ctree.sizes() << '\n';
 			if (N == 1000) {
 				step = 1000;
 			}
 		}
 
-#if defined IR_DEBUG
-		if (not ir.check_sorted_keys()) {
+#if defined CTREE_DEBUG
+		if (not ctree.check_sorted_keys()) {
 			std::cout << "ERROR!\n";
 		}
 #endif
@@ -141,30 +142,30 @@ void occupancy_2(
 	const uint64_t n, const uint64_t _N, const Fn1& f1, const Fn2& f2
 )
 {
-	classtree::ctree<equal_comparable_tree, metadata, T1, T2> ir;
+	classtree::ctree<equal_comparable_tree, metadata, T1, T2> ctree;
 
 	uint64_t step = 100;
 	lal::generate::rand_ulab_free_trees gen(n, 1234);
 	for (std::size_t N = 1; N <= _N; ++N) {
 		lal::graphs::free_tree t = gen.yield_tree();
 
-		ir.add({.tree = std::move(t)}, {.num_occs = 1}, f1(t), f2(t));
+		ctree.add({.tree = std::move(t)}, {.num_occs = 1}, f1(t), f2(t));
 
 		if (N % step == 0) {
 			std::cout << "--------------------\n";
-			const auto sizes = ir.sizes();
-			for (std::size_t i = 0; i < ir.num_keys(); ++i) {
-				const auto& ir_i = ir.get_child(i);
+			const auto sizes = ctree.sizes();
+			for (std::size_t i = 0; i < ctree.num_keys(); ++i) {
+				const auto& ctree_i = ctree.get_child(i);
 				std::cout << std::setw(2) << i << ": (" << sizes[i] << ") -> "
-						  << ir_i.sizes() << '\n';
+						  << ctree_i.sizes() << '\n';
 			}
 			if (N == 1000) {
 				step = 1000;
 			}
 		}
 
-#if defined IR_DEBUG
-		if (not ir.check_sorted_keys()) {
+#if defined CTREE_DEBUG
+		if (not ctree.check_sorted_keys()) {
 			std::cout << "ERROR!\n";
 		}
 #endif
@@ -186,14 +187,14 @@ void occupancy_3(
 	const Fn3& f3
 )
 {
-	classtree::ctree<equal_comparable_tree, metadata, T1, T2, T3> ir;
+	classtree::ctree<equal_comparable_tree, metadata, T1, T2, T3> ctree;
 
 	uint64_t step = 100;
 	lal::generate::rand_ulab_free_trees gen(n, 1234);
 	for (std::size_t N = 1; N <= _N; ++N) {
 		lal::graphs::free_tree t = gen.yield_tree();
 
-		ir.add({.tree = std::move(t)}, {.num_occs = 1}, f1(t), f2(t), f3(t));
+		ctree.add({.tree = std::move(t)}, {.num_occs = 1}, f1(t), f2(t), f3(t));
 
 		if (N % step == 0) {
 			if (N == 1000) {
@@ -201,24 +202,24 @@ void occupancy_3(
 			}
 		}
 
-#if defined IR_DEBUG
-		if (not ir.check_sorted_keys()) {
+#if defined CTREE_DEBUG
+		if (not ctree.check_sorted_keys()) {
 			std::cout << "ERROR!\n";
 		}
 #endif
 	}
 
 	std::cout << "--------------------\n";
-	const auto sizes = ir.sizes();
-	for (std::size_t i = 0; i < ir.num_keys(); ++i) {
-		const auto& ir_i = ir.get_child(i);
+	const auto sizes = ctree.sizes();
+	for (std::size_t i = 0; i < ctree.num_keys(); ++i) {
+		const auto& ctree_i = ctree.get_child(i);
 		std::cout << std::setw(2) << i << ": (" << sizes[i] << ") ->\n";
 
-		const auto sizes_i = ir_i.sizes();
-		for (std::size_t j = 0; j < ir_i.num_keys(); ++j) {
-			const auto& ir_j = ir_i.get_child(j);
+		const auto sizes_i = ctree_i.sizes();
+		for (std::size_t j = 0; j < ctree_i.num_keys(); ++j) {
+			const auto& ctree_j = ctree_i.get_child(j);
 			std::cout << "    " << std::setw(2) << j << ": (" << sizes_i[j]
-					  << ") -> " << ir_j.sizes() << '\n';
+					  << ") -> " << ctree_j.sizes() << '\n';
 		}
 	}
 }
