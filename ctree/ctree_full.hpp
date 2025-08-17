@@ -182,15 +182,13 @@ public:
 	 * The sizes are returned as proportion values (from 0 to 1).
 	 * @returns A vector of sizes proportionally to the full size of this tree.
 	 */
-	[[nodiscard]] std::vector<double> sizes() const noexcept
+	[[nodiscard]] std::vector<std::size_t> sizes() const noexcept
 	{
-		std::vector<double> s(m_children.size(), 0);
+		std::vector<std::size_t> s(m_children.size(), 0);
 
 		std::size_t i = 0;
 		for (const auto& [_, child] : m_children) {
-			const double S = static_cast<double>(child.size());
-			s[i] = S / static_cast<double>(m_size);
-
+			s[i] = child.size();
 			++i;
 		}
 		return s;
