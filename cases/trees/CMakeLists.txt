@@ -94,3 +94,6 @@ configure_tree_executable(trees_profiling)
 
 add_executable(trees_occupancy trees_occupancy.cpp ${ctree})
 configure_tree_executable(trees_occupancy)
+
+add_executable(trees_distribution trees_distribution.cpp ${ctree})
+configure_tree_executable(trees_distribution)
