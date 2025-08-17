@@ -108,19 +108,17 @@ void occupancy_0(const uint64_t n, const uint64_t _N)
 	}
 }
 
-void occupancy_1(const uint64_t n, const uint64_t _N)
+template <typename T, typename Fn>
+void occupancy_1(const uint64_t n, const uint64_t _N, const Fn& f)
 {
-	classtree::ctree<equal_comparable_tree, metadata, uint64_t> ir;
+	classtree::ctree<equal_comparable_tree, metadata, T> ir;
 
 	uint64_t step = 100;
 	lal::generate::rand_ulab_free_trees gen(n, 1234);
 	for (std::size_t N = 1; N <= _N; ++N) {
 		lal::graphs::free_tree t = gen.yield_tree();
 
-		{
-			const auto Dmin_planar = lal::detail::Dmin::planar::AEF<false>(t);
-			ir.add({.tree = std::move(t)}, {.num_occs = 1}, Dmin_planar);
-		}
+		ir.add({.tree = std::move(t)}, {.num_occs = 1}, f(t));
 
 		if (N % step == 0) {
 			std::cout << "--------------------\n";
@@ -138,20 +136,19 @@ void occupancy_1(const uint64_t n, const uint64_t _N)
 	}
 }
 
-void occupancy_2(const uint64_t n, const uint64_t _N)
+template <typename T1, typename T2, typename Fn1, typename Fn2>
+void occupancy_2(
+	const uint64_t n, const uint64_t _N, const Fn1& f1, const Fn2& f2
+)
 {
-	classtree::ctree<equal_comparable_tree, metadata, uint64_t, double> ir;
+	classtree::ctree<equal_comparable_tree, metadata, T1, T2> ir;
 
 	uint64_t step = 100;
 	lal::generate::rand_ulab_free_trees gen(n, 1234);
 	for (std::size_t N = 1; N <= _N; ++N) {
 		lal::graphs::free_tree t = gen.yield_tree();
 
-		{
-			const auto Dmin_planar = lal::detail::Dmin::planar::AEF<false>(t);
-			const auto C_exp = lal::properties::exp_num_crossings(t);
-			ir.add({.tree = std::move(t)}, {.num_occs = 1}, Dmin_planar, C_exp);
-		}
+		ir.add({.tree = std::move(t)}, {.num_occs = 1}, f1(t), f2(t));
 
 		if (N % step == 0) {
 			std::cout << "--------------------\n";
@@ -174,28 +171,29 @@ void occupancy_2(const uint64_t n, const uint64_t _N)
 	}
 }
 
-void occupancy_3(const uint64_t n, const uint64_t _N)
+template <
+	typename T1,
+	typename T2,
+	typename T3,
+	typename Fn1,
+	typename Fn2,
+	typename Fn3>
+void occupancy_3(
+	const uint64_t n,
+	const uint64_t _N,
+	const Fn1& f1,
+	const Fn2& f2,
+	const Fn3& f3
+)
 {
-	classtree::ctree<equal_comparable_tree, metadata, uint64_t, double, double>
-		ir;
+	classtree::ctree<equal_comparable_tree, metadata, T1, T2, T3> ir;
 
 	uint64_t step = 100;
 	lal::generate::rand_ulab_free_trees gen(n, 1234);
 	for (std::size_t N = 1; N <= _N; ++N) {
 		lal::graphs::free_tree t = gen.yield_tree();
 
-		{
-			const auto Dmin_planar = lal::detail::Dmin::planar::AEF<false>(t);
-			const auto C_exp = lal::properties::exp_num_crossings(t);
-			const auto C_var = lal::properties::var_num_crossings_tree(t);
-			ir.add(
-				{.tree = std::move(t)},
-				{.num_occs = 1},
-				Dmin_planar,
-				C_exp,
-				C_var
-			);
-		}
+		ir.add({.tree = std::move(t)}, {.num_occs = 1}, f1(t), f2(t), f3(t));
 
 		if (N % step == 0) {
 			if (N == 1000) {
@@ -227,42 +225,59 @@ void occupancy_3(const uint64_t n, const uint64_t _N)
 
 int main(int argc, char *argv[])
 {
-	std::cout.setf(std::ios::fixed);
-	std::cout.precision(3);
-
 	if (argc != 4) {
 		std::cerr << "Exactly 3 arguments are needed.\n";
-		std::cerr << "    d: depth of the tree (e.g.: 0, 1, 2, ...)\n";
 		std::cerr << "    n: number of vertices\n";
 		std::cerr << "    N: number of trees to generate\n";
+		std::cerr << "    t: test to profile\n";
+		std::cerr << "        0\n";
+		std::cerr << "        1_Dminpl\n";
+		std::cerr << "        1_Cexp\n";
+		std::cerr << "        1_Cvar\n";
+		std::cerr << "        2_Dminpl_Cexp\n";
+		std::cerr << "        2_Dminpl_Cvar\n";
+		std::cerr << "        3_Dminpl_Cexp_Cvar\n";
 		std::cerr << "Example:\n";
-		std::cerr << "    ./trees_occupancy 100 10000\n";
+		std::cerr << "    ./trees_profiling 100 10000 2_Dminpl_Cvar\n";
 		return 1;
 	}
 
-	const uint64_t d = static_cast<uint64_t>(atoi(argv[1]));
-	const uint64_t n = static_cast<uint64_t>(atoi(argv[2]));
-	const uint64_t N = static_cast<uint64_t>(atoi(argv[3]));
+	const uint64_t n = static_cast<uint64_t>(atoi(argv[1]));
+	const std::size_t N = static_cast<std::size_t>(atoi(argv[2]));
+	const std::string_view t(argv[3]);
 
-	std::cout << "n\tN\tir_type\ttime\tunique\n";
-	if (d == 0) {
-		std::cout << "====================\n";
-		std::cout << "OCCUPANCY 0\n";
+	const auto Dminpl = [](const lal::graphs::free_tree& T) -> uint64_t
+	{
+		return lal::detail::Dmin::planar::AEF<false>(T);
+	};
+	const auto Cexp = [](const lal::graphs::free_tree& T) -> double
+	{
+		return lal::properties::exp_num_crossings(T);
+	};
+	const auto Cvar = [](const lal::graphs::free_tree& T) -> double
+	{
+		return lal::properties::var_num_crossings(T);
+	};
+
+	if (t == "0") {
 		occupancy_0(n, N);
 	}
-	else if (d == 1) {
-		std::cout << "====================\n";
-		std::cout << "OCCUPANCY 1\n";
-		occupancy_1(n, N);
+	else if (t == "1_Dminpl") {
+		occupancy_1<uint64_t>(n, N, Dminpl);
 	}
-	else if (d == 2) {
-		std::cout << "====================\n";
-		std::cout << "OCCUPANCY 2\n";
-		occupancy_2(n, N);
+	else if (t == "1_Cexp") {
+		occupancy_1<double>(n, N, Cexp);
 	}
-	else if (d == 3) {
-		std::cout << "====================\n";
-		std::cout << "OCCUPANCY 3\n";
-		occupancy_3(n, N);
+	else if (t == "1_Cvar") {
+		occupancy_1<double>(n, N, Cvar);
+	}
+	else if (t == "2_Dminpl_Cexp") {
+		occupancy_2<uint64_t, double>(n, N, Dminpl, Cexp);
+	}
+	else if (t == "2_Dminpl_Cvar") {
+		occupancy_2<uint64_t, double>(n, N, Dminpl, Cvar);
+	}
+	else if (t == "3_Dminpl_Cexp_Cvar") {
+		occupancy_3<uint64_t, double, double>(n, N, Dminpl, Cexp, Cvar);
 	}
 }
