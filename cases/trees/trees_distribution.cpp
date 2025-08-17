@@ -182,6 +182,8 @@ int main(int argc, char *argv[])
 		std::cerr << "        1_Cvar\n";
 		std::cerr << "        2_Dminpl_Cexp\n";
 		std::cerr << "        2_Dminpl_Cvar\n";
+		std::cerr << "        2_Cexp_Dminpl\n";
+		std::cerr << "        2_Cvar_Dminpl\n";
 		std::cerr << "        3_Dminpl_Cexp_Cvar\n";
 		std::cerr << "Example:\n";
 		std::cerr << "    ./trees_profiling 100 10000 2_Dminpl_Cvar\n";
@@ -218,6 +220,12 @@ int main(int argc, char *argv[])
 	}
 	else if (t == "2_Dminpl_Cvar") {
 		distribution_2<uint64_t, double>(n, Dminpl, Cvar);
+	}
+	else if (t == "2_Cexp_Dminpl") {
+		distribution_2<double, uint64_t>(n, Cexp, Dminpl);
+	}
+	else if (t == "2_Cvar_Dminpl") {
+		distribution_2<double, uint64_t>(n, Cvar, Dminpl);
 	}
 	else if (t == "3_Dminpl_Cexp_Cvar") {
 		distribution_3<uint64_t, double, double>(n, Dminpl, Cexp, Cvar);

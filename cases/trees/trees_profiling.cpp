@@ -154,6 +154,8 @@ int main(int argc, char *argv[])
 		std::cerr << "        1_Cvar\n";
 		std::cerr << "        2_Dminpl_Cexp\n";
 		std::cerr << "        2_Dminpl_Cvar\n";
+		std::cerr << "        2_Cexp_Dminpl\n";
+		std::cerr << "        2_Cvar_Dminpl\n";
 		std::cerr << "        3_Dminpl_Cexp_Cvar\n";
 		std::cerr << "Example:\n";
 		std::cerr << "    ./trees_profiling 100 10000 2_Dminpl_Cvar\n";
@@ -196,6 +198,12 @@ int main(int argc, char *argv[])
 	}
 	else if (t == "2_Dminpl_Cvar") {
 		profiling<uint64_t, double>(n, N, t, Dminpl, Cvar);
+	}
+	else if (t == "2_Cexp_Dminpl") {
+		profiling<double, uint64_t>(n, N, t, Cexp, Dminpl);
+	}
+	else if (t == "2_Cvar_Dminpl") {
+		profiling<double, uint64_t>(n, N, t, Cvar, Dminpl);
 	}
 	else if (t == "3_Dminpl_Cexp_Cvar") {
 		profiling<uint64_t, double, double>(n, N, t, Dminpl, Cexp, Cvar);
