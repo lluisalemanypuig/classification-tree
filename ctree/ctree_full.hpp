@@ -433,7 +433,7 @@ private:
 	 * @returns True if all the types are same. False if otherwise.
 	 */
 	template <typename _value_t, typename _metadata_t, typename... _keys_t>
-	static constexpr void check_types() noexcept
+	static consteval void check_types() noexcept
 	{
 		static_assert(std::is_same_v<std::remove_cvref_t<_value_t>, value_t>);
 		static_assert(std::is_same_v<

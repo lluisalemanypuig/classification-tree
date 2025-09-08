@@ -370,7 +370,7 @@ private:
 	 * @returns True if all the types are same. False if otherwise.
 	 */
 	template <typename _value_t, typename _metadata_t>
-	[[nodiscard]] static constexpr bool check_types() noexcept
+	[[nodiscard]] static consteval bool check_types() noexcept
 	{
 		return std::is_same_v<std::remove_cvref_t<_value_t>, value_t> and
 			   std::is_same_v<std::remove_cvref_t<_metadata_t>, metadata_t>;
