@@ -56,10 +56,10 @@ public:
 	using child_t = ctree<value_t, metadata_t, keys_t...>;
 
 	/// Node type, a pair of key value and its associated subtree.
-	typedef std::pair<key_t, child_t> element_t;
+	using element_t = std::pair<key_t, child_t>;
 
 	/// The container that stores the key values, and the associated subtree.
-	typedef std::vector<element_t> container_t;
+	using container_t = std::vector<element_t>;
 
 public:
 

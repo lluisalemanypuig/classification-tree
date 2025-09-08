@@ -49,10 +49,10 @@ class ctree<value_t, metadata_t> {
 public:
 
 	/// A pair of representative element and its metadata.
-	typedef std::pair<value_t, metadata_t> element_t;
+	using element_t = std::pair<value_t, metadata_t>;
 
 	/// The container that stores the key values, and the associated subtree.
-	typedef std::vector<element_t> container_t;
+	using container_t = std::vector<element_t>;
 
 public:
 
