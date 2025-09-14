@@ -368,6 +368,7 @@ public:
 			m_past_begin = true;
 			m_it = m_tree->end();
 			m_it_idx = 1;
+			m_end_idx = 1;
 			return false;
 		}
 
