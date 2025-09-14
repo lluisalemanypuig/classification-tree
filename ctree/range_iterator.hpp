@@ -292,7 +292,8 @@ private:
 	 * Since this iterator iterates over leaf nodes, there are no limits
 	 * to specify.
 	 */
-	void initialize_limits() noexcept { }
+	void initialize_limits_begin() noexcept { }
+	void initialize_limits_end() noexcept { }
 
 private:
 
@@ -367,22 +368,13 @@ public:
 		if (m_tree->num_keys() == 0) [[unlikely]] {
 			m_past_begin = true;
 			m_it = m_tree->end();
+			m_begin_idx = 1;
 			m_it_idx = 1;
 			m_end_idx = 1;
 			return false;
 		}
 
-		const bool r = initialize_limits();
-		if (not r) {
-			return false;
-		}
-
-		m_past_begin = false;
-		m_it = m_tree->begin();
-		std::advance(m_it, m_begin_idx);
-		m_it_idx = m_begin_idx;
-		m_subtree_iterator.set_pointer(&m_it->second);
-		return m_subtree_iterator.to_begin();
+		return initialize_limits_begin();
 	}
 
 	/**
@@ -400,22 +392,13 @@ public:
 		if (m_tree->num_keys() == 0) [[unlikely]] {
 			m_past_begin = true;
 			m_it = m_tree->end();
+			m_begin_idx = 1;
 			m_it_idx = 1;
+			m_end_idx = 1;
 			return false;
 		}
 
-		const bool r = initialize_limits();
-		if (not r) {
-			return false;
-		}
-
-		m_past_begin = false;
-		m_it = m_tree->begin();
-		std::advance(m_it, m_end_idx - 1);
-		m_it_idx = m_end_idx - 1;
-		// no need to set the subtree iterator because this has already been
-		// done by the initialize_limits function.
-		return true;
+		return initialize_limits_end();
 	}
 
 	/// Advance one step in the iteration.
@@ -568,26 +551,27 @@ public:
 private:
 
 	/**
-	 * @brief Finds the first and last+1 valid positions in this node.
+	 * @brief Initialize the pointers of the iteration.
 	 *
-	 * Sets the pointers @ref m_begin_ptr and @ref m_last_ptr of this iterator.
-	 * Sets the pointers @ref m_begin_ptr and @ref m_last_ptr of the subtree iterator
-	 * as well.
-	 * @post The current iterator @ref m_it is set to the last value in the
-	 * iteration. The subtree iterator is also initialized to its corresponding
-	 * end of the iteration.
+	 * This routine is optimized for iterations that start at the beginning.
 	 */
-	[[nodiscard]] bool initialize_limits() noexcept
+	[[nodiscard]] bool initialize_limits_begin() noexcept
 	{
 #if defined DEBUG
 		assert(m_tree != nullptr);
 #endif
 
-		m_it = m_tree->begin();
-		m_it_idx = 0;
+		// prepare the pointers
+		m_past_begin = false;
+		m_begin_idx = 0;
+		m_it = m_tree->end();
+		--m_it;
+		m_it_idx = m_tree->num_keys() - 1;
 		m_end_idx = m_tree->num_keys();
-		const bool found_begin = next();
-		if (not found_begin) {
+
+		// find the last element
+		const bool found_last = previous();
+		if (not found_last) {
 			m_it = m_tree->begin();
 			m_it_idx = m_tree->num_keys();
 			m_begin_idx = m_tree->num_keys();
@@ -596,20 +580,85 @@ private:
 			return false;
 		}
 
+#if defined DEBUG
+		assert(not m_past_begin);
+#endif
+
+		// capture the right limit (end)
+		m_end_idx = m_it_idx + 1;
+
+		m_it = m_tree->begin();
+		m_it_idx = 0;
+
+		// find the first element
+		[[maybe_unused]] const bool found_first = next();
+#if defined DEBUG
+		// The first element must have been found due to the simple fact that
+		// if there was a 'last' then there must be a first. Notice that the
+		// first and last elements may coincide.
+		assert(found_first);
+#endif
+
+		// capture the left limit (begin)
 		m_begin_idx = m_it_idx;
 
+#if defined DEBUG
+		assert(m_begin_idx < m_end_idx);
+#endif
+		return true;
+	}
+
+	/**
+	 * @brief Initialize the pointers of the iteration.
+	 *
+	 * This routine is optimized for iterations that start at the end.
+	 */
+	[[nodiscard]] bool initialize_limits_end() noexcept
+	{
+#if defined DEBUG
+		assert(m_tree != nullptr);
+#endif
+
+		// prepare the pointers
+		m_begin_idx = 0;
+		m_it = m_tree->begin();
+		m_it_idx = 0;
+		m_end_idx = m_tree->num_keys();
 		m_past_begin = false;
+
+		// find the first element
+		const bool found_first = next();
+		if (not found_first) {
+			m_it = m_tree->begin();
+			m_it_idx = m_tree->num_keys();
+			m_begin_idx = m_tree->num_keys();
+			m_end_idx = m_tree->num_keys();
+			m_past_begin = true;
+			return false;
+		}
+#if defined DEBUG
+		assert(not m_past_begin);
+#endif
+
+		// capture the left limit (begin)
+		m_begin_idx = m_it_idx;
+
 		m_it = m_tree->end();
 		--m_it;
 		m_it_idx = m_tree->num_keys() - 1;
 
-		[[maybe_unused]] const bool found_end = previous();
+		// find the last element
+		[[maybe_unused]] const bool found_last = previous();
 #if defined DEBUG
-		assert(found_end);
+		// The last element must have been found due to the simple fact that
+		// if there was a 'first' then there must be a last. Notice that the
+		// first and last elements may coincide.
+		assert(found_last);
 #endif
 
-		m_end_idx = m_it_idx;
-		m_end_idx += (m_it_idx != m_tree->num_keys());
+		// capture the right limit (end)
+		m_end_idx = m_it_idx + 1;
+
 #if defined DEBUG
 		assert(m_begin_idx < m_end_idx);
 #endif
@@ -671,11 +720,12 @@ private:
 	{
 		bool stop = false;
 		while (not stop) {
-			while (not shallow_end() and not m_func(m_it->first)) {
+			bool s_end;
+			while (not(s_end = shallow_end()) and not m_func(m_it->first)) {
 				++m_it;
 				++m_it_idx;
 			}
-			if (shallow_end()) {
+			if (s_end) {
 				return false;
 			}
 
@@ -710,12 +760,24 @@ private:
 	 */
 	[[nodiscard]] bool previous() noexcept
 	{
+		//std::cout << LOG_POINT("previous", 1) << '\n';
+		//std::cout << "    m_past_begin= " << m_past_begin << '\n';
+		//std::cout << "    m_begin_idx=  " << m_begin_idx << '\n';
+		//std::cout << "    m_it_idx=     " << m_it_idx << '\n';
+		//std::cout << "    m_end_idx=    " << m_end_idx << '\n';
+		//std::cout << "    num_keys()=   " << m_tree->num_keys() << '\n';
+		//std::cout << "    key[" << m_it_idx
+				  //<< "]= " << m_tree->get_key(m_it_idx) << '\n';
+
 		bool stop = false;
 		while (not stop) {
-			while (not shallow_past_begin() and not m_func(m_it->first)) {
+			bool s_begin;
+			while (not(s_begin = shallow_past_begin()) and
+				   not m_func(m_it->first)) {
 				simple_move_back();
 			}
-			if (shallow_past_begin()) {
+			if (s_begin) {
+				//std::cout << "    " << LOG_POINT("previous", 2) << '\n';
 				return false;
 			}
 
@@ -724,9 +786,9 @@ private:
 
 			if (not stop) {
 				simple_move_back();
-				stop = shallow_past_begin();
 			}
 		}
+		//std::cout << "    " << LOG_POINT("previous", 3) << '\n';
 		return true;
 	}
 
