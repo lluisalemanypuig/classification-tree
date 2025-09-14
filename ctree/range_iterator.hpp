@@ -150,13 +150,6 @@ public:
 	 * No functions are needed for a leaf iterator.
 	 */
 	void set_functions() noexcept { }
-	/**
-	 * @brief Initialize the beginning and ending limits of this iterator.
-	 *
-	 * Since this iterator iterates over leaf nodes, there are no limits
-	 * to specify.
-	 */
-	void initialize_limits() noexcept { }
 
 	/**
 	 * @brief Place the iterator at the beginning of the iteration.
@@ -293,6 +286,16 @@ public:
 
 private:
 
+	/**
+	 * @brief Initialize the beginning and ending limits of this iterator.
+	 *
+	 * Since this iterator iterates over leaf nodes, there are no limits
+	 * to specify.
+	 */
+	void initialize_limits() noexcept { }
+
+private:
+
 	/// Pointer over the tree iterated on.
 	tree_pointer_t m_tree = nullptr;
 
@@ -342,8 +345,8 @@ public:
 	 * The first function is assigned to this node. The second and the remaining
 	 * functions are assigned to the remaining iterators.
 	 */
-	template <typename F, typename... Callables>
-	void set_functions(F&& f, Callables&&...fs) noexcept
+	template <typename Callable, typename... Callables>
+	void set_functions(Callable&& f, Callables&&...fs) noexcept
 	{
 		m_func = std::move(f);
 		m_subtree_iterator.set_functions(std::forward<Callables>(fs)...);
@@ -653,7 +656,7 @@ private:
 		assert(m_tree != nullptr);
 #endif
 
-		return m_it == m_tree->end() or m_it_idx == m_end_idx;
+		return m_it_idx == m_end_idx or m_it == m_tree->end();
 	}
 
 	/**
