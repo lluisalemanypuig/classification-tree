@@ -33,6 +33,7 @@
 
 // custom includes
 #include "definitions.hpp"
+#include "functions.hpp"
 
 TEST_CASE("All elements (1)")
 {

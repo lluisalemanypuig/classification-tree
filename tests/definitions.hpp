@@ -24,7 +24,6 @@
 #pragma once
 
 // C++ includes
-#include <sstream>
 #include <ostream>
 
 // ctree includes
@@ -102,50 +101,3 @@ struct meta_incr {
 		return os;
 	}
 };
-
-template <typename tree_t>
-std::string print_string(const tree_t& kd) noexcept
-{
-	std::stringstream ss;
-	kd.print(ss);
-	return ss.str();
-}
-
-template <typename it_t>
-std::string iterate_string(it_t& it) noexcept
-{
-	std::stringstream ss;
-	ss << "Iterate:\n";
-	while (not it.end()) {
-		const auto& e = *it;
-		ss << "    " << e.first << ' ' << e.second << '\n';
-		++it;
-	}
-	return ss.str();
-}
-
-template <typename it_t>
-std::string iterate_string_backward(it_t& it) noexcept
-{
-	std::stringstream ss;
-	ss << "Iterate:\n";
-	while (not it.past_begin()) {
-		const auto& e = *it;
-		ss << "    " << e.first << ' ' << e.second << '\n';
-		--it;
-	}
-	return ss.str();
-}
-
-template <typename it_t>
-std::string range_iterate_string_backward(it_t& it) noexcept
-{
-	std::stringstream ss;
-	ss << "Iterate:\n";
-	while (not it.past_begin()) {
-		const auto& e = *it;
-		ss << "    " << e.first << ' ' << e.second << '\n';
-		--it;
-	}
-	return ss.str();
-}
