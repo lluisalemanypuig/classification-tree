@@ -113,3 +113,11 @@ add_test(NAME test_depth_3__lt__all COMMAND test_depth_3__lt__all)
 add_executable(test_depth_3__lt__unique test_depth_3__lt__unique.cpp definitions.hpp ${ctree})
 configure_executable(test_depth_3__lt__unique)
 add_test(NAME test_depth_3__lt__unique COMMAND test_depth_3__lt__unique)
+
+add_executable(test_depth_11__empty test_depth_11__empty.cpp definitions.hpp ${ctree})
+configure_executable(test_depth_11__empty)
+add_test(NAME test_depth_11__empty COMMAND test_depth_11__empty)
+
+add_executable(test_depth_11__eq__all test_depth_11__eq__all.cpp definitions.hpp ${ctree})
+configure_executable(test_depth_11__eq__all)
+add_test(NAME test_depth_11__eq__all COMMAND test_depth_11__eq__all)
