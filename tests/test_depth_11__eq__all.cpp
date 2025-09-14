@@ -35,7 +35,7 @@
 #include "functions.hpp"
 #define level_types int, int, int, int, int, int, int, int, int, int, int
 
-TEST_CASE("Empty tree")
+TEST_CASE("Deep tree")
 {
 	typedef classtree::ctree<d11, m11, level_types> my_tree;
 	classtree::ctree<d11, m11, level_types> kd;
@@ -43,246 +43,246 @@ TEST_CASE("Empty tree")
 	static_assert(std::is_move_constructible_v<my_tree>);
 
 	kd.add<false>(
-		{7, 7, 2, 2, 2, 2, 2, 2, 1, 1, 0},
+		{6, 6, 2, 2, 1, 0, 1, 2, 1, 1, 0},
 		{.num_occs = 1},
-		7,
-		7,
+		6, // pawns
+		6,
+		2, // rooks
 		2,
-		2,
-		2,
-		2,
-		2,
-		2,
-		1,
-		1,
-		0
-	);
-	kd.add<false>(
-		{7, 7, 2, 2, 1, 0, 1, 2, 1, 1, 0},
-		{.num_occs = 1},
-		7,
-		7,
-		2,
-		2,
-		1,
+		1, // knights
 		0,
-		1,
+		1, // bishops
 		2,
+		1, // queens
 		1,
-		1,
-		0
+		0 // turn
 	);
 	kd.add<false>(
 		{6, 6, 2, 2, 1, 1, 1, 0, 1, 1, 1},
 		{.num_occs = 1},
+		6, // pawns
 		6,
-		6,
+		2, // rooks
 		2,
-		2,
+		1, // knights
 		1,
-		1,
-		1,
+		1, // bishops
 		0,
+		1, // queens
 		1,
-		1,
-		1
-	);
-	kd.add<false>(
-		{6, 6, 2, 2, 1, 0, 1, 2, 1, 1, 0},
-		{.num_occs = 1},
-		6,
-		6,
-		2,
-		2,
-		1,
-		0,
-		1,
-		2,
-		1,
-		1,
-		0
+		1 // turn
 	);
 	kd.add<false>(
 		{6, 6, 2, 2, 2, 1, 0, 0, 1, 1, 1},
 		{.num_occs = 1},
+		6, // pawns
 		6,
-		6,
+		2, // rooks
 		2,
-		2,
-		2,
+		2, // knights
 		1,
+		0, // bishops
 		0,
+		1, // queens
+		1,
+		1 // turn
+	);
+	kd.add<false>(
+		{7, 7, 2, 2, 1, 0, 1, 2, 1, 1, 0},
+		{.num_occs = 1},
+		7, // pawns
+		7,
+		2, // rooks
+		2,
+		1, // knights
 		0,
+		1, // bishops
+		2,
+		1, // queens
 		1,
-		1,
-		1
+		0 // turn
 	);
 	kd.add<false>(
 		{7, 7, 2, 2, 1, 1, 2, 2, 1, 1, 1},
 		{.num_occs = 1},
+		7, // pawns
 		7,
+		2, // rooks
+		2,
+		1, // knights
+		1,
+		2, // bishops
+		2,
+		1, // queens
+		1,
+		1 // turn
+	);
+	kd.add<false>(
+		{7, 7, 2, 2, 2, 2, 2, 2, 1, 1, 0},
+		{.num_occs = 1},
+		7, // pawns
 		7,
+		2, // rooks
 		2,
+		2, // knights
 		2,
-		1,
-		1,
+		2, // bishops
 		2,
-		2,
+		1, // queens
 		1,
-		1,
-		1
+		0 // turn
 	);
 
 	SUBCASE("Print entire tree")
 	{
 		// clang-format off
 		static constexpr std::string_view kd_str =
-"size: 6\n"
-"keys: 2\n"
-"├── 6\n"
-"│   size: 3\n"
-"│   keys: 1\n"
-"│   └── 6\n"
-"│       size: 3\n"
-"│       keys: 1\n"
-"│       └── 2\n"
-"│           size: 3\n"
-"│           keys: 1\n"
-"│           └── 2\n"
-"│               size: 3\n"
-"│               keys: 2\n"
-"│               ├── 1\n"
-"│               │   size: 2\n"
-"│               │   keys: 2\n"
-"│               │   ├── 0\n"
-"│               │   │   size: 1\n"
-"│               │   │   keys: 1\n"
-"│               │   │   └── 1\n"
-"│               │   │       size: 1\n"
-"│               │   │       keys: 1\n"
-"│               │   │       └── 2\n"
-"│               │   │           size: 1\n"
-"│               │   │           keys: 1\n"
-"│               │   │           └── 1\n"
-"│               │   │               size: 1\n"
-"│               │   │               keys: 1\n"
-"│               │   │               └── 1\n"
-"│               │   │                   size: 1\n"
-"│               │   │                   keys: 1\n"
-"│               │   │                   └── 0\n"
-"│               │   │                       ^ size: 1 1\n"
-"│               │   │                       └── 6 6 2 2 1 0 1 2 1 1 0 {1}\n"
-"│               │   └── 1\n"
-"│               │       size: 1\n"
-"│               │       keys: 1\n"
-"│               │       └── 1\n"
-"│               │           size: 1\n"
-"│               │           keys: 1\n"
-"│               │           └── 0\n"
-"│               │               size: 1\n"
-"│               │               keys: 1\n"
-"│               │               └── 1\n"
-"│               │                   size: 1\n"
-"│               │                   keys: 1\n"
-"│               │                   └── 1\n"
-"│               │                       size: 1\n"
-"│               │                       keys: 1\n"
-"│               │                       └── 1\n"
-"│               │                           ^ size: 1 1\n"
-"│               │                           └── 6 6 2 2 1 1 1 0 1 1 1 {1}\n"
-"│               └── 2\n"
-"│                   size: 1\n"
-"│                   keys: 1\n"
-"│                   └── 1\n"
-"│                       size: 1\n"
-"│                       keys: 1\n"
-"│                       └── 0\n"
-"│                           size: 1\n"
-"│                           keys: 1\n"
-"│                           └── 0\n"
-"│                               size: 1\n"
-"│                               keys: 1\n"
-"│                               └── 1\n"
-"│                                   size: 1\n"
-"│                                   keys: 1\n"
-"│                                   └── 1\n"
-"│                                       size: 1\n"
-"│                                       keys: 1\n"
-"│                                       └── 1\n"
-"│                                           ^ size: 1 1\n"
-"│                                           └── 6 6 2 2 2 1 0 0 1 1 1 {1}\n"
-"└── 7\n"
-"    size: 3\n"
-"    keys: 1\n"
-"    └── 7\n"
-"        size: 3\n"
-"        keys: 1\n"
-"        └── 2\n"
-"            size: 3\n"
-"            keys: 1\n"
-"            └── 2\n"
-"                size: 3\n"
-"                keys: 2\n"
-"                ├── 1\n"
-"                │   size: 2\n"
-"                │   keys: 2\n"
-"                │   ├── 0\n"
-"                │   │   size: 1\n"
-"                │   │   keys: 1\n"
-"                │   │   └── 1\n"
-"                │   │       size: 1\n"
-"                │   │       keys: 1\n"
-"                │   │       └── 2\n"
-"                │   │           size: 1\n"
-"                │   │           keys: 1\n"
-"                │   │           └── 1\n"
-"                │   │               size: 1\n"
-"                │   │               keys: 1\n"
-"                │   │               └── 1\n"
-"                │   │                   size: 1\n"
-"                │   │                   keys: 1\n"
-"                │   │                   └── 0\n"
-"                │   │                       ^ size: 1 1\n"
-"                │   │                       └── 7 7 2 2 1 0 1 2 1 1 0 {1}\n"
-"                │   └── 1\n"
-"                │       size: 1\n"
-"                │       keys: 1\n"
-"                │       └── 2\n"
-"                │           size: 1\n"
-"                │           keys: 1\n"
-"                │           └── 2\n"
-"                │               size: 1\n"
-"                │               keys: 1\n"
-"                │               └── 1\n"
-"                │                   size: 1\n"
-"                │                   keys: 1\n"
-"                │                   └── 1\n"
-"                │                       size: 1\n"
-"                │                       keys: 1\n"
-"                │                       └── 1\n"
-"                │                           ^ size: 1 1\n"
-"                │                           └── 7 7 2 2 1 1 2 2 1 1 1 {1}\n"
-"                └── 2\n"
-"                    size: 1\n"
-"                    keys: 1\n"
-"                    └── 2\n"
-"                        size: 1\n"
-"                        keys: 1\n"
-"                        └── 2\n"
-"                            size: 1\n"
-"                            keys: 1\n"
-"                            └── 2\n"
-"                                size: 1\n"
-"                                keys: 1\n"
-"                                └── 1\n"
-"                                    size: 1\n"
-"                                    keys: 1\n"
-"                                    └── 1\n"
-"                                        size: 1\n"
-"                                        keys: 1\n"
-"                                        └── 0\n"
-"                                            ^ size: 1 1\n"
-"                                            └── 7 7 2 2 2 2 2 2 1 1 0 {1}\n";
+			"size: 6\n"
+			"keys: 2\n"
+			"├── 6\n"
+			"│   size: 3\n"
+			"│   keys: 1\n"
+			"│   └── 6\n"
+			"│       size: 3\n"
+			"│       keys: 1\n"
+			"│       └── 2\n"
+			"│           size: 3\n"
+			"│           keys: 1\n"
+			"│           └── 2\n"
+			"│               size: 3\n"
+			"│               keys: 2\n"
+			"│               ├── 1\n"
+			"│               │   size: 2\n"
+			"│               │   keys: 2\n"
+			"│               │   ├── 0\n"
+			"│               │   │   size: 1\n"
+			"│               │   │   keys: 1\n"
+			"│               │   │   └── 1\n"
+			"│               │   │       size: 1\n"
+			"│               │   │       keys: 1\n"
+			"│               │   │       └── 2\n"
+			"│               │   │           size: 1\n"
+			"│               │   │           keys: 1\n"
+			"│               │   │           └── 1\n"
+			"│               │   │               size: 1\n"
+			"│               │   │               keys: 1\n"
+			"│               │   │               └── 1\n"
+			"│               │   │                   size: 1\n"
+			"│               │   │                   keys: 1\n"
+			"│               │   │                   └── 0\n"
+			"│               │   │                       ^ size: 1 1\n"
+			"│               │   │                       └── 6 6 2 2 1 0 1 2 1 1 0 {1}\n"
+			"│               │   └── 1\n"
+			"│               │       size: 1\n"
+			"│               │       keys: 1\n"
+			"│               │       └── 1\n"
+			"│               │           size: 1\n"
+			"│               │           keys: 1\n"
+			"│               │           └── 0\n"
+			"│               │               size: 1\n"
+			"│               │               keys: 1\n"
+			"│               │               └── 1\n"
+			"│               │                   size: 1\n"
+			"│               │                   keys: 1\n"
+			"│               │                   └── 1\n"
+			"│               │                       size: 1\n"
+			"│               │                       keys: 1\n"
+			"│               │                       └── 1\n"
+			"│               │                           ^ size: 1 1\n"
+			"│               │                           └── 6 6 2 2 1 1 1 0 1 1 1 {1}\n"
+			"│               └── 2\n"
+			"│                   size: 1\n"
+			"│                   keys: 1\n"
+			"│                   └── 1\n"
+			"│                       size: 1\n"
+			"│                       keys: 1\n"
+			"│                       └── 0\n"
+			"│                           size: 1\n"
+			"│                           keys: 1\n"
+			"│                           └── 0\n"
+			"│                               size: 1\n"
+			"│                               keys: 1\n"
+			"│                               └── 1\n"
+			"│                                   size: 1\n"
+			"│                                   keys: 1\n"
+			"│                                   └── 1\n"
+			"│                                       size: 1\n"
+			"│                                       keys: 1\n"
+			"│                                       └── 1\n"
+			"│                                           ^ size: 1 1\n"
+			"│                                           └── 6 6 2 2 2 1 0 0 1 1 1 {1}\n"
+			"└── 7\n"
+			"    size: 3\n"
+			"    keys: 1\n"
+			"    └── 7\n"
+			"        size: 3\n"
+			"        keys: 1\n"
+			"        └── 2\n"
+			"            size: 3\n"
+			"            keys: 1\n"
+			"            └── 2\n"
+			"                size: 3\n"
+			"                keys: 2\n"
+			"                ├── 1\n"
+			"                │   size: 2\n"
+			"                │   keys: 2\n"
+			"                │   ├── 0\n"
+			"                │   │   size: 1\n"
+			"                │   │   keys: 1\n"
+			"                │   │   └── 1\n"
+			"                │   │       size: 1\n"
+			"                │   │       keys: 1\n"
+			"                │   │       └── 2\n"
+			"                │   │           size: 1\n"
+			"                │   │           keys: 1\n"
+			"                │   │           └── 1\n"
+			"                │   │               size: 1\n"
+			"                │   │               keys: 1\n"
+			"                │   │               └── 1\n"
+			"                │   │                   size: 1\n"
+			"                │   │                   keys: 1\n"
+			"                │   │                   └── 0\n"
+			"                │   │                       ^ size: 1 1\n"
+			"                │   │                       └── 7 7 2 2 1 0 1 2 1 1 0 {1}\n"
+			"                │   └── 1\n"
+			"                │       size: 1\n"
+			"                │       keys: 1\n"
+			"                │       └── 2\n"
+			"                │           size: 1\n"
+			"                │           keys: 1\n"
+			"                │           └── 2\n"
+			"                │               size: 1\n"
+			"                │               keys: 1\n"
+			"                │               └── 1\n"
+			"                │                   size: 1\n"
+			"                │                   keys: 1\n"
+			"                │                   └── 1\n"
+			"                │                       size: 1\n"
+			"                │                       keys: 1\n"
+			"                │                       └── 1\n"
+			"                │                           ^ size: 1 1\n"
+			"                │                           └── 7 7 2 2 1 1 2 2 1 1 1 {1}\n"
+			"                └── 2\n"
+			"                    size: 1\n"
+			"                    keys: 1\n"
+			"                    └── 2\n"
+			"                        size: 1\n"
+			"                        keys: 1\n"
+			"                        └── 2\n"
+			"                            size: 1\n"
+			"                            keys: 1\n"
+			"                            └── 2\n"
+			"                                size: 1\n"
+			"                                keys: 1\n"
+			"                                └── 1\n"
+			"                                    size: 1\n"
+			"                                    keys: 1\n"
+			"                                    └── 1\n"
+			"                                        size: 1\n"
+			"                                        keys: 1\n"
+			"                                        └── 0\n"
+			"                                            ^ size: 1 1\n"
+			"                                            └── 7 7 2 2 2 2 2 2 1 1 0 {1}\n";
 		// clang-format on
 
 		const std::string print_str_const = print_string(kd);
@@ -362,6 +362,38 @@ TEST_CASE("Empty tree")
 	const auto f10 = [](const int) -> bool { return true; };
 	const auto f11 = [](const int) -> bool { return true; };
 	// clang-format on
+
+	SUBCASE("Check range iterator bounds (2)")
+	{
+		auto it = kd.get_const_range_iterator(
+			f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11
+		);
+
+		[[maybe_unused]] const bool _ = it.to_begin();
+		CHECK_EQ((*it).first.n_white_pawns, 6);
+		CHECK_EQ((*it).first.n_white_knights, 1);
+		CHECK_EQ((*it).first.n_black_knights, 1);
+
+		++it;
+		CHECK_EQ((*it).first.n_white_pawns, 6);
+		CHECK_EQ((*it).first.n_white_knights, 2);
+		CHECK_EQ((*it).first.n_black_knights, 1);
+
+		++it;
+		CHECK_EQ((*it).first.n_white_pawns, 7);
+		CHECK_EQ((*it).first.n_white_knights, 1);
+		CHECK_EQ((*it).first.n_black_knights, 1);
+
+		++it;
+		CHECK_EQ((*it).first.n_white_pawns, 7);
+		CHECK_EQ((*it).first.n_white_knights, 2);
+		CHECK_EQ((*it).first.n_black_knights, 2);
+
+		++it;
+		CHECK_EQ(it.begin(), false);
+		CHECK_EQ(it.past_begin(), false);
+		CHECK_EQ(it.end(), true);
+	}
 
 	SUBCASE("Iterate over a range forward")
 	{
