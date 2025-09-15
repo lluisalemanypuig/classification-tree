@@ -25,9 +25,9 @@
 #include <iostream>
 
 // isorepr includes
-#include <isorepr/ir_tree.hpp>
-#include <isorepr/iterator.hpp>
-#include <isorepr/range_iterator.hpp>
+#include <ctree/ctree.hpp>
+#include <ctree/iterator.hpp>
+#include <ctree/range_iterator.hpp>
 
 struct A {
 	int i, j;
@@ -63,7 +63,7 @@ struct B {
 
 int main()
 {
-	isorepr::ir_tree<A, B, int, double, std::string> kd;
+	classtree::ctree<A, B, int, double, std::string> kd;
 
 	using namespace std::literals::string_literals;
 	kd.add({.i = 1, .j = 1}, {.num_occs = 1}, 1, 0.5, "a"s);
@@ -79,14 +79,14 @@ int main()
 
 	{
 		std::cout << "Full iterate (key-value):\n";
-		auto it = kd.get_iterator();
+		auto it = kd.get_iterator_begin();
 		while (not it.end()) {
 			const auto& e = *it;
 			std::cout << "    " << e.first << ' ' << e.second << '\n';
 			++it;
 		}
 
-		it.initialize();
+		it.to_begin();
 		std::cout << "Full iterate (full branch):\n";
 		while (not it.end()) {
 			const auto& data = +it;
@@ -100,7 +100,7 @@ int main()
 	{
 		std::cout << "Range iterate (key-value):\n";
 
-		auto it = kd.get_range_iterator(
+		auto it = kd.get_range_iterator_begin(
 			[](const int v) -> bool
 			{
 				return 2 <= v and v <= 3;
@@ -121,7 +121,7 @@ int main()
 			++it;
 		}
 
-		[[maybe_unused]] const bool _ = it.initialize();
+		[[maybe_unused]] const bool _ = it.to_begin();
 		std::cout << "Range iterate (full branch):\n";
 		while (not it.end()) {
 			const auto& data = +it;
