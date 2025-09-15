@@ -154,6 +154,27 @@ public:
 	}
 
 	/**
+	 * @brief Adds another element to this tree.
+	 *
+	 * This method assumes that this leaf is empty.
+	 * @tparam unique Store the element when there are no repeats.
+	 * @tparam _value_t Type of the value to add.
+	 * @tparam _metadata_t Type of the metadata associated to this value.
+	 * @param v Value to add.
+	 * @param m Metadata associated to the value.
+	 * @returns True if the element was not found and added. False if otherwise.
+	 */
+	template <
+		bool unique = true,
+		typename _value_t = value_t,
+		typename _metadata_t = metadata_t>
+	bool add_empty(_value_t&& val, _metadata_t&& meta)
+	{
+		m_data.emplace_back(std::move(val), std::move(meta));
+		return true;
+	}
+
+	/**
 	 * @brief The number of unique elements over all leaves of this tree.
 	 * @returns The number of unique elements over all leaves of this tree.
 	 */

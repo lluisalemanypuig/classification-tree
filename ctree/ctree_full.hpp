@@ -114,7 +114,7 @@ public:
 			m_children.insert(it, {std::move(h), child_t()});
 			m_size += 1;
 			// this always returns true
-			return m_children[i].second.template add<unique>(
+			return m_children[i].second.template add_empty<unique>(
 				v, m, std::forward<_keys_t>(ks)...
 			);
 		}
@@ -124,6 +124,39 @@ public:
 		);
 		m_size += added;
 		return added;
+	}
+
+	/**
+	 * @brief Adds another element to this tree.
+	 *
+	 * This method assumes that this node is empty.
+	 * @tparam unique Store the element when there are no repeats.
+	 * @tparam _value_t Type of the value to add.
+	 * @tparam _metadata_t Type of the metadata associated to this value.
+	 * @tparam _key_t Type of the first key.
+	 * @tparam _keys_t Type of the remaining keys.
+	 * @param v Value to add.
+	 * @param m Metadata associated to the value.
+	 * @param h The value of the first key.
+	 * @param ks The values of the other keys.
+	 * @returns True if the element was not found and added. False if otherwise.
+	 */
+	template <
+		bool unique = true,
+		typename _value_t = value_t,
+		typename _metadata_t = metadata_t,
+		typename _key_t = key_t,
+		typename... _keys_t>
+	bool add_empty(_value_t&& v, _metadata_t&& m, _key_t&& h, _keys_t&&...ks)
+	{
+		check_types<_value_t, _metadata_t, _key_t, _keys_t...>();
+
+		m_children.emplace_back(std::move(h), child_t());
+		m_size += 1;
+		// this always returns true
+		return m_children[0].second.template add_empty<unique>(
+			v, m, std::forward<_keys_t>(ks)...
+		);
 	}
 
 	/**
