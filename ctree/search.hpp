@@ -31,12 +31,6 @@
 
 namespace classtree {
 
-template <typename T>
-static constexpr inline bool are_equal(const T& a, const T& b) noexcept
-{
-	return not(a < b) and not(b < a);
-}
-
 template <LessthanComparable T, typename U>
 [[nodiscard]] static constexpr inline std::pair<std::size_t, bool>
 search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
@@ -45,10 +39,11 @@ search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
 		return {0, false};
 	}
 	if (v.size() == 1) [[unlikely]] {
-		if (value < v[0].first) {
+		const bool a_lt_b = value < v[0].first;
+		if (a_lt_b) {
 			return {0, false};
 		}
-		if (are_equal(value, v[0].first)) {
+		if (not(a_lt_b) and not(v[0].first < value)) {
 			return {0, true};
 		}
 		return {1, false};
@@ -59,11 +54,12 @@ search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
 	while (i < j) {
 		const std::size_t m = ((i + j) / 2);
 
-		if (are_equal(value, v[m].first)) {
+		const bool a_lt_b = value < v[m].first;
+		if (not(a_lt_b) and not(v[m].first < value)) {
 			return {m, true};
 		}
 
-		if (value < v[m].first) {
+		if (a_lt_b) {
 			if (m == 0) [[unlikely]] {
 				return {0, false};
 			}
@@ -77,10 +73,11 @@ search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
 		}
 	}
 
-	if (are_equal(value, v[i].first)) {
+	const bool a_lt_b = value < v[i].first;
+	if (not(a_lt_b) and not(v[i].first < value)) {
 		return {i, true};
 	}
-	if (value < v[i].first) {
+	if (a_lt_b) {
 		return {i, false};
 	}
 	return {i + 1, false};
