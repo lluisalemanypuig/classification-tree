@@ -121,3 +121,7 @@ add_test(NAME test_depth_11__empty COMMAND test_depth_11__empty)
 add_executable(test_depth_11__eq__all test_depth_11__eq__all.cpp definitions.hpp ${ctree})
 configure_executable(test_depth_11__eq__all)
 add_test(NAME test_depth_11__eq__all COMMAND test_depth_11__eq__all)
+
+add_executable(test_search test_search.cpp definitions.hpp ${ctree})
+configure_executable(test_search)
+add_test(NAME test_search COMMAND test_search)
