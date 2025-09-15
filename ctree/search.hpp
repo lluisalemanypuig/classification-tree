@@ -1,22 +1,22 @@
 /**
  * Classification Tree
  * Copyright (C) 2025  Lluís Alemany Puig
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
  * by the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- * 
+ *
  * Contact:
- * 
+ *
  * 		Lluís Alemany Puig
  * 		https://github.com/lluisalemanypuig
  */
@@ -85,5 +85,33 @@ search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
 	}
 	return {i + 1, false};
 }
+
+/*
+template <LessthanComparable T, typename U>
+[[nodiscard]] static constexpr std::pair<std::size_t, bool>
+search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
+{
+	typedef std::pair<T, U> elem_t;
+
+	const auto comp = [&](const elem_t& p1, const elem_t& p2) -> bool
+	{
+		return p1.first < p2.first;
+	};
+
+	const auto it =
+		std::lower_bound(v.begin(), v.end(), elem_t{value, U{}}, comp);
+
+	if (it == v.end()) [[unlikely]] {
+		return {v.size(), false};
+	}
+
+	const int64_t d = std::distance(v.begin(), it);
+#if defined DEBUG
+	assert(d >= 0);
+#endif
+	const std::size_t dd = static_cast<std::size_t>(d);
+	return std::pair<std::size_t, bool>{dd, are_equal(it->first, value)};
+}
+*/
 
 } // namespace classtree
