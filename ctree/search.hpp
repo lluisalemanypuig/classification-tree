@@ -38,7 +38,7 @@ static constexpr inline bool are_equal(const T& a, const T& b) noexcept
 }
 
 template <LessthanComparable T, typename U>
-[[nodiscard]] static constexpr std::pair<std::size_t, bool>
+[[nodiscard]] static constexpr inline std::pair<std::size_t, bool>
 search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
 {
 	if (v.size() == 0) [[unlikely]] {
