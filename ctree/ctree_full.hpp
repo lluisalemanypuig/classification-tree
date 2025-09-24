@@ -105,7 +105,7 @@ public:
 		typename... _keys_t>
 	bool add(_value_t&& v, _metadata_t&& m, _key_t&& h, _keys_t&&...ks)
 	{
-		check_types<_value_t, _metadata_t, _key_t, _keys_t...>();
+		static_assert(check_types<_value_t, _metadata_t, _key_t, _keys_t...>());
 
 		const auto [i, exists] = search(m_children, h);
 		if (not exists) {
@@ -149,7 +149,7 @@ public:
 		typename... _keys_t>
 	bool add_empty(_value_t&& v, _metadata_t&& m, _key_t&& h, _keys_t&&...ks)
 	{
-		check_types<_value_t, _metadata_t, _key_t, _keys_t...>();
+		static_assert(check_types<_value_t, _metadata_t, _key_t, _keys_t...>());
 
 		m_children.emplace_back(std::move(h), child_t());
 		m_size += 1;
@@ -466,16 +466,14 @@ private:
 	 * @returns True if all the types are same. False if otherwise.
 	 */
 	template <typename _value_t, typename _metadata_t, typename... _keys_t>
-	static consteval void check_types() noexcept
+	static consteval bool check_types() noexcept
 	{
-		static_assert(std::is_same_v<std::remove_cvref_t<_value_t>, value_t>);
-		static_assert(std::is_same_v<
-					  std::remove_cvref_t<_metadata_t>,
-					  metadata_t>);
-		check_packs(
-			parameter_pack<key_t, keys_t...>{},
-			parameter_pack<std::remove_cvref_t<_keys_t>...>{}
-		);
+		return std::is_same_v<std::remove_cvref_t<_value_t>, value_t> and
+			   std::is_same_v<std::remove_cvref_t<_metadata_t>, metadata_t> and
+			   check_packs(
+				   parameter_pack<key_t, keys_t...>{},
+				   parameter_pack<std::remove_cvref_t<_keys_t>...>{}
+			   );
 	}
 };
 

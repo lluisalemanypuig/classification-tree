@@ -37,14 +37,14 @@ template <
 	typename... args1,
 	typename head2_t,
 	typename... args2>
-static consteval inline void
+static consteval inline bool
 check_packs(const parameter_pack<head1_t, args1...>&, const parameter_pack<head2_t, args2...>&)
 	noexcept
 {
-	static_assert(std::is_same_v<head1_t, head2_t>);
 	if constexpr (sizeof...(args1) > 0) {
-		check_packs(parameter_pack<args1...>{}, parameter_pack<args2...>{});
+		return check_packs(parameter_pack<args1...>{}, parameter_pack<args2...>{});
 	}
+	return std::is_same_v<head1_t, head2_t>;
 }
 
 } // namespace isorepr
