@@ -39,14 +39,13 @@ search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
 		return {0, false};
 	}
 	if (v.size() == 1) [[unlikely]] {
-		const bool a_lt_b = value < v[0].first;
-		if (a_lt_b) {
+		if (value < v[0].first) {
 			return {0, false};
 		}
-		if (not(a_lt_b) and not(v[0].first < value)) {
-			return {0, true};
+		else if (v[0].first < value) {
+			return {1, false};
 		}
-		return {1, false};
+		return {0, true};
 	}
 
 	std::size_t i = 0;
@@ -54,33 +53,32 @@ search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
 	while (i < j) {
 		const std::size_t m = ((i + j) / 2);
 
-		const bool a_lt_b = value < v[m].first;
-		if (not(a_lt_b) and not(v[m].first < value)) {
-			return {m, true};
-		}
-
-		if (a_lt_b) {
+		if (value < v[m].first) {
 			if (m == 0) [[unlikely]] {
 				return {0, false};
 			}
 			j = m - 1;
 		}
 		else {
-			if (m == v.size() - 1) [[unlikely]] {
-				return {v.size(), false};
+			if (v[m].first < value) {
+				if (m == v.size() - 1) [[unlikely]] {
+					return {v.size(), false};
+				}
+				i = m + 1;
 			}
-			i = m + 1;
+			else {
+				return {m, true};
+			}
 		}
 	}
 
-	const bool a_lt_b = value < v[i].first;
-	if (not(a_lt_b) and not(v[i].first < value)) {
-		return {i, true};
-	}
-	if (a_lt_b) {
+	if (value < v[i].first) {
 		return {i, false};
 	}
-	return {i + 1, false};
+	if (v[i].first < value) {
+		return {i + 1, false};
+	}
+	return {i, true};
 }
 
 /*
