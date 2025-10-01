@@ -129,7 +129,7 @@ public:
 			const auto [i, exists] = search(m_data, val);
 			if (exists) {
 				if constexpr (Mergeable<_metadata_t>) {
-					m_data[i].second += meta;
+					m_data[i].second += std::move(meta);
 				}
 				return false;
 			}
@@ -143,7 +143,7 @@ public:
 			for (auto& [v, m] : m_data) {
 				if (val == v) {
 					if constexpr (Mergeable<_metadata_t>) {
-						m += meta;
+						m += std::move(meta);
 					}
 					return false;
 				}
