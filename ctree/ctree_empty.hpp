@@ -140,16 +140,23 @@ public:
 		}
 
 		if constexpr (EqualityComparable<_value_t>) {
-			for (auto& [v, m] : m_data) {
-				if (val == v) {
-					if constexpr (Mergeable<_metadata_t>) {
-						m += std::move(meta);
-					}
-					return false;
+			auto it = std::find_if(
+				m_data.begin(),
+				m_data.end(),
+				[&](const element_t& e) -> bool
+				{
+					return e.first == val;
 				}
+			);
+
+			if (it == m_data.end()) {
+				m_data.emplace_back(std::move(val), std::move(meta));
+				return true;
 			}
-			m_data.emplace_back(std::move(val), std::move(meta));
-			return true;
+			if constexpr (Mergeable<_metadata_t>) {
+				it->second += std::move(meta);
+			}
+			return false;
 		}
 	}
 
