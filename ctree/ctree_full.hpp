@@ -115,12 +115,16 @@ public:
 			m_size += 1;
 			// this always returns true
 			return m_children[i].second.template add_empty<unique>(
-				v, m, std::forward<_keys_t>(ks)...
+				std::forward<_value_t>(v),
+				std::forward<_metadata_t>(m),
+				std::forward<_keys_t>(ks)...
 			);
 		}
 
 		const bool added = m_children[i].second.template add<unique>(
-			v, m, std::forward<_keys_t>(ks)...
+			std::forward<_value_t>(v),
+			std::forward<_metadata_t>(m),
+			std::forward<_keys_t>(ks)...
 		);
 		m_size += added;
 		return added;
@@ -155,7 +159,9 @@ public:
 		m_size += 1;
 		// this always returns true
 		return m_children[0].second.template add_empty<unique>(
-			v, m, std::forward<_keys_t>(ks)...
+			std::forward<_value_t>(v),
+			std::forward<_metadata_t>(m),
+			std::forward<_keys_t>(ks)...
 		);
 	}
 
