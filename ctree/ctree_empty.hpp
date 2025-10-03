@@ -99,7 +99,7 @@ public:
 
 			if constexpr (LessthanComparable<_value_t>) {
 
-				// do binary search and then add if needed.
+				// do binary search and then add
 				const auto [i, _] = search(m_data, val);
 				auto it = m_data.begin();
 				std::advance(it, i);
