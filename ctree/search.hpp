@@ -59,16 +59,14 @@ search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
 			}
 			j = m - 1;
 		}
+		else if (v[m].first < value) {
+			if (m == v.size() - 1) [[unlikely]] {
+				return {v.size(), false};
+			}
+			i = m + 1;
+		}
 		else {
-			if (v[m].first < value) {
-				if (m == v.size() - 1) [[unlikely]] {
-					return {v.size(), false};
-				}
-				i = m + 1;
-			}
-			else {
-				return {m, true};
-			}
+			return {m, true};
 		}
 	}
 
