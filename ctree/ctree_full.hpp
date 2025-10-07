@@ -63,6 +63,20 @@ public:
 
 public:
 
+	/**
+	 * @brief Clear the memory occupied by this internal node.
+	 *
+	 * And also clears the memory occupied by its subtrees.
+	 */
+	void clear() noexcept
+	{
+		for (auto& [_, c] : m_children) {
+			c.clear();
+		}
+		m_children.clear();
+		m_size = 0;
+	}
+
 	/// Iterator to the key-child pair container.
 	[[nodiscard]] container_t::iterator begin() noexcept
 	{
@@ -163,6 +177,50 @@ public:
 			std::forward<_metadata_t>(m),
 			std::forward<_keys_t>(ks)...
 		);
+	}
+
+	/**
+	 * @brief Merges another tree into this tree.
+	 * @tparam unique Store the elements of the new tree so that there are no repeats.
+	 * @param t The tree to be merged into this tree.
+	 * @returns The difference of the new size and the old size.
+	 */
+	template <bool unique = true>
+	std::size_t merge(ctree<value_t, metadata_t, key_t, keys_t...>&& t)
+	{
+		std::size_t old_size = m_size;
+		for (auto& [k, c] : t.m_children) {
+
+			const auto [i, exists] = search(m_children, k);
+			if (not exists) {
+				auto it = m_children.begin();
+				std::advance(it, i);
+				m_children.insert(it, {std::move(k), std::move(c)});
+				m_size += t.size();
+			}
+			else {
+				m_size +=
+					m_children[i].second.template merge<unique>(std::move(c));
+			}
+		}
+		return m_size - old_size;
+	}
+
+	/**
+	 * @brief Does this node have a specific key?
+	 * @param key The key value to look for.
+	 * @returns True if there is a child under the key value @e key.
+	 */
+	[[nodiscard]] bool has_key(const key_t& key) const noexcept
+	{
+		return std::find_if(
+				   m_children.begin(),
+				   m_children.end(),
+				   [&key](const element_t& e) noexcept
+				   {
+					   return e.first == key;
+				   }
+			   ) != m_children.end();
 	}
 
 	/**

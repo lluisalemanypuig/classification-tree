@@ -56,6 +56,12 @@ public:
 
 public:
 
+	/// Clear the memory occupied by this leaf node.
+	void clear() noexcept
+	{
+		m_data.clear();
+	}
+
 	/// Iterator to the key-child pair container.
 	[[nodiscard]] container_t::iterator begin() noexcept
 	{
@@ -97,7 +103,7 @@ public:
 		if constexpr (not unique) {
 			// store all objects, regardless of repeats
 
-			if constexpr (LessthanComparable<_value_t>) {
+			if constexpr (LessthanComparable<value_t>) {
 
 				// do binary search and then add
 				const auto [i, _] = search(m_data, val);
@@ -115,20 +121,20 @@ public:
 
 		/* store unique objects */
 
-		if constexpr (not EqualityComparable<_value_t> and
-					  not LessthanComparable<_value_t>) {
+		if constexpr (not EqualityComparable<value_t> and
+					  not LessthanComparable<value_t>) {
 			// this cannot happen if we want to keep unique instances.
 			static_assert(false);
 			return false;
 		}
 
-		if constexpr (LessthanComparable<_value_t>) {
-			static_assert(LessthanComparable<_value_t>);
+		if constexpr (LessthanComparable<value_t>) {
+			static_assert(LessthanComparable<value_t>);
 
 			// do binary search and then add if needed.
 			const auto [i, exists] = search(m_data, val);
 			if (exists) {
-				if constexpr (Mergeable<_metadata_t>) {
+				if constexpr (Mergeable<metadata_t>) {
 					m_data[i].second += std::move(meta);
 				}
 				return false;
@@ -139,8 +145,8 @@ public:
 			return true;
 		}
 
-		if constexpr (EqualityComparable<_value_t>) {
-			auto it = std::find_if(
+		if constexpr (EqualityComparable<value_t>) {
+			const auto it = std::find_if(
 				m_data.begin(),
 				m_data.end(),
 				[&](const element_t& e) -> bool
@@ -153,7 +159,7 @@ public:
 				m_data.emplace_back(std::move(val), std::move(meta));
 				return true;
 			}
-			if constexpr (Mergeable<_metadata_t>) {
+			if constexpr (Mergeable<metadata_t>) {
 				it->second += std::move(meta);
 			}
 			return false;
@@ -179,6 +185,22 @@ public:
 	{
 		m_data.emplace_back(std::move(val), std::move(meta));
 		return true;
+	}
+
+	/**
+	 * @brief Merges another tree into this tree.
+	 * @tparam unique Store the elements of the new tree so that there are no repeats.
+	 * @param t The tree to be merged into this tree.
+	 * @returns The difference of the new size and the old size.
+	 */
+	template <bool unique = true>
+	std::size_t merge(ctree<value_t, metadata_t>&& t)
+	{
+		std::size_t added_elems = 0;
+		for (auto& [v, m] : t.m_data) {
+			added_elems += add<unique>(std::move(v), std::move(m));
+		}
+		return added_elems;
 	}
 
 	/**
