@@ -59,7 +59,7 @@ struct equal_comparable_tree {
 	{
 		const auto hv = t.tree.get_head_vector();
 		os << hv[0];
-		for (std::size_t i = 1; i < hv.size(); ++i) {
+		for (size_t i = 1; i < hv.size(); ++i) {
 			os << ' ' << hv[i];
 		}
 		return os;
@@ -88,7 +88,7 @@ void occupancy_0(const uint64_t n, const uint64_t _N)
 
 	uint64_t step = 100;
 	lal::generate::rand_ulab_free_trees gen(n, 1234);
-	for (std::size_t N = 1; N <= _N; ++N) {
+	for (size_t N = 1; N <= _N; ++N) {
 		lal::graphs::free_tree t = gen.yield_tree();
 
 		{
@@ -116,7 +116,7 @@ void occupancy_1(const uint64_t n, const uint64_t _N, const Fn& f)
 
 	uint64_t step = 100;
 	lal::generate::rand_ulab_free_trees gen(n, 1234);
-	for (std::size_t N = 1; N <= _N; ++N) {
+	for (size_t N = 1; N <= _N; ++N) {
 		lal::graphs::free_tree t = gen.yield_tree();
 
 		ctree.add({.tree = std::move(t)}, {.num_occs = 1}, f(t));
@@ -146,7 +146,7 @@ void occupancy_2(
 
 	uint64_t step = 100;
 	lal::generate::rand_ulab_free_trees gen(n, 1234);
-	for (std::size_t N = 1; N <= _N; ++N) {
+	for (size_t N = 1; N <= _N; ++N) {
 		lal::graphs::free_tree t = gen.yield_tree();
 
 		ctree.add({.tree = std::move(t)}, {.num_occs = 1}, f1(t), f2(t));
@@ -154,7 +154,7 @@ void occupancy_2(
 		if (N % step == 0) {
 			std::cout << "--------------------\n";
 			const auto sizes = ctree.sizes();
-			for (std::size_t i = 0; i < ctree.num_keys(); ++i) {
+			for (size_t i = 0; i < ctree.num_keys(); ++i) {
 				const auto& ctree_i = ctree.get_child(i);
 				std::cout << std::setw(2) << i << ": (" << sizes[i] << ") -> "
 						  << ctree_i.sizes() << '\n';
@@ -191,7 +191,7 @@ void occupancy_3(
 
 	uint64_t step = 100;
 	lal::generate::rand_ulab_free_trees gen(n, 1234);
-	for (std::size_t N = 1; N <= _N; ++N) {
+	for (size_t N = 1; N <= _N; ++N) {
 		lal::graphs::free_tree t = gen.yield_tree();
 
 		ctree.add({.tree = std::move(t)}, {.num_occs = 1}, f1(t), f2(t), f3(t));
@@ -211,12 +211,12 @@ void occupancy_3(
 
 	std::cout << "--------------------\n";
 	const auto sizes = ctree.sizes();
-	for (std::size_t i = 0; i < ctree.num_keys(); ++i) {
+	for (size_t i = 0; i < ctree.num_keys(); ++i) {
 		const auto& ctree_i = ctree.get_child(i);
 		std::cout << std::setw(2) << i << ": (" << sizes[i] << ") ->\n";
 
 		const auto sizes_i = ctree_i.sizes();
-		for (std::size_t j = 0; j < ctree_i.num_keys(); ++j) {
+		for (size_t j = 0; j < ctree_i.num_keys(); ++j) {
 			const auto& ctree_j = ctree_i.get_child(j);
 			std::cout << "    " << std::setw(2) << j << ": (" << sizes_i[j]
 					  << ") -> " << ctree_j.sizes() << '\n';
@@ -244,7 +244,7 @@ int main(int argc, char *argv[])
 	}
 
 	const uint64_t n = static_cast<uint64_t>(atoi(argv[1]));
-	const std::size_t N = static_cast<std::size_t>(atoi(argv[2]));
+	const size_t N = static_cast<size_t>(atoi(argv[2]));
 	const std::string_view t(argv[3]);
 
 	const auto Dminpl = [](const lal::graphs::free_tree& T) -> uint64_t

@@ -52,10 +52,10 @@ inline double elapsed_time(const time_point& begin, const time_point& end)
 		.count();
 }
 
-bool is_power_10(const std::size_t N) noexcept
+bool is_power_10(const size_t N) noexcept
 {
-	std::size_t p10 = 1;
-	std::size_t n = N;
+	size_t p10 = 1;
+	size_t n = N;
 	while (n > 9) {
 		p10 *= 10;
 		n /= 10;
@@ -76,7 +76,7 @@ struct equal_comparable_tree {
 	{
 		const auto hv = t.tree.get_head_vector();
 		os << hv[0];
-		for (std::size_t i = 1; i < hv.size(); ++i) {
+		for (size_t i = 1; i < hv.size(); ++i) {
 			os << ' ' << hv[i];
 		}
 		return os;
@@ -113,7 +113,7 @@ void profiling(
 
 	uint64_t step = 100;
 	lal::generate::rand_ulab_free_trees gen(n, 1234);
-	for (std::size_t N = 1; N <= _N; ++N) {
+	for (size_t N = 1; N <= _N; ++N) {
 		lal::graphs::free_tree t = gen.yield_tree();
 
 		const auto begin = now();
@@ -163,7 +163,7 @@ int main(int argc, char *argv[])
 	}
 
 	const uint64_t n = static_cast<uint64_t>(atoi(argv[1]));
-	const std::size_t N = static_cast<std::size_t>(atoi(argv[2]));
+	const size_t N = static_cast<size_t>(atoi(argv[2]));
 	const std::string_view t(argv[3]);
 
 	std::cout << "n\tN\tfeature_type\ttime\tunique\n";

@@ -59,7 +59,7 @@ struct equal_comparable_tree {
 	{
 		const auto hv = t.tree.get_head_vector();
 		os << hv[0];
-		for (std::size_t i = 1; i < hv.size(); ++i) {
+		for (size_t i = 1; i < hv.size(); ++i) {
 			os << ' ' << hv[i];
 		}
 		return os;
@@ -91,7 +91,9 @@ void distribution_1(const uint64_t n, const Fn& f)
 	while (not gen.end()) {
 		lal::graphs::free_tree t = gen.yield_tree();
 
-		ctree.template add<false>({.tree = std::move(t)}, {.num_occs = 1}, f(t));
+		ctree.template add<false>(
+			{.tree = std::move(t)}, {.num_occs = 1}, f(t)
+		);
 
 #if defined CTREE_DEBUG
 		if (not ctree.check_sorted_keys()) {
@@ -99,14 +101,12 @@ void distribution_1(const uint64_t n, const Fn& f)
 		}
 #endif
 	}
-	
+
 	std::cout << ctree.sizes() << '\n';
 }
 
 template <typename T1, typename T2, typename Fn1, typename Fn2>
-void distribution_2(
-	const uint64_t n, const Fn1& f1, const Fn2& f2
-)
+void distribution_2(const uint64_t n, const Fn1& f1, const Fn2& f2)
 {
 	classtree::ctree<equal_comparable_tree, metadata, T1, T2> ctree;
 
@@ -114,7 +114,9 @@ void distribution_2(
 	while (not gen.end()) {
 		lal::graphs::free_tree t = gen.yield_tree();
 
-		ctree.template add<false>({.tree = std::move(t)}, {.num_occs = 1}, f1(t), f2(t));
+		ctree.template add<false>(
+			{.tree = std::move(t)}, {.num_occs = 1}, f1(t), f2(t)
+		);
 
 #if defined CTREE_DEBUG
 		if (not ctree.check_sorted_keys()) {
@@ -122,8 +124,8 @@ void distribution_2(
 		}
 #endif
 	}
-	
-	for (std::size_t i = 0; i < ctree.num_keys(); ++i) {
+
+	for (size_t i = 0; i < ctree.num_keys(); ++i) {
 		const auto& ctree_i = ctree.get_child(i);
 		std::cout << ctree_i.sizes() << '\n';
 	}
@@ -137,10 +139,7 @@ template <
 	typename Fn2,
 	typename Fn3>
 void distribution_3(
-	const uint64_t n,
-	const Fn1& f1,
-	const Fn2& f2,
-	const Fn3& f3
+	const uint64_t n, const Fn1& f1, const Fn2& f2, const Fn3& f3
 )
 {
 	classtree::ctree<equal_comparable_tree, metadata, T1, T2, T3> ctree;
@@ -149,7 +148,9 @@ void distribution_3(
 	while (not gen.end()) {
 		lal::graphs::free_tree t = gen.yield_tree();
 
-		ctree.template add<false>({.tree = std::move(t)}, {.num_occs = 1}, f1(t), f2(t), f3(t));
+		ctree.template add<false>(
+			{.tree = std::move(t)}, {.num_occs = 1}, f1(t), f2(t), f3(t)
+		);
 
 #if defined CTREE_DEBUG
 		if (not ctree.check_sorted_keys()) {
@@ -159,12 +160,12 @@ void distribution_3(
 	}
 
 	const auto sizes = ctree.sizes();
-	for (std::size_t i = 0; i < ctree.num_keys(); ++i) {
+	for (size_t i = 0; i < ctree.num_keys(); ++i) {
 		const auto& ctree_i = ctree.get_child(i);
 		std::cout << ctree_i.sizes() << ":\n";
 
 		const auto sizes_i = ctree_i.sizes();
-		for (std::size_t j = 0; j < ctree_i.num_keys(); ++j) {
+		for (size_t j = 0; j < ctree_i.num_keys(); ++j) {
 			const auto& ctree_j = ctree_i.get_child(j);
 			std::cout << "    " << ctree_j.sizes() << '\n';
 		}

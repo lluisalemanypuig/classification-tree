@@ -166,7 +166,7 @@ TEST_CASE("Empty tree")
 		};
 
 		auto it = kd.get_range_iterator(f1, f2, f3);
-		const std::size_t c = it.count();
+		const size_t c = it.count();
 		CHECK_EQ(c, 0);
 	}
 

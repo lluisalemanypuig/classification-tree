@@ -398,7 +398,7 @@ public:
 
 private:
 
-	template <std::size_t i, std::size_t total_size>
+	template <size_t i, size_t total_size>
 	static constexpr void move_tuple_into(
 		std::tuple<value_t, metadata_t, key_t, keys_t...>& current,
 		std::tuple<value_t, metadata_t, keys_t...>&& subtree

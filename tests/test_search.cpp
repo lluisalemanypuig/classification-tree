@@ -32,40 +32,40 @@
 TEST_CASE("Small vector")
 {
 	std::vector<std::pair<int, int>> v;
-	for (std::size_t i = 1; i <= 17; i += 2) {
-		v.push_back({i,i});
+	for (size_t i = 1; i <= 17; i += 2) {
+		v.push_back({i, i});
 	}
 
 	for (int i = 1; i <= 17; i += 2) {
 		const auto [pos, found] = classtree::search(v, i);
 		CHECK(found);
-		CHECK_EQ(pos, (i - 1)/2);
+		CHECK_EQ(pos, (i - 1) / 2);
 	}
 
 	for (int i = 0; i <= 18; i += 2) {
 		const auto [pos, found] = classtree::search(v, i);
 		CHECK(not found);
-		CHECK_EQ(pos, i/2);
+		CHECK_EQ(pos, i / 2);
 	}
 }
 
 TEST_CASE("Large vector")
 {
 	std::vector<std::pair<int, int>> v;
-	for (std::size_t i = 1; i <= 301; i += 2) {
-		v.push_back({i,i});
+	for (size_t i = 1; i <= 301; i += 2) {
+		v.push_back({i, i});
 	}
 
 	for (int i = 1; i <= 301; i += 2) {
 		const auto [pos, found] = classtree::search(v, i);
 		CHECK(found);
-		CHECK_EQ(pos, (i - 1)/2);
+		CHECK_EQ(pos, (i - 1) / 2);
 	}
 
 	for (int i = 0; i <= 302; i += 2) {
 		const auto [pos, found] = classtree::search(v, i);
 		CHECK(not found);
-		CHECK_EQ(pos, i/2);
+		CHECK_EQ(pos, i / 2);
 	}
 }
 

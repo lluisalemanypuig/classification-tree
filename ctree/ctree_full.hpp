@@ -186,9 +186,9 @@ public:
 	 * @returns The difference of the new size and the old size.
 	 */
 	template <bool unique = true>
-	std::size_t merge(ctree<value_t, metadata_t, key_t, keys_t...>&& t)
+	size_t merge(ctree<value_t, metadata_t, key_t, keys_t...>&& t)
 	{
-		std::size_t old_size = m_size;
+		size_t old_size = m_size;
 		for (auto& [k, c] : t.m_children) {
 
 			const auto [i, exists] = search(m_children, k);
@@ -227,7 +227,7 @@ public:
 	 * @brief The number of unique elements over all leaves of this tree.
 	 * @returns The number of unique elements over all leaves of this tree.
 	 */
-	[[nodiscard]] std::size_t size() const noexcept
+	[[nodiscard]] size_t size() const noexcept
 	{
 		return m_size;
 	}
@@ -237,7 +237,7 @@ public:
 	 * This is equal to the number of children of this node.
 	 * @returns The number of keys in this node.
 	 */
-	[[nodiscard]] std::size_t num_keys() const noexcept
+	[[nodiscard]] size_t num_keys() const noexcept
 	{
 		return m_children.size();
 	}
@@ -257,7 +257,7 @@ public:
 		os << tab << "size: " << size() << '\n';
 		os << tab << "keys: " << num_keys() << '\n';
 
-		std::size_t i = 0;
+		size_t i = 0;
 		for (const auto& [v, child] : m_children) {
 
 			if (i < m_children.size() - 1) {
@@ -279,11 +279,11 @@ public:
 	 * The sizes are returned as proportion values (from 0 to 1).
 	 * @returns A vector of sizes proportionally to the full size of this tree.
 	 */
-	[[nodiscard]] std::vector<std::size_t> sizes() const noexcept
+	[[nodiscard]] std::vector<size_t> sizes() const noexcept
 	{
-		std::vector<std::size_t> s(m_children.size(), 0);
+		std::vector<size_t> s(m_children.size(), 0);
 
-		std::size_t i = 0;
+		size_t i = 0;
 		for (const auto& [_, child] : m_children) {
 			s[i] = child.size();
 			++i;
@@ -296,7 +296,7 @@ public:
 	 * @param i A valid index. Must be less than @ref num_keys().
 	 * @returns A constant reference to a key value.
 	 */
-	const key_t& get_key(const std::size_t i) const noexcept
+	const key_t& get_key(const size_t i) const noexcept
 	{
 #if defined DEBUG
 		assert(i < m_children.size());
@@ -311,7 +311,7 @@ public:
 	 * @param i A valid index. Must be less than @ref num_keys().
 	 * @returns A non-constant reference to a key value.
 	 */
-	child_t& get_child(const std::size_t i) noexcept
+	child_t& get_child(const size_t i) noexcept
 	{
 #if defined DEBUG
 		assert(i < m_children.size());
@@ -326,7 +326,7 @@ public:
 	 * @param i A valid index. Must be less than @ref num_keys().
 	 * @returns A constant reference to a key value.
 	 */
-	const child_t& get_child(const std::size_t i) const noexcept
+	const child_t& get_child(const size_t i) const noexcept
 	{
 #if defined DEBUG
 		assert(i < m_children.size());
@@ -515,7 +515,7 @@ private:
 	/// The set of keys and their associated subtree of this tree's node.
 	container_t m_children;
 	/// The number of unique elements over all leaves of this tree.
-	std::size_t m_size = 0;
+	size_t m_size = 0;
 
 private:
 

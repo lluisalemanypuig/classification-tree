@@ -455,7 +455,7 @@ TEST_CASE("Deep tree")
 	{
 		auto it =
 			kd.get_range_iterator(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11);
-		const std::size_t c = it.count();
+		const size_t c = it.count();
 		CHECK_EQ(c, 4);
 	}
 }

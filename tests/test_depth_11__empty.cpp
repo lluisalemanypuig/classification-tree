@@ -34,7 +34,7 @@
 #include "definitions_11.hpp"
 #include "functions.hpp"
 
-#define level_types int,int, int,int, int,int, int,int, int,int, int
+#define level_types int, int, int, int, int, int, int, int, int, int, int
 
 TEST_CASE("Empty tree")
 {
@@ -108,14 +108,18 @@ TEST_CASE("Empty tree")
 
 		const std::string iter_str_const = [&]()
 		{
-			auto it = kd.get_const_range_iterator_begin(f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11);
+			auto it = kd.get_const_range_iterator_begin(
+				f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11
+			);
 			return iterate_string(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str_const);
 
 		const std::string iter_str = [&]()
 		{
-			auto it = kd.get_range_iterator_begin(f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11);
+			auto it = kd.get_range_iterator_begin(
+				f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11
+			);
 			return iterate_string(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str);
@@ -141,14 +145,18 @@ TEST_CASE("Empty tree")
 
 		const std::string iter_str_const = [&]()
 		{
-			auto it = kd.get_const_range_iterator_end(f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11);
+			auto it = kd.get_const_range_iterator_end(
+				f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11
+			);
 			return range_iterate_string_backward(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str_const);
 
 		const std::string iter_str = [&]()
 		{
-			auto it = kd.get_range_iterator_end(f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11);
+			auto it = kd.get_range_iterator_end(
+				f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11
+			);
 			return range_iterate_string_backward(it);
 		}();
 		CHECK_EQ(kd_iter_str, iter_str);
@@ -170,8 +178,9 @@ TEST_CASE("Empty tree")
 		const auto f11 = [](const int v) -> bool { return v == 1; };
 		// clang-format on
 
-		auto it = kd.get_range_iterator(f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11);
-		const std::size_t c = it.count();
+		auto it =
+			kd.get_range_iterator(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11);
+		const size_t c = it.count();
 		CHECK_EQ(c, 0);
 	}
 
@@ -198,7 +207,9 @@ TEST_CASE("Empty tree")
 		const auto f11 = [](const int v) -> bool { return v == 1; };
 		// clang-format on
 
-		auto it = kd.get_const_range_iterator_begin(f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11);
+		auto it = kd.get_const_range_iterator_begin(
+			f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11
+		);
 		CHECK_EQ(it.end(), true);
 		CHECK_EQ(it.past_begin(), true);
 	}

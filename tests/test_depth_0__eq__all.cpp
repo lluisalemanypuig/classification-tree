@@ -192,8 +192,8 @@ TEST_CASE("All elements")
 			CHECK_EQ(it.end(), false);
 		}
 
-		std::size_t c = 0;
-		for (std::size_t i = 0; i < kd.size(); ++i) {
+		size_t c = 0;
+		for (size_t i = 0; i < kd.size(); ++i) {
 			CHECK_EQ(it.past_begin(), false);
 			if (i > 0) {
 				CHECK_EQ(it.begin(), false);
@@ -242,8 +242,8 @@ TEST_CASE("All elements")
 			CHECK_EQ(it.end(), false);
 		}
 
-		std::size_t c = 0;
-		for (std::size_t i = 0; i < kd.size(); ++i) {
+		size_t c = 0;
+		for (size_t i = 0; i < kd.size(); ++i) {
 			CHECK_EQ(it.past_begin(), false);
 			if (i > 0) {
 				CHECK_EQ(it.begin(), false);

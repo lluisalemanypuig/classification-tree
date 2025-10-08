@@ -307,7 +307,7 @@ TEST_CASE("Unique elements (1)")
 		};
 
 		auto it = kd.get_range_iterator(f1);
-		const std::size_t c = it.count();
+		const size_t c = it.count();
 		CHECK_EQ(c, 7);
 	}
 
@@ -319,7 +319,7 @@ TEST_CASE("Unique elements (1)")
 		};
 
 		auto it = kd.get_range_iterator(f1);
-		const std::size_t c = it.count();
+		const size_t c = it.count();
 		CHECK_EQ(c, 0);
 	}
 
@@ -331,7 +331,7 @@ TEST_CASE("Unique elements (1)")
 		};
 
 		auto it = kd.get_range_iterator(f1);
-		const std::size_t c = it.count();
+		const size_t c = it.count();
 		CHECK_EQ(c, kd.size());
 	}
 
@@ -343,7 +343,7 @@ TEST_CASE("Unique elements (1)")
 		};
 
 		auto it = kd.get_range_iterator(f1);
-		const std::size_t c = it.count();
+		const size_t c = it.count();
 		CHECK_EQ(c, 0);
 	}
 
@@ -367,7 +367,7 @@ TEST_CASE("Unique elements (1)")
 			CHECK_EQ(it.end(), false);
 		}
 
-		for (std::size_t i = 0; i < kd.size(); ++i) {
+		for (size_t i = 0; i < kd.size(); ++i) {
 			CHECK_EQ(it.past_begin(), false);
 			if (i > 0) {
 				CHECK_EQ(it.begin(), false);
@@ -490,7 +490,7 @@ TEST_CASE("Unique elements (1)")
 			CHECK_EQ(it.end(), false);
 		}
 
-		for (std::size_t i = 0; i < 7; ++i) {
+		for (size_t i = 0; i < 7; ++i) {
 			CHECK_EQ(it.past_begin(), false);
 			if (i > 0) {
 				CHECK_EQ(it.begin(), false);
@@ -674,7 +674,7 @@ TEST_CASE("Unique elements (2)")
 	{
 		const auto f1 = [](const int v) -> bool
 		{
-			return v%2 == 0;
+			return v % 2 == 0;
 		};
 
 		auto it = kd.get_const_range_iterator(f1);

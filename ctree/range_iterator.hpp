@@ -224,7 +224,7 @@ public:
 	}
 
 	/// Count the number of elements that match the search criteria.
-	[[nodiscard]] std::size_t count() const noexcept
+	[[nodiscard]] size_t count() const noexcept
 	{
 #if defined DEBUG
 		assert(m_tree != nullptr);
@@ -450,7 +450,7 @@ public:
 	}
 
 	/// Count the number of elements that match the search criteria.
-	[[nodiscard]] std::size_t count() noexcept
+	[[nodiscard]] size_t count() noexcept
 	{
 #if defined DEBUG
 		assert(m_tree != nullptr);
@@ -461,7 +461,7 @@ public:
 		m_begin_idx = 0;
 		m_end_idx = m_tree->num_keys();
 
-		std::size_t c = 0;
+		size_t c = 0;
 		while (not shallow_end()) {
 			while (not shallow_end() and not m_func(m_it->first)) {
 				++m_it;
@@ -672,7 +672,7 @@ private:
 	 * @param to The tuple into which the elements will be moved.
 	 * @param from The tuple from which the elements will be moved.
 	 */
-	template <std::size_t i, std::size_t total_size>
+	template <size_t i, size_t total_size>
 	static constexpr void move_tuple_into(
 		std::tuple<value_t, metadata_t, key_t, keys_t...>& to,
 		std::tuple<value_t, metadata_t, keys_t...>&& from
@@ -767,7 +767,7 @@ private:
 		//std::cout << "    m_end_idx=    " << m_end_idx << '\n';
 		//std::cout << "    num_keys()=   " << m_tree->num_keys() << '\n';
 		//std::cout << "    key[" << m_it_idx
-				  //<< "]= " << m_tree->get_key(m_it_idx) << '\n';
+		//<< "]= " << m_tree->get_key(m_it_idx) << '\n';
 
 		bool stop = false;
 		while (not stop) {
@@ -803,12 +803,12 @@ private:
 	/// Iterator to the key of @ref m_tree currently being iterated.
 	container_iterator_t m_it;
 	/// The index of @ref m_it within the container.
-	std::size_t m_it_idx;
+	size_t m_it_idx;
 
 	/// Pointer to the first valid position of this node.
-	std::size_t m_begin_idx;
+	size_t m_begin_idx;
 	/// Pointer to the last + 1 valid position of this node.
-	std::size_t m_end_idx;
+	size_t m_end_idx;
 
 	/// Has the iterator reached the beginning and tried to move back?
 	bool m_past_begin = false;

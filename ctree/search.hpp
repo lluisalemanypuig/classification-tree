@@ -32,7 +32,7 @@
 namespace classtree {
 
 template <LessthanComparable T, typename U>
-[[nodiscard]] static constexpr inline std::pair<std::size_t, bool>
+[[nodiscard]] static constexpr inline std::pair<size_t, bool>
 search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
 {
 	if (v.size() == 0) [[unlikely]] {
@@ -48,10 +48,10 @@ search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
 		return {0, true};
 	}
 
-	std::size_t i = 0;
-	std::size_t j = v.size() - 1;
+	size_t i = 0;
+	size_t j = v.size() - 1;
 	while (i < j) {
-		const std::size_t m = ((i + j) / 2);
+		const size_t m = ((i + j) / 2);
 
 		if (value < v[m].first) {
 			if (m == 0) [[unlikely]] {
@@ -81,7 +81,7 @@ search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
 
 /*
 template <LessthanComparable T, typename U>
-[[nodiscard]] static constexpr std::pair<std::size_t, bool>
+[[nodiscard]] static constexpr std::pair<size_t, bool>
 search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
 {
 	typedef std::pair<T, U> elem_t;
@@ -102,8 +102,8 @@ search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
 #if defined DEBUG
 	assert(d >= 0);
 #endif
-	const std::size_t dd = static_cast<std::size_t>(d);
-	return std::pair<std::size_t, bool>{dd, are_equal(it->first, value)};
+	const size_t dd = static_cast<size_t>(d);
+	return std::pair<size_t, bool>{dd, are_equal(it->first, value)};
 }
 */
 

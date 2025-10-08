@@ -194,9 +194,9 @@ public:
 	 * @returns The difference of the new size and the old size.
 	 */
 	template <bool unique = true>
-	std::size_t merge(ctree<value_t, metadata_t>&& t)
+	size_t merge(ctree<value_t, metadata_t>&& t)
 	{
-		std::size_t added_elems = 0;
+		size_t added_elems = 0;
 		for (auto& [v, m] : t.m_data) {
 			added_elems += add<unique>(std::move(v), std::move(m));
 		}
@@ -207,7 +207,7 @@ public:
 	 * @brief The number of unique elements over all leaves of this tree.
 	 * @returns The number of unique elements over all leaves of this tree.
 	 */
-	[[nodiscard]] std::size_t size() const noexcept
+	[[nodiscard]] size_t size() const noexcept
 	{
 		return m_data.size();
 	}
@@ -217,7 +217,7 @@ public:
 	 * This is equal to the number of children of this node.
 	 * @returns The number of keys in this node.
 	 */
-	[[nodiscard]] std::size_t num_keys() const noexcept
+	[[nodiscard]] size_t num_keys() const noexcept
 	{
 		return m_data.size();
 	}
@@ -227,7 +227,7 @@ public:
 	 * @param i A valid index. Must be less than @ref num_keys().
 	 * @returns A non-constant reference to a key value.
 	 */
-	std::pair<value_t, metadata_t>& get_child(const std::size_t i) noexcept
+	std::pair<value_t, metadata_t>& get_child(const size_t i) noexcept
 	{
 #if defined DEBUG
 		assert(i < m_data.size());
@@ -249,7 +249,7 @@ public:
 	{
 		os << tab << "^ size: " << size() << ' ' << num_keys() << '\n';
 		if (print_leaves) {
-			for (std::size_t i = 0; i < m_data.size(); ++i) {
+			for (size_t i = 0; i < m_data.size(); ++i) {
 				const auto& [v, meta] = m_data[i];
 
 				if (i < m_data.size() - 1) {
