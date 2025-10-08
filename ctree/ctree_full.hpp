@@ -195,8 +195,8 @@ public:
 			if (not exists) {
 				auto it = m_children.begin();
 				std::advance(it, i);
+				m_size += c.size();
 				m_children.insert(it, {std::move(k), std::move(c)});
-				m_size += t.size();
 			}
 			else {
 				m_size +=
