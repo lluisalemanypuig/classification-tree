@@ -92,7 +92,7 @@ void distribution_1(const uint64_t n, const Fn& f)
 		lal::graphs::free_tree t = gen.yield_tree();
 
 		ctree.template add<false>(
-			{.tree = std::move(t)}, {.num_occs = 1}, f(t)
+			{{.tree = std::move(t)}, {.num_occs = 1}}, f(t)
 		);
 
 #if defined CTREE_DEBUG
@@ -115,7 +115,7 @@ void distribution_2(const uint64_t n, const Fn1& f1, const Fn2& f2)
 		lal::graphs::free_tree t = gen.yield_tree();
 
 		ctree.template add<false>(
-			{.tree = std::move(t)}, {.num_occs = 1}, f1(t), f2(t)
+			{{.tree = std::move(t)}, {.num_occs = 1}}, f1(t), f2(t)
 		);
 
 #if defined CTREE_DEBUG
@@ -149,7 +149,7 @@ void distribution_3(
 		lal::graphs::free_tree t = gen.yield_tree();
 
 		ctree.template add<false>(
-			{.tree = std::move(t)}, {.num_occs = 1}, f1(t), f2(t), f3(t)
+			{{.tree = std::move(t)}, {.num_occs = 1}}, f1(t), f2(t), f3(t)
 		);
 
 #if defined CTREE_DEBUG

@@ -91,9 +91,7 @@ void occupancy_0(const uint64_t n, const uint64_t _N)
 	for (size_t N = 1; N <= _N; ++N) {
 		lal::graphs::free_tree t = gen.yield_tree();
 
-		{
-			ctree.add({.tree = std::move(t)}, {.num_occs = 1});
-		}
+		ctree.add({{.tree = std::move(t)}, {.num_occs = 1}});
 
 		if (N % step == 0) {
 			if (N == 1000) {
@@ -119,7 +117,7 @@ void occupancy_1(const uint64_t n, const uint64_t _N, const Fn& f)
 	for (size_t N = 1; N <= _N; ++N) {
 		lal::graphs::free_tree t = gen.yield_tree();
 
-		ctree.add({.tree = std::move(t)}, {.num_occs = 1}, f(t));
+		ctree.add({{.tree = std::move(t)}, {.num_occs = 1}}, f(t));
 
 		if (N % step == 0) {
 			std::cout << "--------------------\n";
@@ -149,7 +147,7 @@ void occupancy_2(
 	for (size_t N = 1; N <= _N; ++N) {
 		lal::graphs::free_tree t = gen.yield_tree();
 
-		ctree.add({.tree = std::move(t)}, {.num_occs = 1}, f1(t), f2(t));
+		ctree.add({{.tree = std::move(t)}, {.num_occs = 1}}, f1(t), f2(t));
 
 		if (N % step == 0) {
 			std::cout << "--------------------\n";
@@ -194,7 +192,9 @@ void occupancy_3(
 	for (size_t N = 1; N <= _N; ++N) {
 		lal::graphs::free_tree t = gen.yield_tree();
 
-		ctree.add({.tree = std::move(t)}, {.num_occs = 1}, f1(t), f2(t), f3(t));
+		ctree.add(
+			{{.tree = std::move(t)}, {.num_occs = 1}}, f1(t), f2(t), f3(t)
+		);
 
 		if (N % step == 0) {
 			if (N == 1000) {

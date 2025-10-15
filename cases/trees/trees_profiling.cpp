@@ -118,7 +118,7 @@ void profiling(
 
 		const auto begin = now();
 		{
-			ctree.add({.tree = std::move(t)}, {.num_occs = 1}, fs(t)...);
+			ctree.add({{.tree = std::move(t)}, {.num_occs = 1}}, fs(t)...);
 		}
 		const auto end = now();
 		total_time += elapsed_time(begin, end);
