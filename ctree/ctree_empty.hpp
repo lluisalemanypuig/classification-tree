@@ -48,10 +48,14 @@ template <typename data_t, typename metadata_t>
 class ctree<data_t, metadata_t> {
 public:
 
-	using element_t = std::pair<data_t, metadata_t>;
+	/// Shorthand for a useful type.
+	using leaf_element_t = element_t<data_t, metadata_t>;
 
 	/// The container that stores the key values, and the associated subtree.
-	using container_t = std::vector<element_t>;
+	using container_t = std::vector<leaf_element_t>;
+
+	/// Direct access to a nice property of @ref element_t.
+	static constexpr bool is_compound = Compound<data_t, metadata_t>;
 
 public:
 
@@ -84,20 +88,15 @@ public:
 
 	/**
 	 * @brief Adds another element to this tree.
+	 * @tparam _leaf_element_t Type of the value to add.
 	 * @tparam unique Store the element when there are no repeats.
-	 * @tparam _data_t Type of the value to add.
-	 * @tparam _metadata_t Type of the metadata associated to this value.
-	 * @param v Value to add.
-	 * @param m Metadata associated to the value.
+	 * @param value Value to add.
 	 * @returns True if the element was not found and added. False if otherwise.
 	 */
-	template <
-		bool unique = true,
-		typename _data_t = data_t,
-		typename _metadata_t = metadata_t>
-	bool add(_data_t&& val, _metadata_t&& meta)
+	template <bool unique = true, typename _leaf_element_t = leaf_element_t>
+	bool add(leaf_element_t&& value)
 	{
-		static_assert(check_types<_data_t, _metadata_t>());
+		static_assert(check_types<_leaf_element_t>());
 
 		if constexpr (not unique) {
 			// store all objects, regardless of repeats
@@ -105,15 +104,24 @@ public:
 			if constexpr (LessthanComparable<data_t>) {
 
 				// do binary search and then add
-				const auto [i, _] = search(m_data, val);
+				const auto [i, _] = [&]()
+				{
+					if constexpr (is_compound) {
+						return search<data_t, metadata_t>(m_data, value.data);
+					}
+					else {
+						return search<data_t, metadata_t>(m_data, value);
+					}
+				}();
+
 				auto it = m_data.begin();
 				std::advance(it, i);
-				m_data.insert(it, {std::move(val), std::move(meta)});
+				m_data.insert(it, {std::move(value)});
 			}
 			else {
 				// simply add the object and its metadata -- no need
 				// to check the types.
-				m_data.emplace_back(std::move(val), std::move(meta));
+				m_data.emplace_back(std::move(value));
 			}
 			return true;
 		}
@@ -131,16 +139,26 @@ public:
 			static_assert(LessthanComparable<data_t>);
 
 			// do binary search and then add if needed.
-			const auto [i, exists] = search(m_data, val);
+			const auto [i, exists] = [&]()
+			{
+				if constexpr (is_compound) {
+					return search<data_t, metadata_t>(m_data, value.data);
+				}
+				else {
+					return search<data_t, metadata_t>(m_data, value);
+				}
+			}();
+
 			if (exists) {
 				if constexpr (Mergeable<metadata_t>) {
-					m_data[i].second += std::move(meta);
+					static_assert(is_compound);
+					m_data[i].metadata += std::move(value.metadata);
 				}
 				return false;
 			}
 			auto it = m_data.begin();
 			std::advance(it, i);
-			m_data.insert(it, {std::move(val), std::move(meta)});
+			m_data.insert(it, std::move(value));
 			return true;
 		}
 
@@ -148,18 +166,24 @@ public:
 			const auto it = std::find_if(
 				m_data.begin(),
 				m_data.end(),
-				[&](const element_t& e) -> bool
+				[&](const leaf_element_t& e) -> bool
 				{
-					return e.first == val;
+					if constexpr (is_compound) {
+						return e.data == value.data;
+					}
+					else {
+						return e == value;
+					}
 				}
 			);
 
 			if (it == m_data.end()) {
-				m_data.emplace_back(std::move(val), std::move(meta));
+				m_data.emplace_back(std::move(value));
 				return true;
 			}
 			if constexpr (Mergeable<metadata_t>) {
-				it->second += std::move(meta);
+				static_assert(is_compound);
+				it->metadata += std::move(value.metadata);
 			}
 			return false;
 		}
@@ -169,20 +193,16 @@ public:
 	 * @brief Adds another element to this tree.
 	 *
 	 * This method assumes that this leaf is empty.
+	 * @tparam _leaf_element_t Type of the value to add.
 	 * @tparam unique Store the element when there are no repeats.
-	 * @tparam _data_t Type of the value to add.
-	 * @tparam _metadata_t Type of the metadata associated to this value.
-	 * @param v Value to add.
-	 * @param m Metadata associated to the value.
+	 * @param value Value to add.
 	 * @returns True if the element was not found and added. False if otherwise.
 	 */
-	template <
-		bool unique = true,
-		typename _data_t = data_t,
-		typename _metadata_t = metadata_t>
-	bool add_empty(_data_t&& val, _metadata_t&& meta)
+	template <bool unique = true, typename _leaf_element_t = leaf_element_t>
+	bool add_empty(_leaf_element_t&& value)
 	{
-		m_data.emplace_back(std::move(val), std::move(meta));
+		static_assert(check_types<_leaf_element_t>());
+		m_data.emplace_back(std::move(value));
 		return true;
 	}
 
@@ -196,8 +216,8 @@ public:
 	size_t merge(ctree<data_t, metadata_t>&& t)
 	{
 		size_t added_elems = 0;
-		for (auto& [v, m] : t.m_data) {
-			added_elems += add<unique>(std::move(v), std::move(m));
+		for (auto& v : t.m_data) {
+			added_elems += add<unique>(std::move(v));
 		}
 		return added_elems;
 	}
@@ -226,7 +246,19 @@ public:
 	 * @param i A valid index. Must be less than @ref num_keys().
 	 * @returns A non-constant reference to a key value.
 	 */
-	std::pair<data_t, metadata_t>& get_child(const size_t i) noexcept
+	leaf_element_t& get_child(const size_t i) noexcept
+	{
+#if defined DEBUG
+		assert(i < m_data.size());
+#endif
+		return m_data[i];
+	}
+	/**
+	 * @brief Returns the @e i-th child of this node.
+	 * @param i A valid index. Must be less than @ref num_keys().
+	 * @returns A non-constant reference to a key value.
+	 */
+	const leaf_element_t& get_child(const size_t i) const noexcept
 	{
 #if defined DEBUG
 		assert(i < m_data.size());
@@ -249,8 +281,6 @@ public:
 		os << tab << "^ size: " << size() << ' ' << num_keys() << '\n';
 		if (print_leaves) {
 			for (size_t i = 0; i < m_data.size(); ++i) {
-				const auto& [v, meta] = m_data[i];
-
 				if (i < m_data.size() - 1) {
 					os << tab << "├── ";
 				}
@@ -258,7 +288,14 @@ public:
 					os << tab << "└── ";
 				}
 
-				os << v << ' ' << meta << '\n';
+				if constexpr (is_compound) {
+					const auto& [v, meta] = m_data[i];
+					os << v << ' ' << meta << '\n';
+				}
+				else {
+					const auto& v = m_data[i];
+					os << v << '\n';
+				}
 			}
 		}
 	}
@@ -414,15 +451,14 @@ private:
 	 * same as those in the template parameters of this class.
 	 *
 	 * Constant and reference qualifiers are removed prior to comparing.
-	 * @tparam _data_t Type of the keys.
-	 * @tparam _metadata_t Type of the metadata.
+	 * @tparam _leaf_element_t Type of the value to add.
 	 * @returns True if all the types are same. False if otherwise.
 	 */
-	template <typename _data_t, typename _metadata_t>
+	template <typename _leaf_element_t>
 	[[nodiscard]] static consteval bool check_types() noexcept
 	{
-		return std::is_same_v<std::remove_cvref_t<_data_t>, data_t> and
-			   std::is_same_v<std::remove_cvref_t<_metadata_t>, metadata_t>;
+		return std::
+			is_same_v<std::remove_cvref_t<_leaf_element_t>, leaf_element_t>;
 	}
 
 private:

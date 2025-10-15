@@ -25,6 +25,7 @@
 
 // ctree includes
 #include <ctree/concepts.hpp>
+#include <ctree/types.hpp>
 
 namespace classtree {
 

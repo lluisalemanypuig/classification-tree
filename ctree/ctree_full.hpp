@@ -52,14 +52,17 @@ template <
 class ctree<data_t, metadata_t, key_t, keys_t...> {
 public:
 
+	/// Shorthand for a useful type.
+	using leaf_element_t = element_t<data_t, metadata_t>;
+
 	/// Type of the children nodes.
 	using child_t = ctree<data_t, metadata_t, keys_t...>;
 
 	/// Node type, a pair of key value and its associated subtree.
-	using element_t = std::pair<key_t, child_t>;
+	using subtree_t = std::pair<key_t, child_t>;
 
 	/// The container that stores the key values, and the associated subtree.
-	using container_t = std::vector<element_t>;
+	using container_t = std::vector<subtree_t>;
 
 public:
 
@@ -101,44 +104,38 @@ public:
 	/**
 	 * @brief Adds another element to this tree.
 	 * @tparam unique Store the element when there are no repeats.
-	 * @tparam _data_t Type of the value to add.
-	 * @tparam _metadata_t Type of the metadata associated to this value.
+	 * @tparam _leaf_element_t Type of the element to be added.
 	 * @tparam _key_t Type of the first key.
 	 * @tparam _keys_t Type of the remaining keys.
-	 * @param v Value to add.
-	 * @param m Metadata associated to the value.
+	 * @param value Value to add.
 	 * @param h The value of the first key.
 	 * @param ks The values of the other keys.
 	 * @returns True if the element was not found and added. False if otherwise.
 	 */
 	template <
 		bool unique = true,
-		typename _data_t = data_t,
-		typename _metadata_t = metadata_t,
+		typename _leaf_element_t = leaf_element_t,
 		typename _key_t = key_t,
 		typename... _keys_t>
-	bool add(_data_t&& v, _metadata_t&& m, _key_t&& h, _keys_t&&...ks)
+	bool add(_leaf_element_t&& value, _key_t&& h, _keys_t&&...ks)
 	{
-		static_assert(check_types<_data_t, _metadata_t, _key_t, _keys_t...>());
+		static_assert(check_types<_leaf_element_t, _key_t, _keys_t...>());
 
 		const auto [i, exists] = search(m_children, h);
 		if (not exists) {
 			auto it = m_children.begin();
 			std::advance(it, i);
-			m_children.insert(it, {std::move(h), child_t()});
+			m_children.insert(it, subtree_t{std::move(h), child_t()});
 			m_size += 1;
 			// this always returns true
 			return m_children[i].second.template add_empty<unique>(
-				std::forward<_data_t>(v),
-				std::forward<_metadata_t>(m),
+				std::forward<leaf_element_t>(value),
 				std::forward<_keys_t>(ks)...
 			);
 		}
 
 		const bool added = m_children[i].second.template add<unique>(
-			std::forward<_data_t>(v),
-			std::forward<_metadata_t>(m),
-			std::forward<_keys_t>(ks)...
+			std::forward<leaf_element_t>(value), std::forward<_keys_t>(ks)...
 		);
 		m_size += added;
 		return added;
@@ -149,33 +146,28 @@ public:
 	 *
 	 * This method assumes that this node is empty.
 	 * @tparam unique Store the element when there are no repeats.
-	 * @tparam _data_t Type of the value to add.
-	 * @tparam _metadata_t Type of the metadata associated to this value.
+	 * @tparam _leaf_element_t Type of the element to be added.
 	 * @tparam _key_t Type of the first key.
 	 * @tparam _keys_t Type of the remaining keys.
 	 * @param v Value to add.
-	 * @param m Metadata associated to the value.
 	 * @param h The value of the first key.
 	 * @param ks The values of the other keys.
 	 * @returns True if the element was not found and added. False if otherwise.
 	 */
 	template <
 		bool unique = true,
-		typename _data_t = data_t,
-		typename _metadata_t = metadata_t,
+		typename _leaf_element_t = leaf_element_t,
 		typename _key_t = key_t,
 		typename... _keys_t>
-	bool add_empty(_data_t&& v, _metadata_t&& m, _key_t&& h, _keys_t&&...ks)
+	bool add_empty(leaf_element_t&& value, _key_t&& h, _keys_t&&...ks)
 	{
-		static_assert(check_types<_data_t, _metadata_t, _key_t, _keys_t...>());
+		static_assert(check_types<_leaf_element_t, _key_t, _keys_t...>());
 
 		m_children.emplace_back(std::move(h), child_t());
 		m_size += 1;
 		// this always returns true
 		return m_children[0].second.template add_empty<unique>(
-			std::forward<_data_t>(v),
-			std::forward<_metadata_t>(m),
-			std::forward<_keys_t>(ks)...
+			std::forward<leaf_element_t>(value), std::forward<_keys_t>(ks)...
 		);
 	}
 
@@ -216,7 +208,7 @@ public:
 		return std::find_if(
 				   m_children.begin(),
 				   m_children.end(),
-				   [&key](const element_t& e) noexcept
+				   [&key](const subtree_t& e) noexcept
 				   {
 					   return e.first == key;
 				   }
@@ -493,7 +485,7 @@ public:
 		const bool keys_sorted = std::is_sorted(
 			m_children.begin(),
 			m_children.end(),
-			[](const element_t& e1, const element_t& e2) -> bool
+			[](const subtree_t& e1, const subtree_t& e2) -> bool
 			{
 				return e1.first < e2.first;
 			}
@@ -501,7 +493,7 @@ public:
 		if (not keys_sorted) {
 			return false;
 		}
-		for (const element_t& e : m_children) {
+		for (const subtree_t& e : m_children) {
 			if (not e.second.check_sorted_keys()) {
 				return false;
 			}
@@ -524,16 +516,16 @@ private:
 	 * same as those in the template parameters of this class.
 	 *
 	 * Constant and reference qualifiers are removed prior to comparing.
-	 * @tparam _data_t Type of the keys.
-	 * @tparam _metadata_t Type of the metadata.
+	 * @tparam _leaf_element_t Type of the keys.
 	 * @tparam _keys_t Type of the key functions.
 	 * @returns True if all the types are same. False if otherwise.
 	 */
-	template <typename _data_t, typename _metadata_t, typename... _keys_t>
+	template <typename _leaf_element_t, typename... _keys_t>
 	static consteval bool check_types() noexcept
 	{
-		return std::is_same_v<std::remove_cvref_t<_data_t>, data_t> and
-			   std::is_same_v<std::remove_cvref_t<_metadata_t>, metadata_t> and
+		return std::is_same_v<
+				   std::remove_cvref_t<_leaf_element_t>,
+				   leaf_element_t> and
 			   check_packs(
 				   parameter_pack<key_t, keys_t...>{},
 				   parameter_pack<std::remove_cvref_t<_keys_t>...>{}

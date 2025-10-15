@@ -138,6 +138,11 @@ class range_iterator_<
 	metadata_t> {
 public:
 
+	/// Shorthand for a useful type.
+	using leaf_element_t = element_t<data_t, metadata_t>;
+
+public:
+
 	/// Set the pointer of the tree to iterate on.
 	void set_pointer(tree_pointer_t tree) noexcept
 	{
@@ -268,18 +273,18 @@ public:
 		std::enable_if_t<
 			std::is_same_v<pointer_t<data_t, metadata_t>, _inner_pointer_t>,
 			bool> = true>
-	std::pair<data_t, metadata_t>& operator* () noexcept
+	leaf_element_t& operator* () noexcept
 	{
 		return *m_it;
 	}
 	/// Returns the current value of the iteration.
-	const std::pair<data_t, metadata_t>& operator* () const noexcept
+	const leaf_element_t& operator* () const noexcept
 	{
 		return *m_it;
 	}
 
 	/// Returns the current value of the iteration.
-	std::tuple<data_t, metadata_t> operator+ () const noexcept
+	std::tuple<leaf_element_t> operator+ () const noexcept
 	{
 		return std::make_tuple(m_it->first, m_it->second);
 	}
@@ -332,6 +337,11 @@ class range_iterator_<
 	metadata_t,
 	key_t,
 	keys_t...> {
+public:
+
+	/// Shorthand for a useful type.
+	using leaf_element_t = element_t<data_t, metadata_t>;
+
 public:
 
 	/// Set the pointer of the tree to iterate on.
@@ -523,26 +533,25 @@ public:
 				pointer_t<data_t, metadata_t, key_t, keys_t...>,
 				_inner_pointer_t>,
 			bool> = true>
-	std::pair<data_t, metadata_t>& operator* () noexcept
+	leaf_element_t& operator* () noexcept
 	{
 		return *m_subtree_iterator;
 	}
 	/// Returns the current value of the iteration.
-	const std::pair<data_t, metadata_t>& operator* () const noexcept
+	const leaf_element_t& operator* () const noexcept
 	{
 		return *m_subtree_iterator;
 	}
 
 	/// Returns the current value of the iteration.
-	std::tuple<data_t, metadata_t, key_t, keys_t...> operator+ () const noexcept
+	std::tuple<leaf_element_t, key_t, keys_t...> operator+ () const noexcept
 	{
-		std::tuple<data_t, metadata_t, keys_t...> subtree = +m_subtree_iterator;
+		std::tuple<leaf_element_t, keys_t...> subtree = +m_subtree_iterator;
 
-		std::tuple<data_t, metadata_t, key_t, keys_t...> current;
+		std::tuple<leaf_element_t, key_t, keys_t...> current;
 		std::get<0>(current) = std::get<0>(std::move(subtree));
-		std::get<1>(current) = std::get<1>(std::move(subtree));
-		std::get<2>(current) = m_it->first;
-		move_tuple_into<3, 3 + sizeof...(keys_t)>(current, std::move(subtree));
+		std::get<1>(current) = m_it->first;
+		move_tuple_into<2, 2 + sizeof...(keys_t)>(current, std::move(subtree));
 		return current;
 	}
 
