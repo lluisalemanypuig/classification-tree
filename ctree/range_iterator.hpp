@@ -286,7 +286,12 @@ public:
 	/// Returns the current value of the iteration.
 	std::tuple<leaf_element_t> operator+ () const noexcept
 	{
-		return std::make_tuple(m_it->first, m_it->second);
+		if constexpr (Compound<data_t, metadata_t>) {
+			return std::make_tuple(leaf_element_t{m_it->data, m_it->metadata});
+		}
+		else {
+			return std::make_tuple(*m_it);
+		}
 	}
 
 private:
@@ -681,8 +686,8 @@ private:
 	 */
 	template <size_t i, size_t total_size>
 	static constexpr void move_tuple_into(
-		std::tuple<data_t, metadata_t, key_t, keys_t...>& to,
-		std::tuple<data_t, metadata_t, keys_t...>&& from
+		std::tuple<leaf_element_t, key_t, keys_t...>& to,
+		std::tuple<leaf_element_t, keys_t...>&& from
 	) noexcept
 	{
 		if constexpr (i < total_size) {
