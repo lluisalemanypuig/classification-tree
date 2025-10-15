@@ -39,21 +39,21 @@ namespace classtree {
 
 /**
  * @brief Partial template specialization of the Classification Tree.
- * @tparam value_t Type of the values to add.
+ * @tparam data_t Type of the values to add.
  * @tparam metadata_t Type of the metadata associated to the values.
  * @tparam key_t Type of the first key.
  * @tparam keys_t Type of the remaining keys.
  */
 template <
-	typename value_t,
+	typename data_t,
 	typename metadata_t,
 	Comparable key_t,
 	Comparable... keys_t>
-class ctree<value_t, metadata_t, key_t, keys_t...> {
+class ctree<data_t, metadata_t, key_t, keys_t...> {
 public:
 
 	/// Type of the children nodes.
-	using child_t = ctree<value_t, metadata_t, keys_t...>;
+	using child_t = ctree<data_t, metadata_t, keys_t...>;
 
 	/// Node type, a pair of key value and its associated subtree.
 	using element_t = std::pair<key_t, child_t>;
@@ -101,7 +101,7 @@ public:
 	/**
 	 * @brief Adds another element to this tree.
 	 * @tparam unique Store the element when there are no repeats.
-	 * @tparam _value_t Type of the value to add.
+	 * @tparam _data_t Type of the value to add.
 	 * @tparam _metadata_t Type of the metadata associated to this value.
 	 * @tparam _key_t Type of the first key.
 	 * @tparam _keys_t Type of the remaining keys.
@@ -113,13 +113,13 @@ public:
 	 */
 	template <
 		bool unique = true,
-		typename _value_t = value_t,
+		typename _data_t = data_t,
 		typename _metadata_t = metadata_t,
 		typename _key_t = key_t,
 		typename... _keys_t>
-	bool add(_value_t&& v, _metadata_t&& m, _key_t&& h, _keys_t&&...ks)
+	bool add(_data_t&& v, _metadata_t&& m, _key_t&& h, _keys_t&&...ks)
 	{
-		static_assert(check_types<_value_t, _metadata_t, _key_t, _keys_t...>());
+		static_assert(check_types<_data_t, _metadata_t, _key_t, _keys_t...>());
 
 		const auto [i, exists] = search(m_children, h);
 		if (not exists) {
@@ -129,14 +129,14 @@ public:
 			m_size += 1;
 			// this always returns true
 			return m_children[i].second.template add_empty<unique>(
-				std::forward<_value_t>(v),
+				std::forward<_data_t>(v),
 				std::forward<_metadata_t>(m),
 				std::forward<_keys_t>(ks)...
 			);
 		}
 
 		const bool added = m_children[i].second.template add<unique>(
-			std::forward<_value_t>(v),
+			std::forward<_data_t>(v),
 			std::forward<_metadata_t>(m),
 			std::forward<_keys_t>(ks)...
 		);
@@ -149,7 +149,7 @@ public:
 	 *
 	 * This method assumes that this node is empty.
 	 * @tparam unique Store the element when there are no repeats.
-	 * @tparam _value_t Type of the value to add.
+	 * @tparam _data_t Type of the value to add.
 	 * @tparam _metadata_t Type of the metadata associated to this value.
 	 * @tparam _key_t Type of the first key.
 	 * @tparam _keys_t Type of the remaining keys.
@@ -161,19 +161,19 @@ public:
 	 */
 	template <
 		bool unique = true,
-		typename _value_t = value_t,
+		typename _data_t = data_t,
 		typename _metadata_t = metadata_t,
 		typename _key_t = key_t,
 		typename... _keys_t>
-	bool add_empty(_value_t&& v, _metadata_t&& m, _key_t&& h, _keys_t&&...ks)
+	bool add_empty(_data_t&& v, _metadata_t&& m, _key_t&& h, _keys_t&&...ks)
 	{
-		static_assert(check_types<_value_t, _metadata_t, _key_t, _keys_t...>());
+		static_assert(check_types<_data_t, _metadata_t, _key_t, _keys_t...>());
 
 		m_children.emplace_back(std::move(h), child_t());
 		m_size += 1;
 		// this always returns true
 		return m_children[0].second.template add_empty<unique>(
-			std::forward<_value_t>(v),
+			std::forward<_data_t>(v),
 			std::forward<_metadata_t>(m),
 			std::forward<_keys_t>(ks)...
 		);
@@ -186,7 +186,7 @@ public:
 	 * @returns The difference of the new size and the old size.
 	 */
 	template <bool unique = true>
-	size_t merge(ctree<value_t, metadata_t, key_t, keys_t...>&& t)
+	size_t merge(ctree<data_t, metadata_t, key_t, keys_t...>&& t)
 	{
 		size_t old_size = m_size;
 		for (auto& [k, c] : t.m_children) {
@@ -337,10 +337,10 @@ public:
 	}
 
 	// Returns an iterator object over the leaves of this tree.
-	[[nodiscard]] iterator<value_t, metadata_t, key_t, keys_t...>
+	[[nodiscard]] iterator<data_t, metadata_t, key_t, keys_t...>
 	get_iterator() noexcept
 	{
-		iterator<value_t, metadata_t, key_t, keys_t...> it;
+		iterator<data_t, metadata_t, key_t, keys_t...> it;
 		it.set_pointer(this);
 		return it;
 	}
@@ -349,10 +349,10 @@ public:
 	 *
 	 * Starts at the beginning of the iteration.
 	 */
-	[[nodiscard]] iterator<value_t, metadata_t, key_t, keys_t...>
+	[[nodiscard]] iterator<data_t, metadata_t, key_t, keys_t...>
 	get_iterator_begin() noexcept
 	{
-		iterator<value_t, metadata_t, key_t, keys_t...> it;
+		iterator<data_t, metadata_t, key_t, keys_t...> it;
 		it.set_pointer(this);
 		it.to_begin();
 		return it;
@@ -362,19 +362,19 @@ public:
 	 *
 	 * Starts at the end of the iteration.
 	 */
-	[[nodiscard]] iterator<value_t, metadata_t, key_t, keys_t...>
+	[[nodiscard]] iterator<data_t, metadata_t, key_t, keys_t...>
 	get_iterator_end() noexcept
 	{
-		iterator<value_t, metadata_t, key_t, keys_t...> it;
+		iterator<data_t, metadata_t, key_t, keys_t...> it;
 		it.set_pointer(this);
 		it.to_end();
 		return it;
 	}
 	// Returns an iterator object over the leaves of this tree.
-	[[nodiscard]] const_iterator<value_t, metadata_t, key_t, keys_t...>
+	[[nodiscard]] const_iterator<data_t, metadata_t, key_t, keys_t...>
 	get_const_iterator() const noexcept
 	{
-		const_iterator<value_t, metadata_t, key_t, keys_t...> it;
+		const_iterator<data_t, metadata_t, key_t, keys_t...> it;
 		it.set_pointer(this);
 		return it;
 	}
@@ -383,10 +383,10 @@ public:
 	 *
 	 * Starts at the beginning of the iteration.
 	 */
-	[[nodiscard]] const_iterator<value_t, metadata_t, key_t, keys_t...>
+	[[nodiscard]] const_iterator<data_t, metadata_t, key_t, keys_t...>
 	get_const_iterator_begin() const noexcept
 	{
-		const_iterator<value_t, metadata_t, key_t, keys_t...> it;
+		const_iterator<data_t, metadata_t, key_t, keys_t...> it;
 		it.set_pointer(this);
 		it.to_begin();
 		return it;
@@ -396,10 +396,10 @@ public:
 	 *
 	 * Starts at the end of the iteration.
 	 */
-	[[nodiscard]] const_iterator<value_t, metadata_t, key_t, keys_t...>
+	[[nodiscard]] const_iterator<data_t, metadata_t, key_t, keys_t...>
 	get_const_iterator_end() const noexcept
 	{
-		const_iterator<value_t, metadata_t, key_t, keys_t...> it;
+		const_iterator<data_t, metadata_t, key_t, keys_t...> it;
 		it.set_pointer(this);
 		it.to_end();
 		return it;
@@ -407,10 +407,10 @@ public:
 
 	// Returns a range iterator object over the leaves of this tree.
 	template <typename... Callables>
-	[[nodiscard]] range_iterator<value_t, metadata_t, key_t, keys_t...>
+	[[nodiscard]] range_iterator<data_t, metadata_t, key_t, keys_t...>
 	get_range_iterator(Callables&&...fs) noexcept
 	{
-		range_iterator<value_t, metadata_t, key_t, keys_t...> it;
+		range_iterator<data_t, metadata_t, key_t, keys_t...> it;
 		it.set_functions(std::forward<Callables>(fs)...);
 		it.set_pointer(this);
 		return it;
@@ -421,10 +421,10 @@ public:
 	 * Starts at the beginning of the iteration.
 	 */
 	template <typename... Callables>
-	[[nodiscard]] range_iterator<value_t, metadata_t, key_t, keys_t...>
+	[[nodiscard]] range_iterator<data_t, metadata_t, key_t, keys_t...>
 	get_range_iterator_begin(Callables&&...fs) noexcept
 	{
-		range_iterator<value_t, metadata_t, key_t, keys_t...> it;
+		range_iterator<data_t, metadata_t, key_t, keys_t...> it;
 		it.set_functions(std::forward<Callables>(fs)...);
 		it.set_pointer(this);
 		[[maybe_unused]] const bool _ = it.to_begin();
@@ -436,10 +436,10 @@ public:
 	 * Starts at the end of the iteration.
 	 */
 	template <typename... Callables>
-	[[nodiscard]] range_iterator<value_t, metadata_t, key_t, keys_t...>
+	[[nodiscard]] range_iterator<data_t, metadata_t, key_t, keys_t...>
 	get_range_iterator_end(Callables&&...fs) noexcept
 	{
-		range_iterator<value_t, metadata_t, key_t, keys_t...> it;
+		range_iterator<data_t, metadata_t, key_t, keys_t...> it;
 		it.set_functions(std::forward<Callables>(fs)...);
 		it.set_pointer(this);
 		[[maybe_unused]] const bool _ = it.to_end();
@@ -447,10 +447,10 @@ public:
 	}
 	// Returns a const range iterator object over the leaves of this tree.
 	template <typename... Callables>
-	[[nodiscard]] const_range_iterator<value_t, metadata_t, key_t, keys_t...>
+	[[nodiscard]] const_range_iterator<data_t, metadata_t, key_t, keys_t...>
 	get_const_range_iterator(Callables&&...fs) const noexcept
 	{
-		const_range_iterator<value_t, metadata_t, key_t, keys_t...> it;
+		const_range_iterator<data_t, metadata_t, key_t, keys_t...> it;
 		it.set_functions(std::forward<Callables>(fs)...);
 		it.set_pointer(this);
 		return it;
@@ -461,10 +461,10 @@ public:
 	 * Starts at the beginning of the iteration.
 	 */
 	template <typename... Callables>
-	[[nodiscard]] const_range_iterator<value_t, metadata_t, key_t, keys_t...>
+	[[nodiscard]] const_range_iterator<data_t, metadata_t, key_t, keys_t...>
 	get_const_range_iterator_begin(Callables&&...fs) const noexcept
 	{
-		const_range_iterator<value_t, metadata_t, key_t, keys_t...> it;
+		const_range_iterator<data_t, metadata_t, key_t, keys_t...> it;
 		it.set_functions(std::forward<Callables>(fs)...);
 		it.set_pointer(this);
 		[[maybe_unused]] const bool _ = it.to_begin();
@@ -476,10 +476,10 @@ public:
 	 * Starts at the end of the iteration.
 	 */
 	template <typename... Callables>
-	[[nodiscard]] const_range_iterator<value_t, metadata_t, key_t, keys_t...>
+	[[nodiscard]] const_range_iterator<data_t, metadata_t, key_t, keys_t...>
 	get_const_range_iterator_end(Callables&&...fs) const noexcept
 	{
-		const_range_iterator<value_t, metadata_t, key_t, keys_t...> it;
+		const_range_iterator<data_t, metadata_t, key_t, keys_t...> it;
 		it.set_functions(std::forward<Callables>(fs)...);
 		it.set_pointer(this);
 		[[maybe_unused]] const bool _ = it.to_end();
@@ -524,15 +524,15 @@ private:
 	 * same as those in the template parameters of this class.
 	 *
 	 * Constant and reference qualifiers are removed prior to comparing.
-	 * @tparam _value_t Type of the keys.
+	 * @tparam _data_t Type of the keys.
 	 * @tparam _metadata_t Type of the metadata.
 	 * @tparam _keys_t Type of the key functions.
 	 * @returns True if all the types are same. False if otherwise.
 	 */
-	template <typename _value_t, typename _metadata_t, typename... _keys_t>
+	template <typename _data_t, typename _metadata_t, typename... _keys_t>
 	static consteval bool check_types() noexcept
 	{
-		return std::is_same_v<std::remove_cvref_t<_value_t>, value_t> and
+		return std::is_same_v<std::remove_cvref_t<_data_t>, data_t> and
 			   std::is_same_v<std::remove_cvref_t<_metadata_t>, metadata_t> and
 			   check_packs(
 				   parameter_pack<key_t, keys_t...>{},

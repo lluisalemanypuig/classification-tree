@@ -41,15 +41,14 @@ namespace classtree {
  *
  * This class has no subtrees and is implemented simply as an array of
  * pairs of value and its metadata (see @ref element_t).
- * @tparam value_t Type of the values to add.
+ * @tparam data_t Type of the values to add.
  * @tparam metadata_t Type of the metadata associated to the values.
  */
-template <typename value_t, typename metadata_t>
-class ctree<value_t, metadata_t> {
+template <typename data_t, typename metadata_t>
+class ctree<data_t, metadata_t> {
 public:
 
-	/// A pair of representative element and its metadata.
-	using element_t = std::pair<value_t, metadata_t>;
+	using element_t = std::pair<data_t, metadata_t>;
 
 	/// The container that stores the key values, and the associated subtree.
 	using container_t = std::vector<element_t>;
@@ -86,7 +85,7 @@ public:
 	/**
 	 * @brief Adds another element to this tree.
 	 * @tparam unique Store the element when there are no repeats.
-	 * @tparam _value_t Type of the value to add.
+	 * @tparam _data_t Type of the value to add.
 	 * @tparam _metadata_t Type of the metadata associated to this value.
 	 * @param v Value to add.
 	 * @param m Metadata associated to the value.
@@ -94,16 +93,16 @@ public:
 	 */
 	template <
 		bool unique = true,
-		typename _value_t = value_t,
+		typename _data_t = data_t,
 		typename _metadata_t = metadata_t>
-	bool add(_value_t&& val, _metadata_t&& meta)
+	bool add(_data_t&& val, _metadata_t&& meta)
 	{
-		static_assert(check_types<_value_t, _metadata_t>());
+		static_assert(check_types<_data_t, _metadata_t>());
 
 		if constexpr (not unique) {
 			// store all objects, regardless of repeats
 
-			if constexpr (LessthanComparable<value_t>) {
+			if constexpr (LessthanComparable<data_t>) {
 
 				// do binary search and then add
 				const auto [i, _] = search(m_data, val);
@@ -121,15 +120,15 @@ public:
 
 		/* store unique objects */
 
-		if constexpr (not EqualityComparable<value_t> and
-					  not LessthanComparable<value_t>) {
+		if constexpr (not EqualityComparable<data_t> and
+					  not LessthanComparable<data_t>) {
 			// this cannot happen if we want to keep unique instances.
 			static_assert(false);
 			return false;
 		}
 
-		if constexpr (LessthanComparable<value_t>) {
-			static_assert(LessthanComparable<value_t>);
+		if constexpr (LessthanComparable<data_t>) {
+			static_assert(LessthanComparable<data_t>);
 
 			// do binary search and then add if needed.
 			const auto [i, exists] = search(m_data, val);
@@ -145,7 +144,7 @@ public:
 			return true;
 		}
 
-		if constexpr (EqualityComparable<value_t>) {
+		if constexpr (EqualityComparable<data_t>) {
 			const auto it = std::find_if(
 				m_data.begin(),
 				m_data.end(),
@@ -171,7 +170,7 @@ public:
 	 *
 	 * This method assumes that this leaf is empty.
 	 * @tparam unique Store the element when there are no repeats.
-	 * @tparam _value_t Type of the value to add.
+	 * @tparam _data_t Type of the value to add.
 	 * @tparam _metadata_t Type of the metadata associated to this value.
 	 * @param v Value to add.
 	 * @param m Metadata associated to the value.
@@ -179,9 +178,9 @@ public:
 	 */
 	template <
 		bool unique = true,
-		typename _value_t = value_t,
+		typename _data_t = data_t,
 		typename _metadata_t = metadata_t>
-	bool add_empty(_value_t&& val, _metadata_t&& meta)
+	bool add_empty(_data_t&& val, _metadata_t&& meta)
 	{
 		m_data.emplace_back(std::move(val), std::move(meta));
 		return true;
@@ -194,7 +193,7 @@ public:
 	 * @returns The difference of the new size and the old size.
 	 */
 	template <bool unique = true>
-	size_t merge(ctree<value_t, metadata_t>&& t)
+	size_t merge(ctree<data_t, metadata_t>&& t)
 	{
 		size_t added_elems = 0;
 		for (auto& [v, m] : t.m_data) {
@@ -227,7 +226,7 @@ public:
 	 * @param i A valid index. Must be less than @ref num_keys().
 	 * @returns A non-constant reference to a key value.
 	 */
-	std::pair<value_t, metadata_t>& get_child(const size_t i) noexcept
+	std::pair<data_t, metadata_t>& get_child(const size_t i) noexcept
 	{
 #if defined DEBUG
 		assert(i < m_data.size());
@@ -265,9 +264,9 @@ public:
 	}
 
 	/// Returns an iterator object over the leaves of this tree.
-	[[nodiscard]] iterator<value_t, metadata_t> get_iterator() noexcept
+	[[nodiscard]] iterator<data_t, metadata_t> get_iterator() noexcept
 	{
-		iterator<value_t, metadata_t> it;
+		iterator<data_t, metadata_t> it;
 		it.set_pointer(this);
 		return it;
 	}
@@ -276,9 +275,9 @@ public:
 	 *
 	 * Starts at the beginning of the iteration.
 	 */
-	[[nodiscard]] iterator<value_t, metadata_t> get_iterator_begin() noexcept
+	[[nodiscard]] iterator<data_t, metadata_t> get_iterator_begin() noexcept
 	{
-		iterator<value_t, metadata_t> it;
+		iterator<data_t, metadata_t> it;
 		it.set_pointer(this);
 		it.to_begin();
 		return it;
@@ -288,18 +287,18 @@ public:
 	 *
 	 * Starts at the end of the iteration.
 	 */
-	[[nodiscard]] iterator<value_t, metadata_t> get_iterator_end() noexcept
+	[[nodiscard]] iterator<data_t, metadata_t> get_iterator_end() noexcept
 	{
-		iterator<value_t, metadata_t> it;
+		iterator<data_t, metadata_t> it;
 		it.set_pointer(this);
 		it.to_end();
 		return it;
 	}
 	/// Returns an iterator object over the leaves of this tree.
-	[[nodiscard]] const_iterator<value_t, metadata_t>
+	[[nodiscard]] const_iterator<data_t, metadata_t>
 	get_const_iterator() const noexcept
 	{
-		const_iterator<value_t, metadata_t> it;
+		const_iterator<data_t, metadata_t> it;
 		it.set_pointer(this);
 		return it;
 	}
@@ -308,10 +307,10 @@ public:
 	 *
 	 * Starts at the beginning of the iteration.
 	 */
-	[[nodiscard]] const_iterator<value_t, metadata_t>
+	[[nodiscard]] const_iterator<data_t, metadata_t>
 	get_const_iterator_begin() const noexcept
 	{
-		const_iterator<value_t, metadata_t> it;
+		const_iterator<data_t, metadata_t> it;
 		it.set_pointer(this);
 		it.to_begin();
 		return it;
@@ -321,20 +320,20 @@ public:
 	 *
 	 * Starts at the end of the iteration.
 	 */
-	[[nodiscard]] const_iterator<value_t, metadata_t>
+	[[nodiscard]] const_iterator<data_t, metadata_t>
 	get_const_iterator_end() const noexcept
 	{
-		const_iterator<value_t, metadata_t> it;
+		const_iterator<data_t, metadata_t> it;
 		it.set_pointer(this);
 		it.to_end();
 		return it;
 	}
 
 	/// Returns an iterator object over the leaves of this tree.
-	[[nodiscard]] range_iterator<value_t, metadata_t>
+	[[nodiscard]] range_iterator<data_t, metadata_t>
 	get_range_iterator() noexcept
 	{
-		range_iterator<value_t, metadata_t> it;
+		range_iterator<data_t, metadata_t> it;
 		it.set_pointer(this);
 		return it;
 	}
@@ -343,10 +342,10 @@ public:
 	 *
 	 * Starts at the beginning of the iteration.
 	 */
-	[[nodiscard]] range_iterator<value_t, metadata_t>
+	[[nodiscard]] range_iterator<data_t, metadata_t>
 	get_range_iterator_begin() noexcept
 	{
-		range_iterator<value_t, metadata_t> it;
+		range_iterator<data_t, metadata_t> it;
 		it.set_pointer(this);
 		[[maybe_unused]] const auto _ = it.to_begin();
 		return it;
@@ -356,19 +355,19 @@ public:
 	 *
 	 * Starts at the end of the iteration.
 	 */
-	[[nodiscard]] range_iterator<value_t, metadata_t>
+	[[nodiscard]] range_iterator<data_t, metadata_t>
 	get_range_iterator_end() noexcept
 	{
-		range_iterator<value_t, metadata_t> it;
+		range_iterator<data_t, metadata_t> it;
 		it.set_pointer(this);
 		[[maybe_unused]] const auto _ = it.to_end();
 		return it;
 	}
 	/// Returns an iterator object over the leaves of this tree.
-	[[nodiscard]] const_range_iterator<value_t, metadata_t>
+	[[nodiscard]] const_range_iterator<data_t, metadata_t>
 	get_const_range_iterator() const noexcept
 	{
-		const_range_iterator<value_t, metadata_t> it;
+		const_range_iterator<data_t, metadata_t> it;
 		it.set_pointer(this);
 		return it;
 	}
@@ -377,10 +376,10 @@ public:
 	 *
 	 * Starts at the beginning of the iteration.
 	 */
-	[[nodiscard]] const_range_iterator<value_t, metadata_t>
+	[[nodiscard]] const_range_iterator<data_t, metadata_t>
 	get_const_range_iterator_begin() const noexcept
 	{
-		const_range_iterator<value_t, metadata_t> it;
+		const_range_iterator<data_t, metadata_t> it;
 		it.set_pointer(this);
 		[[maybe_unused]] const auto _ = it.to_begin();
 		return it;
@@ -390,10 +389,10 @@ public:
 	 *
 	 * Starts at the beginning of the iteration.
 	 */
-	[[nodiscard]] const_range_iterator<value_t, metadata_t>
+	[[nodiscard]] const_range_iterator<data_t, metadata_t>
 	get_const_range_iterator_end() const noexcept
 	{
-		const_range_iterator<value_t, metadata_t> it;
+		const_range_iterator<data_t, metadata_t> it;
 		it.set_pointer(this);
 		[[maybe_unused]] const auto _ = it.to_end();
 		return it;
@@ -415,14 +414,14 @@ private:
 	 * same as those in the template parameters of this class.
 	 *
 	 * Constant and reference qualifiers are removed prior to comparing.
-	 * @tparam _value_t Type of the keys.
+	 * @tparam _data_t Type of the keys.
 	 * @tparam _metadata_t Type of the metadata.
 	 * @returns True if all the types are same. False if otherwise.
 	 */
-	template <typename _value_t, typename _metadata_t>
+	template <typename _data_t, typename _metadata_t>
 	[[nodiscard]] static consteval bool check_types() noexcept
 	{
-		return std::is_same_v<std::remove_cvref_t<_value_t>, value_t> and
+		return std::is_same_v<std::remove_cvref_t<_data_t>, data_t> and
 			   std::is_same_v<std::remove_cvref_t<_metadata_t>, metadata_t>;
 	}
 

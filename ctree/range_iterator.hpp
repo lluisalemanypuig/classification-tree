@@ -37,14 +37,14 @@ namespace detail {
  * @brief Partial template specialization of the @ref iterator_ class.
  * @tparam tree_pointer_t Type of the pointer to the tree iterated on.
  * @tparam container_iterator_t Type of the iterator over the keys of the tree iterated on.
- * @tparam value_t Type of the values to add.
+ * @tparam data_t Type of the values to add.
  * @tparam metadata_t Type of the metadata associated to the values.
  * @tparam keys_t Type of the remaining keys.
  */
 template <
 	typename tree_pointer_t,
 	typename container_iterator_t,
-	typename value_t,
+	typename data_t,
 	typename metadata_t,
 	Comparable... keys_t>
 class range_iterator_;
@@ -52,14 +52,14 @@ class range_iterator_;
 /**
  * @brief Shorthand for the type of iterator over the children of the current subtree.
  * @tparam tree_pointer_t Type of the pointer to the tree iterated on.
- * @tparam value_t Type of the values to add.
+ * @tparam data_t Type of the values to add.
  * @tparam metadata_t Type of the metadata associated to the values.
  * @tparam key_t Type of the first key.
  * @tparam keys_t Type of the remaining keys.
  */
 template <
 	typename tree_pointer_t,
-	typename value_t,
+	typename data_t,
 	typename metadata_t,
 	Comparable key_t,
 	Comparable... keys_t>
@@ -68,27 +68,27 @@ struct sub_range_iterator {
 	/// Is @e tree_pointer_t const-qualified?
 	static constexpr bool is_constant = std::is_same_v<
 		tree_pointer_t,
-		const_pointer_t<value_t, metadata_t, key_t, keys_t...>>;
+		const_pointer_t<data_t, metadata_t, key_t, keys_t...>>;
 
 	/// Shorthand for a non-constant pointer type.
-	using non_const_pointer_type = pointer_t<value_t, metadata_t, keys_t...>;
+	using non_const_pointer_type = pointer_t<data_t, metadata_t, keys_t...>;
 	/// Shorthand for a constant pointer type.
-	using const_pointer_type = const_pointer_t<value_t, metadata_t, keys_t...>;
+	using const_pointer_type = const_pointer_t<data_t, metadata_t, keys_t...>;
 
 	/// Shorthand for a non-constant iterator type.
 	using non_const_range_iterator_type = range_iterator_<
 		non_const_pointer_type,
-		typename ctree<value_t, metadata_t, keys_t...>::container_t::iterator,
-		value_t,
+		typename ctree<data_t, metadata_t, keys_t...>::container_t::iterator,
+		data_t,
 		metadata_t,
 		keys_t...>;
 
 	/// Shorthand for a constant iterator type.
 	using const_range_iterator_type = range_iterator_<
 		const_pointer_type,
-		typename ctree<value_t, metadata_t, keys_t...>::container_t::
+		typename ctree<data_t, metadata_t, keys_t...>::container_t::
 			const_iterator,
-		value_t,
+		data_t,
 		metadata_t,
 		keys_t...>;
 
@@ -102,19 +102,19 @@ struct sub_range_iterator {
 /**
  * @brief Shorthand for the type of iterator over the children of the current subtree.
  * @tparam tree_pointer_t Type of the pointer to the tree iterated on.
- * @tparam value_t Type of the values to add.
+ * @tparam data_t Type of the values to add.
  * @tparam metadata_t Type of the metadata associated to the values.
  * @tparam key_t Type of the first key.
  * @tparam keys_t Type of the remaining keys.
  */
 template <
 	typename tree_pointer_t,
-	typename value_t,
+	typename data_t,
 	typename metadata_t,
 	Comparable key_t,
 	Comparable... keys_t>
 using sub_range_iterator_t =
-	sub_range_iterator<tree_pointer_t, value_t, metadata_t, key_t, keys_t...>::
+	sub_range_iterator<tree_pointer_t, data_t, metadata_t, key_t, keys_t...>::
 		type;
 
 /**
@@ -123,18 +123,18 @@ using sub_range_iterator_t =
  * This class iterates over leaf nodes.
  * @tparam tree_pointer_t Type of the pointer to the tree iterated on.
  * @tparam container_iterator_t Type of the iterator over the keys of the tree iterated on.
- * @tparam value_t Type of the values to add.
+ * @tparam data_t Type of the values to add.
  * @tparam metadata_t Type of the metadata associated to the values.
  */
 template <
 	typename tree_pointer_t,
 	typename container_iterator_t,
-	typename value_t,
+	typename data_t,
 	typename metadata_t>
 class range_iterator_<
 	tree_pointer_t,
 	container_iterator_t,
-	value_t,
+	data_t,
 	metadata_t> {
 public:
 
@@ -266,20 +266,20 @@ public:
 	template <
 		typename _inner_pointer_t = tree_pointer_t,
 		std::enable_if_t<
-			std::is_same_v<pointer_t<value_t, metadata_t>, _inner_pointer_t>,
+			std::is_same_v<pointer_t<data_t, metadata_t>, _inner_pointer_t>,
 			bool> = true>
-	std::pair<value_t, metadata_t>& operator* () noexcept
+	std::pair<data_t, metadata_t>& operator* () noexcept
 	{
 		return *m_it;
 	}
 	/// Returns the current value of the iteration.
-	const std::pair<value_t, metadata_t>& operator* () const noexcept
+	const std::pair<data_t, metadata_t>& operator* () const noexcept
 	{
 		return *m_it;
 	}
 
 	/// Returns the current value of the iteration.
-	std::tuple<value_t, metadata_t> operator+ () const noexcept
+	std::tuple<data_t, metadata_t> operator+ () const noexcept
 	{
 		return std::make_tuple(m_it->first, m_it->second);
 	}
@@ -313,7 +313,7 @@ private:
  * This iterator iterates over internal nodes. This class contains a subtree
  * iterator, which is just another iterator over the nodes of the next level
  * of the tree.
- * @tparam value_t Type of the values to add.
+ * @tparam data_t Type of the values to add.
  * @tparam metadata_t Type of the metadata associated to the values.
  * @tparam key_t Type of the first key.
  * @tparam keys_t Type of the remaining keys.
@@ -321,14 +321,14 @@ private:
 template <
 	typename tree_pointer_t,
 	typename container_iterator_t,
-	typename value_t,
+	typename data_t,
 	typename metadata_t,
 	Comparable key_t,
 	Comparable... keys_t>
 class range_iterator_<
 	tree_pointer_t,
 	container_iterator_t,
-	value_t,
+	data_t,
 	metadata_t,
 	key_t,
 	keys_t...> {
@@ -520,27 +520,25 @@ public:
 		typename _inner_pointer_t = tree_pointer_t,
 		std::enable_if_t<
 			std::is_same_v<
-				pointer_t<value_t, metadata_t, key_t, keys_t...>,
+				pointer_t<data_t, metadata_t, key_t, keys_t...>,
 				_inner_pointer_t>,
 			bool> = true>
-	std::pair<value_t, metadata_t>& operator* () noexcept
+	std::pair<data_t, metadata_t>& operator* () noexcept
 	{
 		return *m_subtree_iterator;
 	}
 	/// Returns the current value of the iteration.
-	const std::pair<value_t, metadata_t>& operator* () const noexcept
+	const std::pair<data_t, metadata_t>& operator* () const noexcept
 	{
 		return *m_subtree_iterator;
 	}
 
 	/// Returns the current value of the iteration.
-	std::tuple<value_t, metadata_t, key_t, keys_t...>
-	operator+ () const noexcept
+	std::tuple<data_t, metadata_t, key_t, keys_t...> operator+ () const noexcept
 	{
-		std::tuple<value_t, metadata_t, keys_t...> subtree =
-			+m_subtree_iterator;
+		std::tuple<data_t, metadata_t, keys_t...> subtree = +m_subtree_iterator;
 
-		std::tuple<value_t, metadata_t, key_t, keys_t...> current;
+		std::tuple<data_t, metadata_t, key_t, keys_t...> current;
 		std::get<0>(current) = std::get<0>(std::move(subtree));
 		std::get<1>(current) = std::get<1>(std::move(subtree));
 		std::get<2>(current) = m_it->first;
@@ -674,8 +672,8 @@ private:
 	 */
 	template <size_t i, size_t total_size>
 	static constexpr void move_tuple_into(
-		std::tuple<value_t, metadata_t, key_t, keys_t...>& to,
-		std::tuple<value_t, metadata_t, keys_t...>&& from
+		std::tuple<data_t, metadata_t, key_t, keys_t...>& to,
+		std::tuple<data_t, metadata_t, keys_t...>&& from
 	) noexcept
 	{
 		if constexpr (i < total_size) {
@@ -814,7 +812,7 @@ private:
 	bool m_past_begin = false;
 
 	/// Iterator over the children of @ref m_tree.
-	sub_range_iterator_t<tree_pointer_t, value_t, metadata_t, key_t, keys_t...>
+	sub_range_iterator_t<tree_pointer_t, data_t, metadata_t, key_t, keys_t...>
 		m_subtree_iterator;
 };
 
@@ -822,37 +820,37 @@ private:
 
 /**
  * @brief Partial template specialization of the @ref range_iterator class.
- * @tparam value_t Type of the values to add.
+ * @tparam data_t Type of the values to add.
  * @tparam metadata_t Type of the metadata associated to the values.
  */
-template <typename value_t, typename metadata_t>
-class range_iterator<value_t, metadata_t>
+template <typename data_t, typename metadata_t>
+class range_iterator<data_t, metadata_t>
 	: public detail::range_iterator_<
-		  detail::pointer_t<value_t, metadata_t>,
-		  typename ctree<value_t, metadata_t>::container_t::iterator,
-		  value_t,
+		  detail::pointer_t<data_t, metadata_t>,
+		  typename ctree<data_t, metadata_t>::container_t::iterator,
+		  data_t,
 		  metadata_t> {
 public:
 };
 
 /**
  * @brief Partial template specialization of the @ref range_iterator class.
- * @tparam value_t Type of the values to add.
+ * @tparam data_t Type of the values to add.
  * @tparam metadata_t Type of the metadata associated to the values.
  * @tparam key_t Type of the first key.
  * @tparam keys_t Type of the remaining keys.
  */
 template <
-	typename value_t,
+	typename data_t,
 	typename metadata_t,
 	Comparable key_t,
 	Comparable... keys_t>
-class range_iterator<value_t, metadata_t, key_t, keys_t...>
+class range_iterator<data_t, metadata_t, key_t, keys_t...>
 	: public detail::range_iterator_<
-		  detail::pointer_t<value_t, metadata_t, key_t, keys_t...>,
-		  typename ctree<value_t, metadata_t, key_t, keys_t...>::container_t::
+		  detail::pointer_t<data_t, metadata_t, key_t, keys_t...>,
+		  typename ctree<data_t, metadata_t, key_t, keys_t...>::container_t::
 			  iterator,
-		  value_t,
+		  data_t,
 		  metadata_t,
 		  key_t,
 		  keys_t...> {
@@ -861,37 +859,37 @@ public:
 
 /**
  * @brief Partial template specialization of the @ref const_range_iterator class.
- * @tparam value_t Type of the values to add.
+ * @tparam data_t Type of the values to add.
  * @tparam metadata_t Type of the metadata associated to the values.
  */
-template <typename value_t, typename metadata_t>
-class const_range_iterator<value_t, metadata_t>
+template <typename data_t, typename metadata_t>
+class const_range_iterator<data_t, metadata_t>
 	: public detail::range_iterator_<
-		  detail::const_pointer_t<value_t, metadata_t>,
-		  typename ctree<value_t, metadata_t>::container_t::const_iterator,
-		  value_t,
+		  detail::const_pointer_t<data_t, metadata_t>,
+		  typename ctree<data_t, metadata_t>::container_t::const_iterator,
+		  data_t,
 		  metadata_t> {
 public:
 };
 
 /**
  * @brief Partial template specialization of the @ref const_range_iterator class.
- * @tparam value_t Type of the values to add.
+ * @tparam data_t Type of the values to add.
  * @tparam metadata_t Type of the metadata associated to the values.
  * @tparam key_t Type of the first key.
  * @tparam keys_t Type of the remaining keys.
  */
 template <
-	typename value_t,
+	typename data_t,
 	typename metadata_t,
 	Comparable key_t,
 	Comparable... keys_t>
-class const_range_iterator<value_t, metadata_t, key_t, keys_t...>
+class const_range_iterator<data_t, metadata_t, key_t, keys_t...>
 	: public detail::range_iterator_<
-		  detail::const_pointer_t<value_t, metadata_t, key_t, keys_t...>,
-		  typename ctree<value_t, metadata_t, key_t, keys_t...>::container_t::
+		  detail::const_pointer_t<data_t, metadata_t, key_t, keys_t...>,
+		  typename ctree<data_t, metadata_t, key_t, keys_t...>::container_t::
 			  const_iterator,
-		  value_t,
+		  data_t,
 		  metadata_t,
 		  key_t,
 		  keys_t...> {
