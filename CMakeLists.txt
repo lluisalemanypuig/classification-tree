@@ -125,6 +125,7 @@ message(STATUS "    CTREE_LIB_NAME: ${CTREE_LIB_NAME}")
 # Add subdirectories
 
 add_subdirectory(tests)
+add_subdirectory(examples)
 add_subdirectory(cases)
 
 # *******************************************************************************
