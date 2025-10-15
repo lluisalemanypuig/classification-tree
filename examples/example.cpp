@@ -66,14 +66,14 @@ int main()
 	classtree::ctree<A, B, int, double, std::string> kd;
 
 	using namespace std::literals::string_literals;
-	kd.add({.i = 1, .j = 1}, {.num_occs = 1}, 1, 0.5, "a"s);
-	kd.add({.i = 1, .j = 2}, {.num_occs = 1}, 1, 0.5, "a"s);
-	kd.add({.i = 1, .j = 3}, {.num_occs = 1}, 1, 1.5, "b"s);
-	kd.add({.i = 1, .j = 4}, {.num_occs = 1}, 2, 0.5, "a"s);
-	kd.add({.i = 1, .j = 5}, {.num_occs = 1}, 2, 0.5, "b"s);
-	kd.add({.i = 1, .j = 6}, {.num_occs = 1}, 2, 0.5, "b"s);
-	kd.add({.i = 1, .j = 7}, {.num_occs = 1}, 3, 0.5, "a"s);
-	kd.add({.i = 1, .j = 8}, {.num_occs = 1}, 3, 1.5, "c"s);
+	kd.add({{.i = 1, .j = 1}, {.num_occs = 1}}, 1, 0.5, "a"s);
+	kd.add({{.i = 1, .j = 2}, {.num_occs = 1}}, 1, 0.5, "a"s);
+	kd.add({{.i = 1, .j = 3}, {.num_occs = 1}}, 1, 1.5, "b"s);
+	kd.add({{.i = 1, .j = 4}, {.num_occs = 1}}, 2, 0.5, "a"s);
+	kd.add({{.i = 1, .j = 5}, {.num_occs = 1}}, 2, 0.5, "b"s);
+	kd.add({{.i = 1, .j = 6}, {.num_occs = 1}}, 2, 0.5, "b"s);
+	kd.add({{.i = 1, .j = 7}, {.num_occs = 1}}, 3, 0.5, "a"s);
+	kd.add({{.i = 1, .j = 8}, {.num_occs = 1}}, 3, 1.5, "c"s);
 
 	kd.print(std::cout);
 
@@ -82,7 +82,7 @@ int main()
 		auto it = kd.get_iterator_begin();
 		while (not it.end()) {
 			const auto& e = *it;
-			std::cout << "    " << e.first << ' ' << e.second << '\n';
+			std::cout << "    " << e.data << ' ' << e.metadata << '\n';
 			++it;
 		}
 
@@ -90,9 +90,10 @@ int main()
 		std::cout << "Full iterate (full branch):\n";
 		while (not it.end()) {
 			const auto& data = +it;
-			std::cout << "    " << std::get<0>(data) << ' ' << std::get<1>(data)
-					  << " '" << std::get<2>(data) << "' '" << std::get<3>(data)
-					  << "' '" << std::get<4>(data) << "'\n";
+			std::cout << "    " << std::get<0>(data).data << ' '
+					  << std::get<0>(data).metadata << " '" << std::get<1>(data)
+					  << "' '" << std::get<2>(data) << "' '"
+					  << std::get<3>(data) << "'\n";
 			++it;
 		}
 	}
@@ -117,7 +118,7 @@ int main()
 
 		while (not it.end()) {
 			const auto& e = *it;
-			std::cout << "    " << e.first << ' ' << e.second << '\n';
+			std::cout << "    " << e.data << ' ' << e.metadata << '\n';
 			++it;
 		}
 
@@ -125,9 +126,10 @@ int main()
 		std::cout << "Range iterate (full branch):\n";
 		while (not it.end()) {
 			const auto& data = +it;
-			std::cout << "    " << std::get<0>(data) << ' ' << std::get<1>(data)
-					  << " '" << std::get<2>(data) << "' '" << std::get<3>(data)
-					  << "' '" << std::get<4>(data) << "'\n";
+			std::cout << "    " << std::get<0>(data).data << ' '
+					  << std::get<0>(data).metadata << " '" << std::get<1>(data)
+					  << "' '" << std::get<2>(data) << "' '"
+					  << std::get<3>(data) << "'\n";
 			++it;
 		}
 	}
