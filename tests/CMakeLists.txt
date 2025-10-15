@@ -48,95 +48,201 @@ find_package(doctest REQUIRED)
 
 file(GLOB_RECURSE ctree ../ctree/*.hpp)
 
+# =======
 # DEPTH 0
+# =======
 
-add_executable(test_depth_0__empty test_depth_0__empty.cpp definitions.hpp ${ctree})
-configure_executable(test_depth_0__empty)
-add_test(NAME test_depth_0__empty COMMAND test_depth_0__empty)
+# WITH METADATA
 
-add_executable(test_depth_0__eq__all test_depth_0__eq__all.cpp definitions.hpp ${ctree})
-configure_executable(test_depth_0__eq__all)
-add_test(NAME test_depth_0__eq__all COMMAND test_depth_0__eq__all)
+add_executable(test__metadata_w__depth_0__empty test__metadata_w__depth_0__empty.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_w__depth_0__empty)
+add_test(NAME test__metadata_w__depth_0__empty COMMAND test__metadata_w__depth_0__empty)
 
-add_executable(test_depth_0__eq__unique test_depth_0__eq__unique.cpp definitions.hpp ${ctree})
-configure_executable(test_depth_0__eq__unique)
-add_test(NAME test_depth_0__eq__unique COMMAND test_depth_0__eq__unique)
+add_executable(test__metadata_w__depth_0__eq__all test__metadata_w__depth_0__eq__all.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_w__depth_0__eq__all)
+add_test(NAME test__metadata_w__depth_0__eq__all COMMAND test__metadata_w__depth_0__eq__all)
 
-add_executable(test_depth_0__lt__all test_depth_0__lt__all.cpp definitions.hpp ${ctree})
-configure_executable(test_depth_0__lt__all)
-add_test(NAME test_depth_0__lt__all COMMAND test_depth_0__lt__all)
+add_executable(test__metadata_w__depth_0__eq__unique test__metadata_w__depth_0__eq__unique.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_w__depth_0__eq__unique)
+add_test(NAME test__metadata_w__depth_0__eq__unique COMMAND test__metadata_w__depth_0__eq__unique)
 
-add_executable(test_depth_0__lt__unique test_depth_0__lt__unique.cpp definitions.hpp ${ctree})
-configure_executable(test_depth_0__lt__unique)
-add_test(NAME test_depth_0__lt__unique COMMAND test_depth_0__lt__unique)
+add_executable(test__metadata_w__depth_0__lt__all test__metadata_w__depth_0__lt__all.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_w__depth_0__lt__all)
+add_test(NAME test__metadata_w__depth_0__lt__all COMMAND test__metadata_w__depth_0__lt__all)
 
-add_executable(test_depth_0__merge test_depth_0__merge.cpp definitions.hpp ${ctree})
-configure_executable(test_depth_0__merge)
-add_test(NAME test_depth_0__merge COMMAND test_depth_0__merge)
+add_executable(test__metadata_w__depth_0__lt__unique test__metadata_w__depth_0__lt__unique.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_w__depth_0__lt__unique)
+add_test(NAME test__metadata_w__depth_0__lt__unique COMMAND test__metadata_w__depth_0__lt__unique)
 
+add_executable(test__metadata_w__depth_0__merge test__metadata_w__depth_0__merge.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_w__depth_0__merge)
+add_test(NAME test__metadata_w__depth_0__merge COMMAND test__metadata_w__depth_0__merge)
+
+# WITHOUT METADATA
+
+add_executable(test__metadata_wo__depth_0__empty test__metadata_wo__depth_0__empty.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_wo__depth_0__empty)
+add_test(NAME test__metadata_wo__depth_0__empty COMMAND test__metadata_wo__depth_0__empty)
+
+add_executable(test__metadata_wo__depth_0__eq__all test__metadata_wo__depth_0__eq__all.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_wo__depth_0__eq__all)
+add_test(NAME test__metadata_wo__depth_0__eq__all COMMAND test__metadata_wo__depth_0__eq__all)
+
+add_executable(test__metadata_wo__depth_0__eq__unique test__metadata_wo__depth_0__eq__unique.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_wo__depth_0__eq__unique)
+add_test(NAME test__metadata_wo__depth_0__eq__unique COMMAND test__metadata_wo__depth_0__eq__unique)
+
+add_executable(test__metadata_wo__depth_0__lt__all test__metadata_wo__depth_0__lt__all.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_wo__depth_0__lt__all)
+add_test(NAME test__metadata_wo__depth_0__lt__all COMMAND test__metadata_wo__depth_0__lt__all)
+
+add_executable(test__metadata_wo__depth_0__lt__unique test__metadata_wo__depth_0__lt__unique.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_wo__depth_0__lt__unique)
+add_test(NAME test__metadata_wo__depth_0__lt__unique COMMAND test__metadata_wo__depth_0__lt__unique)
+
+add_executable(test__metadata_wo__depth_0__merge test__metadata_wo__depth_0__merge.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_wo__depth_0__merge)
+add_test(NAME test__metadata_wo__depth_0__merge COMMAND test__metadata_wo__depth_0__merge)
+
+# =======
 # DEPTH 1
+# =======
 
-add_executable(test_depth_1__empty test_depth_1__empty.cpp definitions.hpp ${ctree})
-configure_executable(test_depth_1__empty)
-add_test(NAME test_depth_1__empty COMMAND test_depth_1__empty)
+# WITH METADATA
 
-add_executable(test_depth_1__eq__all test_depth_1__eq__all.cpp definitions.hpp ${ctree})
-configure_executable(test_depth_1__eq__all)
-add_test(NAME test_depth_1__eq__all COMMAND test_depth_1__eq__all)
+add_executable(test__metadata_w__depth_1__empty test__metadata_w__depth_1__empty.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_w__depth_1__empty)
+add_test(NAME test__metadata_w__depth_1__empty COMMAND test__metadata_w__depth_1__empty)
 
-add_executable(test_depth_1__eq__unique test_depth_1__eq__unique.cpp definitions.hpp ${ctree})
-configure_executable(test_depth_1__eq__unique)
-add_test(NAME test_depth_1__eq__unique COMMAND test_depth_1__eq__unique)
+add_executable(test__metadata_w__depth_1__eq__all test__metadata_w__depth_1__eq__all.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_w__depth_1__eq__all)
+add_test(NAME test__metadata_w__depth_1__eq__all COMMAND test__metadata_w__depth_1__eq__all)
 
-add_executable(test_depth_1__lt__all test_depth_1__lt__all.cpp definitions.hpp ${ctree})
-configure_executable(test_depth_1__lt__all)
-add_test(NAME test_depth_1__lt__all COMMAND test_depth_1__lt__all)
+add_executable(test__metadata_w__depth_1__eq__unique test__metadata_w__depth_1__eq__unique.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_w__depth_1__eq__unique)
+add_test(NAME test__metadata_w__depth_1__eq__unique COMMAND test__metadata_w__depth_1__eq__unique)
 
-add_executable(test_depth_1__lt__unique test_depth_1__lt__unique.cpp definitions.hpp ${ctree})
-configure_executable(test_depth_1__lt__unique)
-add_test(NAME test_depth_1__lt__unique COMMAND test_depth_1__lt__unique)
+add_executable(test__metadata_w__depth_1__lt__all test__metadata_w__depth_1__lt__all.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_w__depth_1__lt__all)
+add_test(NAME test__metadata_w__depth_1__lt__all COMMAND test__metadata_w__depth_1__lt__all)
 
-add_executable(test_depth_1__merge test_depth_1__merge.cpp definitions.hpp ${ctree})
-configure_executable(test_depth_1__merge)
-add_test(NAME test_depth_1__merge COMMAND test_depth_1__merge)
+add_executable(test__metadata_w__depth_1__lt__unique test__metadata_w__depth_1__lt__unique.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_w__depth_1__lt__unique)
+add_test(NAME test__metadata_w__depth_1__lt__unique COMMAND test__metadata_w__depth_1__lt__unique)
 
+add_executable(test__metadata_w__depth_1__merge test__metadata_w__depth_1__merge.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_w__depth_1__merge)
+add_test(NAME test__metadata_w__depth_1__merge COMMAND test__metadata_w__depth_1__merge)
+
+# WITHOUT METADATA
+
+add_executable(test__metadata_wo__depth_1__empty test__metadata_wo__depth_1__empty.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_wo__depth_1__empty)
+add_test(NAME test__metadata_wo__depth_1__empty COMMAND test__metadata_wo__depth_1__empty)
+
+add_executable(test__metadata_wo__depth_1__eq__all test__metadata_wo__depth_1__eq__all.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_wo__depth_1__eq__all)
+add_test(NAME test__metadata_wo__depth_1__eq__all COMMAND test__metadata_wo__depth_1__eq__all)
+
+add_executable(test__metadata_wo__depth_1__eq__unique test__metadata_wo__depth_1__eq__unique.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_wo__depth_1__eq__unique)
+add_test(NAME test__metadata_wo__depth_1__eq__unique COMMAND test__metadata_wo__depth_1__eq__unique)
+
+add_executable(test__metadata_wo__depth_1__lt__all test__metadata_wo__depth_1__lt__all.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_wo__depth_1__lt__all)
+add_test(NAME test__metadata_wo__depth_1__lt__all COMMAND test__metadata_wo__depth_1__lt__all)
+
+add_executable(test__metadata_wo__depth_1__lt__unique test__metadata_wo__depth_1__lt__unique.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_wo__depth_1__lt__unique)
+add_test(NAME test__metadata_wo__depth_1__lt__unique COMMAND test__metadata_wo__depth_1__lt__unique)
+
+add_executable(test__metadata_wo__depth_1__merge test__metadata_wo__depth_1__merge.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_wo__depth_1__merge)
+add_test(NAME test__metadata_wo__depth_1__merge COMMAND test__metadata_wo__depth_1__merge)
+
+# =======
 # DEPTH 3
+# =======
 
-add_executable(test_depth_3__empty test_depth_3__empty.cpp definitions.hpp ${ctree})
-configure_executable(test_depth_3__empty)
-add_test(NAME test_depth_3__empty COMMAND test_depth_3__empty)
+# WITH METADATA
 
-add_executable(test_depth_3__eq__all test_depth_3__eq__all.cpp definitions.hpp ${ctree})
-configure_executable(test_depth_3__eq__all)
-add_test(NAME test_depth_3__eq__all COMMAND test_depth_3__eq__all)
+add_executable(test__metadata_w__depth_3__empty test__metadata_w__depth_3__empty.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_w__depth_3__empty)
+add_test(NAME test__metadata_w__depth_3__empty COMMAND test__metadata_w__depth_3__empty)
 
-add_executable(test_depth_3__eq__unique test_depth_3__eq__unique.cpp definitions.hpp ${ctree})
-configure_executable(test_depth_3__eq__unique)
-add_test(NAME test_depth_3__eq__unique COMMAND test_depth_3__eq__unique)
+add_executable(test__metadata_w__depth_3__eq__all test__metadata_w__depth_3__eq__all.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_w__depth_3__eq__all)
+add_test(NAME test__metadata_w__depth_3__eq__all COMMAND test__metadata_w__depth_3__eq__all)
 
-add_executable(test_depth_3__lt__all test_depth_3__lt__all.cpp definitions.hpp ${ctree})
-configure_executable(test_depth_3__lt__all)
-add_test(NAME test_depth_3__lt__all COMMAND test_depth_3__lt__all)
+add_executable(test__metadata_w__depth_3__eq__unique test__metadata_w__depth_3__eq__unique.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_w__depth_3__eq__unique)
+add_test(NAME test__metadata_w__depth_3__eq__unique COMMAND test__metadata_w__depth_3__eq__unique)
 
-add_executable(test_depth_3__lt__unique test_depth_3__lt__unique.cpp definitions.hpp ${ctree})
-configure_executable(test_depth_3__lt__unique)
-add_test(NAME test_depth_3__lt__unique COMMAND test_depth_3__lt__unique)
+add_executable(test__metadata_w__depth_3__lt__all test__metadata_w__depth_3__lt__all.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_w__depth_3__lt__all)
+add_test(NAME test__metadata_w__depth_3__lt__all COMMAND test__metadata_w__depth_3__lt__all)
 
-add_executable(test_depth_3__merge test_depth_3__merge.cpp definitions.hpp ${ctree})
-configure_executable(test_depth_3__merge)
-add_test(NAME test_depth_3__merge COMMAND test_depth_3__merge)
+add_executable(test__metadata_w__depth_3__lt__unique test__metadata_w__depth_3__lt__unique.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_w__depth_3__lt__unique)
+add_test(NAME test__metadata_w__depth_3__lt__unique COMMAND test__metadata_w__depth_3__lt__unique)
 
+add_executable(test__metadata_w__depth_3__merge test__metadata_w__depth_3__merge.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_w__depth_3__merge)
+add_test(NAME test__metadata_w__depth_3__merge COMMAND test__metadata_w__depth_3__merge)
+
+# WITHOUT METADATA
+
+add_executable(test__metadata_wo__depth_3__empty test__metadata_wo__depth_3__empty.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_wo__depth_3__empty)
+add_test(NAME test__metadata_wo__depth_3__empty COMMAND test__metadata_wo__depth_3__empty)
+
+add_executable(test__metadata_wo__depth_3__eq__all test__metadata_wo__depth_3__eq__all.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_wo__depth_3__eq__all)
+add_test(NAME test__metadata_wo__depth_3__eq__all COMMAND test__metadata_wo__depth_3__eq__all)
+
+add_executable(test__metadata_wo__depth_3__eq__unique test__metadata_wo__depth_3__eq__unique.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_wo__depth_3__eq__unique)
+add_test(NAME test__metadata_wo__depth_3__eq__unique COMMAND test__metadata_wo__depth_3__eq__unique)
+
+add_executable(test__metadata_wo__depth_3__lt__all test__metadata_wo__depth_3__lt__all.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_wo__depth_3__lt__all)
+add_test(NAME test__metadata_wo__depth_3__lt__all COMMAND test__metadata_wo__depth_3__lt__all)
+
+add_executable(test__metadata_wo__depth_3__lt__unique test__metadata_wo__depth_3__lt__unique.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_wo__depth_3__lt__unique)
+add_test(NAME test__metadata_wo__depth_3__lt__unique COMMAND test__metadata_wo__depth_3__lt__unique)
+
+add_executable(test__metadata_wo__depth_3__merge test__metadata_wo__depth_3__merge.cpp definitions.hpp ${ctree})
+configure_executable(test__metadata_wo__depth_3__merge)
+add_test(NAME test__metadata_wo__depth_3__merge COMMAND test__metadata_wo__depth_3__merge)
+
+# ========
 # DEPTH 11
+# ========
 
-add_executable(test_depth_11__empty test_depth_11__empty.cpp definitions_11.hpp ${ctree})
-configure_executable(test_depth_11__empty)
-add_test(NAME test_depth_11__empty COMMAND test_depth_11__empty)
+# WITH METADATA
 
-add_executable(test_depth_11__eq__all test_depth_11__eq__all.cpp definitions_11.hpp ${ctree})
-configure_executable(test_depth_11__eq__all)
-add_test(NAME test_depth_11__eq__all COMMAND test_depth_11__eq__all)
+add_executable(test__metadata_w__depth_11__empty test__metadata_w__depth_11__empty.cpp definitions_11.hpp ${ctree})
+configure_executable(test__metadata_w__depth_11__empty)
+add_test(NAME test__metadata_w__depth_11__empty COMMAND test__metadata_w__depth_11__empty)
 
+add_executable(test__metadata_w__depth_11__eq__all test__metadata_w__depth_11__eq__all.cpp definitions_11.hpp ${ctree})
+configure_executable(test__metadata_w__depth_11__eq__all)
+add_test(NAME test__metadata_w__depth_11__eq__all COMMAND test__metadata_w__depth_11__eq__all)
+
+# WITHOUT METADATA
+
+add_executable(test__metadata_wo__depth_11__empty test__metadata_wo__depth_11__empty.cpp definitions_11.hpp ${ctree})
+configure_executable(test__metadata_wo__depth_11__empty)
+add_test(NAME test__metadata_wo__depth_11__empty COMMAND test__metadata_wo__depth_11__empty)
+
+add_executable(test__metadata_wo__depth_11__eq__all test__metadata_wo__depth_11__eq__all.cpp definitions_11.hpp ${ctree})
+configure_executable(test__metadata_wo__depth_11__eq__all)
+add_test(NAME test__metadata_wo__depth_11__eq__all COMMAND test__metadata_wo__depth_11__eq__all)
+
+# ===========
 # MISCELLANEA
+# ===========
 
 add_executable(test_search test_search.cpp definitions.hpp ${ctree})
 configure_executable(test_search)
