@@ -37,8 +37,9 @@
 
 TEST_CASE("All elements (1)")
 {
-	typedef classtree::ctree<data_lt, meta_incr, int> my_tree;
-	classtree::ctree<data_lt, void, int> kd;
+	typedef classtree::ctree<data_lt, void, int> my_tree;
+	
+	my_tree kd;
 	static_assert(std::is_nothrow_move_constructible_v<my_tree>);
 	static_assert(std::is_move_constructible_v<my_tree>);
 

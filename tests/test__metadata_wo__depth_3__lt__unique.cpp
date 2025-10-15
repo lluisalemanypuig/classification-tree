@@ -38,7 +38,8 @@
 TEST_CASE("Unique elements (1)")
 {
 	typedef classtree::ctree<data_lt, void, int, int, int> my_tree;
-	classtree::ctree<data_lt, void, int, int, int> kd;
+	
+	my_tree kd;
 	static_assert(std::is_nothrow_move_constructible_v<my_tree>);
 	static_assert(std::is_move_constructible_v<my_tree>);
 
@@ -763,7 +764,8 @@ TEST_CASE("Unique elements (1)")
 TEST_CASE("All elements (2)")
 {
 	typedef classtree::ctree<data_lt, void, int, int, int> my_tree;
-	classtree::ctree<data_lt, void, int, int, int> kd;
+	
+	my_tree kd;
 	static_assert(std::is_nothrow_move_constructible_v<my_tree>);
 	static_assert(std::is_move_constructible_v<my_tree>);
 
@@ -1114,7 +1116,8 @@ TEST_CASE("All elements (2)")
 TEST_CASE("Unique elements (3)")
 {
 	typedef classtree::ctree<data_lt, void, int, int, int> my_tree;
-	classtree::ctree<data_lt, void, int, int, int> kd;
+	
+	my_tree kd;
 	static_assert(std::is_nothrow_move_constructible_v<my_tree>);
 	static_assert(std::is_move_constructible_v<my_tree>);
 
