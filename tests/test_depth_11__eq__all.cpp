@@ -43,8 +43,7 @@ TEST_CASE("Deep tree")
 	static_assert(std::is_move_constructible_v<my_tree>);
 
 	kd.add<false>(
-		{6, 6, 2, 2, 1, 0, 1, 2, 1, 1, 0},
-		{.num_occs = 1},
+		{{6, 6, 2, 2, 1, 0, 1, 2, 1, 1, 0}, {.num_occs = 1}},
 		6, // pawns
 		6,
 		2, // rooks
@@ -58,8 +57,7 @@ TEST_CASE("Deep tree")
 		0 // turn
 	);
 	kd.add<false>(
-		{6, 6, 2, 2, 1, 1, 1, 0, 1, 1, 1},
-		{.num_occs = 1},
+		{{6, 6, 2, 2, 1, 1, 1, 0, 1, 1, 1}, {.num_occs = 1}},
 		6, // pawns
 		6,
 		2, // rooks
@@ -73,8 +71,7 @@ TEST_CASE("Deep tree")
 		1 // turn
 	);
 	kd.add<false>(
-		{6, 6, 2, 2, 2, 1, 0, 0, 1, 1, 1},
-		{.num_occs = 1},
+		{{6, 6, 2, 2, 2, 1, 0, 0, 1, 1, 1}, {.num_occs = 1}},
 		6, // pawns
 		6,
 		2, // rooks
@@ -88,8 +85,7 @@ TEST_CASE("Deep tree")
 		1 // turn
 	);
 	kd.add<false>(
-		{7, 7, 2, 2, 1, 0, 1, 2, 1, 1, 0},
-		{.num_occs = 1},
+		{{7, 7, 2, 2, 1, 0, 1, 2, 1, 1, 0}, {.num_occs = 1}},
 		7, // pawns
 		7,
 		2, // rooks
@@ -103,8 +99,7 @@ TEST_CASE("Deep tree")
 		0 // turn
 	);
 	kd.add<false>(
-		{7, 7, 2, 2, 1, 1, 2, 2, 1, 1, 1},
-		{.num_occs = 1},
+		{{7, 7, 2, 2, 1, 1, 2, 2, 1, 1, 1}, {.num_occs = 1}},
 		7, // pawns
 		7,
 		2, // rooks
@@ -118,8 +113,7 @@ TEST_CASE("Deep tree")
 		1 // turn
 	);
 	kd.add<false>(
-		{7, 7, 2, 2, 2, 2, 2, 2, 1, 1, 0},
-		{.num_occs = 1},
+		{{7, 7, 2, 2, 2, 2, 2, 2, 1, 1, 0}, {.num_occs = 1}},
 		7, // pawns
 		7,
 		2, // rooks
@@ -370,24 +364,24 @@ TEST_CASE("Deep tree")
 		);
 
 		[[maybe_unused]] const bool _ = it.to_begin();
-		CHECK_EQ((*it).first.n_white_pawns, 6);
-		CHECK_EQ((*it).first.n_white_knights, 1);
-		CHECK_EQ((*it).first.n_black_knights, 1);
+		CHECK_EQ((*it).data.n_white_pawns, 6);
+		CHECK_EQ((*it).data.n_white_knights, 1);
+		CHECK_EQ((*it).data.n_black_knights, 1);
 
 		++it;
-		CHECK_EQ((*it).first.n_white_pawns, 6);
-		CHECK_EQ((*it).first.n_white_knights, 2);
-		CHECK_EQ((*it).first.n_black_knights, 1);
+		CHECK_EQ((*it).data.n_white_pawns, 6);
+		CHECK_EQ((*it).data.n_white_knights, 2);
+		CHECK_EQ((*it).data.n_black_knights, 1);
 
 		++it;
-		CHECK_EQ((*it).first.n_white_pawns, 7);
-		CHECK_EQ((*it).first.n_white_knights, 1);
-		CHECK_EQ((*it).first.n_black_knights, 1);
+		CHECK_EQ((*it).data.n_white_pawns, 7);
+		CHECK_EQ((*it).data.n_white_knights, 1);
+		CHECK_EQ((*it).data.n_black_knights, 1);
 
 		++it;
-		CHECK_EQ((*it).first.n_white_pawns, 7);
-		CHECK_EQ((*it).first.n_white_knights, 2);
-		CHECK_EQ((*it).first.n_black_knights, 2);
+		CHECK_EQ((*it).data.n_white_pawns, 7);
+		CHECK_EQ((*it).data.n_white_knights, 2);
+		CHECK_EQ((*it).data.n_black_knights, 2);
 
 		++it;
 		CHECK_EQ(it.begin(), false);

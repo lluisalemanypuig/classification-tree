@@ -48,12 +48,12 @@ TEST_CASE("Empty trees")
 	{
 		CHECK_EQ(kd.size(), 0);
 		classtree::ctree<data_eq, meta_incr, int> kd2;
-		kd2.add({.i = 1, .j = 1, .k = 1, .z = 1}, {.num_occs = 1}, 1);
-		kd2.add({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1}, 1);
-		kd2.add({.i = 1, .j = 1, .k = 1, .z = 3}, {.num_occs = 1}, 1);
-		kd2.add({.i = 1, .j = 2, .k = 1, .z = 1}, {.num_occs = 1}, 1);
-		kd2.add({.i = 1, .j = 2, .k = 1, .z = 2}, {.num_occs = 1}, 1);
-		kd2.add({.i = 1, .j = 2, .k = 1, .z = 3}, {.num_occs = 1}, 1);
+		kd2.add({{.i = 1, .j = 1, .k = 1, .z = 1}, {.num_occs = 1}}, 1);
+		kd2.add({{.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1}}, 1);
+		kd2.add({{.i = 1, .j = 1, .k = 1, .z = 3}, {.num_occs = 1}}, 1);
+		kd2.add({{.i = 1, .j = 2, .k = 1, .z = 1}, {.num_occs = 1}}, 1);
+		kd2.add({{.i = 1, .j = 2, .k = 1, .z = 2}, {.num_occs = 1}}, 1);
+		kd2.add({{.i = 1, .j = 2, .k = 1, .z = 3}, {.num_occs = 1}}, 1);
 		const size_t r = kd.merge(std::move(kd2));
 		CHECK_EQ(r, 6);
 		CHECK_EQ(kd.size(), 6);
@@ -77,12 +77,12 @@ TEST_CASE("Empty trees")
 	{
 		CHECK_EQ(kd.size(), 6);
 		classtree::ctree<data_eq, meta_incr, int> kd2;
-		kd2.add({.i = 1, .j = 1, .k = 1, .z = 1}, {.num_occs = 1}, 1);
-		kd2.add({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1}, 1);
-		kd2.add({.i = 1, .j = 1, .k = 1, .z = 3}, {.num_occs = 1}, 1);
-		kd2.add({.i = 1, .j = 2, .k = 1, .z = 1}, {.num_occs = 1}, 1);
-		kd2.add({.i = 1, .j = 2, .k = 1, .z = 2}, {.num_occs = 1}, 1);
-		kd2.add({.i = 1, .j = 2, .k = 1, .z = 3}, {.num_occs = 1}, 1);
+		kd2.add({{.i = 1, .j = 1, .k = 1, .z = 1}, {.num_occs = 1}}, 1);
+		kd2.add({{.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1}}, 1);
+		kd2.add({{.i = 1, .j = 1, .k = 1, .z = 3}, {.num_occs = 1}}, 1);
+		kd2.add({{.i = 1, .j = 2, .k = 1, .z = 1}, {.num_occs = 1}}, 1);
+		kd2.add({{.i = 1, .j = 2, .k = 1, .z = 2}, {.num_occs = 1}}, 1);
+		kd2.add({{.i = 1, .j = 2, .k = 1, .z = 3}, {.num_occs = 1}}, 1);
 		const size_t r = kd.merge(std::move(kd2));
 		CHECK_EQ(r, 0);
 		CHECK_EQ(kd.size(), 6);

@@ -30,6 +30,12 @@
 // ctree includes
 #include <ctree/concepts.hpp>
 
+template <typename it_t>
+concept CustomCompound = requires(it_t it) {
+	(*it).data;
+	(*it).metadata;
+};
+
 template <typename tree_t>
 std::string print_string(const tree_t& kd) noexcept
 {
@@ -45,7 +51,12 @@ std::string iterate_string(it_t& it) noexcept
 	ss << "Iterate:\n";
 	while (not it.end()) {
 		const auto& e = *it;
-		ss << "    " << e.first << ' ' << e.second << '\n';
+		if constexpr (CustomCompound<it_t>) {
+			ss << "    " << e.data << ' ' << e.metadata << '\n';
+		}
+		else {
+			ss << "    " << e << '\n';
+		}
 		++it;
 	}
 	return ss.str();
@@ -58,7 +69,12 @@ std::string iterate_string_backward(it_t& it) noexcept
 	ss << "Iterate:\n";
 	while (not it.past_begin()) {
 		const auto& e = *it;
-		ss << "    " << e.first << ' ' << e.second << '\n';
+		if constexpr (CustomCompound<it_t>) {
+			ss << "    " << e.data << ' ' << e.metadata << '\n';
+		}
+		else {
+			ss << "    " << e << '\n';
+		}
 		--it;
 	}
 	return ss.str();
@@ -71,7 +87,12 @@ std::string range_iterate_string_backward(it_t& it) noexcept
 	ss << "Iterate:\n";
 	while (not it.past_begin()) {
 		const auto& e = *it;
-		ss << "    " << e.first << ' ' << e.second << '\n';
+		if constexpr (CustomCompound<it_t>) {
+			ss << "    " << e.data << ' ' << e.metadata << '\n';
+		}
+		else {
+			ss << "    " << e << '\n';
+		}
 		--it;
 	}
 	return ss.str();

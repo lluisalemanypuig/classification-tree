@@ -38,17 +38,17 @@ TEST_CASE("All elements")
 {
 	classtree::ctree<data_lt, meta_incr> kd;
 
-	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1});
-	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 1}, {.num_occs = 1});
-	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 3}, {.num_occs = 1});
-	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 4}, {.num_occs = 1});
-	kd.add<false>({.i = 1, .j = 2, .k = 1, .z = 1}, {.num_occs = 1});
-	kd.add<false>({.i = 1, .j = 2, .k = 2, .z = 1}, {.num_occs = 1});
-	kd.add<false>({.i = 1, .j = 3, .k = 5, .z = 1}, {.num_occs = 1});
-	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1}); // *
-	kd.add<false>({.i = 2, .j = 2, .k = 2, .z = 1}, {.num_occs = 1});
-	kd.add<false>({.i = 2, .j = 2, .k = 2, .z = 2}, {.num_occs = 1});
-	kd.add<false>({.i = 2, .j = 2, .k = 3, .z = 2}, {.num_occs = 1});
+	kd.add<false>({{.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1}});
+	kd.add<false>({{.i = 1, .j = 1, .k = 1, .z = 1}, {.num_occs = 1}});
+	kd.add<false>({{.i = 1, .j = 1, .k = 1, .z = 3}, {.num_occs = 1}});
+	kd.add<false>({{.i = 1, .j = 1, .k = 1, .z = 4}, {.num_occs = 1}});
+	kd.add<false>({{.i = 1, .j = 2, .k = 1, .z = 1}, {.num_occs = 1}});
+	kd.add<false>({{.i = 1, .j = 2, .k = 2, .z = 1}, {.num_occs = 1}});
+	kd.add<false>({{.i = 1, .j = 3, .k = 5, .z = 1}, {.num_occs = 1}});
+	kd.add<false>({{.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1}}); // *
+	kd.add<false>({{.i = 2, .j = 2, .k = 2, .z = 1}, {.num_occs = 1}});
+	kd.add<false>({{.i = 2, .j = 2, .k = 2, .z = 2}, {.num_occs = 1}});
+	kd.add<false>({{.i = 2, .j = 2, .k = 3, .z = 2}, {.num_occs = 1}});
 
 	CHECK_EQ(kd.size(), 11);
 
@@ -138,38 +138,38 @@ TEST_CASE("All elements")
 	SUBCASE("Manual iteration")
 	{
 		auto it = kd.get_const_iterator_begin();
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 3});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 1, .k = 1, .z = 3});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 4});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 1, .k = 1, .z = 4});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 	}
 
 	SUBCASE("Check iterator bounds")

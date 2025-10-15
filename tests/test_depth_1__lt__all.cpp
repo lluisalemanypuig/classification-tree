@@ -42,17 +42,17 @@ TEST_CASE("All elements (1)")
 	static_assert(std::is_nothrow_move_constructible_v<my_tree>);
 	static_assert(std::is_move_constructible_v<my_tree>);
 
-	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1}, 1);
-	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 1}, {.num_occs = 1}, 1);
-	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 3}, {.num_occs = 1}, 1);
-	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 4}, {.num_occs = 1}, 1);
-	kd.add<false>({.i = 1, .j = 2, .k = 1, .z = 1}, {.num_occs = 1}, 1);
-	kd.add<false>({.i = 1, .j = 2, .k = 2, .z = 1}, {.num_occs = 1}, 1);
-	kd.add<false>({.i = 1, .j = 3, .k = 5, .z = 1}, {.num_occs = 1}, 1);
-	kd.add<false>({.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1}, 1);
-	kd.add<false>({.i = 2, .j = 2, .k = 2, .z = 1}, {.num_occs = 1}, 2);
-	kd.add<false>({.i = 2, .j = 2, .k = 3, .z = 2}, {.num_occs = 1}, 2);
-	kd.add<false>({.i = 2, .j = 2, .k = 2, .z = 2}, {.num_occs = 1}, 2);
+	kd.add<false>({{.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1}}, 1);
+	kd.add<false>({{.i = 1, .j = 1, .k = 1, .z = 1}, {.num_occs = 1}}, 1);
+	kd.add<false>({{.i = 1, .j = 1, .k = 1, .z = 3}, {.num_occs = 1}}, 1);
+	kd.add<false>({{.i = 1, .j = 1, .k = 1, .z = 4}, {.num_occs = 1}}, 1);
+	kd.add<false>({{.i = 1, .j = 2, .k = 1, .z = 1}, {.num_occs = 1}}, 1);
+	kd.add<false>({{.i = 1, .j = 2, .k = 2, .z = 1}, {.num_occs = 1}}, 1);
+	kd.add<false>({{.i = 1, .j = 3, .k = 5, .z = 1}, {.num_occs = 1}}, 1);
+	kd.add<false>({{.i = 1, .j = 1, .k = 1, .z = 2}, {.num_occs = 1}}, 1);
+	kd.add<false>({{.i = 2, .j = 2, .k = 2, .z = 1}, {.num_occs = 1}}, 2);
+	kd.add<false>({{.i = 2, .j = 2, .k = 3, .z = 2}, {.num_occs = 1}}, 2);
+	kd.add<false>({{.i = 2, .j = 2, .k = 2, .z = 2}, {.num_occs = 1}}, 2);
 
 	CHECK_EQ(kd.size(), 11);
 
@@ -146,50 +146,50 @@ TEST_CASE("All elements (1)")
 	SUBCASE("Manual iteration")
 	{
 		auto it = kd.get_const_iterator_begin();
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 3});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 1, .k = 1, .z = 3});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 4});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 1, .k = 1, .z = 4});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 2, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 2, .k = 1, .z = 1});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		++it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 2, .k = 2, .z = 1});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 2, .k = 2, .z = 1});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 2, .k = 1, .z = 1});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 2, .k = 1, .z = 1});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 		--it;
-		CHECK_EQ((*it).first, data_lt{.i = 1, .j = 1, .k = 1, .z = 4});
-		CHECK_EQ((*it).second, meta_incr{.num_occs = 1});
+		CHECK_EQ((*it).data, data_lt{.i = 1, .j = 1, .k = 1, .z = 4});
+		CHECK_EQ((*it).metadata, meta_incr{.num_occs = 1});
 	}
 
 	SUBCASE("Iterate over a range forward (1)")
@@ -434,7 +434,7 @@ TEST_CASE("All elements (1)")
 		CHECK_EQ(it.end(), false);
 
 		{
-			const auto& d = (*it).first;
+			const auto& d = (*it).data;
 			CHECK_EQ(d.i, 2);
 			CHECK_EQ(d.j, 2);
 			CHECK_EQ(d.k, 3);
@@ -460,7 +460,7 @@ TEST_CASE("All elements (1)")
 		--it;
 
 		{
-			const auto& d = (*it).first;
+			const auto& d = (*it).data;
 			CHECK_EQ(d.i, 1);
 			CHECK_EQ(d.j, 1);
 			CHECK_EQ(d.k, 1);
@@ -561,7 +561,7 @@ TEST_CASE("All elements (1)")
 		CHECK_EQ(it.end(), false);
 
 		{
-			const auto& d = (*it).first;
+			const auto& d = (*it).data;
 			CHECK_EQ(d.i, 1);
 			CHECK_EQ(d.j, 3);
 			CHECK_EQ(d.k, 5);
@@ -584,7 +584,7 @@ TEST_CASE("All elements (1)")
 		--it;
 
 		{
-			const auto& d = (*it).first;
+			const auto& d = (*it).data;
 			CHECK_EQ(d.i, 1);
 			CHECK_EQ(d.j, 1);
 			CHECK_EQ(d.k, 1);
@@ -623,7 +623,7 @@ TEST_CASE("All elements (1)")
 		CHECK_EQ(it.end(), false);
 
 		{
-			const auto& d = (*it).first;
+			const auto& d = (*it).data;
 			CHECK_EQ(d.i, 2);
 			CHECK_EQ(d.j, 2);
 			CHECK_EQ(d.k, 3);
@@ -641,7 +641,7 @@ TEST_CASE("All elements (1)")
 		--it;
 
 		{
-			const auto& d = (*it).first;
+			const auto& d = (*it).data;
 			CHECK_EQ(d.i, 2);
 			CHECK_EQ(d.j, 2);
 			CHECK_EQ(d.k, 2);
@@ -682,7 +682,7 @@ TEST_CASE("All elements (2)")
 	static_assert(std::is_move_constructible_v<my_tree>);
 
 	for (int z = 1; z <= 10; ++z) {
-		kd.add<false>({.i = z, .j = 1, .k = 1, .z = 1}, {.num_occs = 1}, z);
+		kd.add<false>({{.i = z, .j = 1, .k = 1, .z = 1}, {.num_occs = 1}}, z);
 	}
 
 	SUBCASE("Check range iterator bounds (1)")
