@@ -25,9 +25,62 @@
 
 // C++ includes
 #include <doctest/doctest.h>
+#include <print>
 
 // ctree includes
 #include <ctree/search.hpp>
+
+TEST_CASE("Empty vector")
+{
+	std::vector<std::pair<int, int>> v;
+
+	for (int i = 1; i <= 9; ++i) {
+		const auto [pos, found] = classtree::search(v, i);
+		CHECK(not found);
+		CHECK_EQ(pos, 0);
+	}
+}
+
+TEST_CASE("Singleton vector")
+{
+	std::vector<std::pair<int, int>> v {{5, 5}};
+
+	for (int i = 1; i <= 4; ++i) {
+		const auto [pos, found] = classtree::search(v, i);
+		CHECK(not found);
+		CHECK_EQ(pos, 0);
+	}
+	{
+	const auto [pos, found] = classtree::search(v, 5);
+	CHECK(found);
+	CHECK_EQ(pos, 0);
+	}
+	for (int i = 6; i <= 9; ++i) {
+		const auto [pos, found] = classtree::search(v, i);
+		CHECK(not found);
+		CHECK_EQ(pos, 1);
+	}
+}
+
+TEST_CASE("Tiny vector")
+{
+	std::vector<std::pair<int, int>> v;
+	for (size_t i = 1; i <= 9; i += 2) {
+		v.push_back({i, i});
+	}
+
+	for (int i = 1; i <= 9; i += 2) {
+		const auto [pos, found] = classtree::search(v, i);
+		CHECK(found);
+		CHECK_EQ(pos, (i - 1) / 2);
+	}
+
+	for (int i = 0; i <= 10; i += 2) {
+		const auto [pos, found] = classtree::search(v, i);
+		CHECK(not found);
+		CHECK_EQ(pos, i / 2);
+	}
+}
 
 TEST_CASE("Small vector")
 {
