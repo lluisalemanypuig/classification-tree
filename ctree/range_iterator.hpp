@@ -772,15 +772,6 @@ private:
 	 */
 	[[nodiscard]] bool previous() noexcept
 	{
-		//std::cout << LOG_POINT("previous", 1) << '\n';
-		//std::cout << "    m_past_begin= " << m_past_begin << '\n';
-		//std::cout << "    m_begin_idx=  " << m_begin_idx << '\n';
-		//std::cout << "    m_it_idx=     " << m_it_idx << '\n';
-		//std::cout << "    m_end_idx=    " << m_end_idx << '\n';
-		//std::cout << "    num_keys()=   " << m_tree->num_keys() << '\n';
-		//std::cout << "    key[" << m_it_idx
-		//<< "]= " << m_tree->get_key(m_it_idx) << '\n';
-
 		bool stop = false;
 		while (not stop) {
 			bool s_begin;
@@ -789,7 +780,6 @@ private:
 				simple_move_back();
 			}
 			if (s_begin) {
-				//std::cout << "    " << LOG_POINT("previous", 2) << '\n';
 				return false;
 			}
 
@@ -800,7 +790,6 @@ private:
 				simple_move_back();
 			}
 		}
-		//std::cout << "    " << LOG_POINT("previous", 3) << '\n';
 		return true;
 	}
 
