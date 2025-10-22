@@ -54,10 +54,30 @@ template <LessthanComparable data_t, typename metadata_t>
 		if (value < value_elem(v[0])) {
 			return {0, false};
 		}
-		else if (value_elem(v[0]) < value) {
+		if (value_elem(v[0]) < value) {
 			return {1, false};
 		}
 		return {0, true};
+	}
+
+	if (v.size() <= 16) {
+		for (size_t i = 0; i < v.size() - 1; ++i) {
+			if (value < value_elem(v[i])) {
+				return {i, false};
+			}
+			else if (value_elem(v[i]) < value) {
+				if (value < value_elem(v[i + 1])) {
+					return {i + 1, false};
+				}
+			}
+			else {
+				return {i, true};
+			}
+		}
+		if (value_elem(v.back()) < value) {
+			return {v.size(), false};
+		}
+		return {v.size() - 1, true};
 	}
 
 	size_t i = 0;
@@ -102,10 +122,30 @@ search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
 		if (value < v[0].first) {
 			return {0, false};
 		}
-		else if (v[0].first < value) {
+		if (v[0].first < value) {
 			return {1, false};
 		}
 		return {0, true};
+	}
+
+	if (v.size() <= 16) {
+		for (size_t i = 0; i < v.size() - 1; ++i) {
+			if (value < v[i].first) {
+				return {i, false};
+			}
+			else if (v[i].first < value) {
+				if (value < v[i + 1].first) {
+					return {i + 1, false};
+				}
+			}
+			else {
+				return {i, true};
+			}
+		}
+		if (v.back().first < value) {
+			return {v.size(), false};
+		}
+		return {v.size() - 1, true};
 	}
 
 	size_t i = 0;
