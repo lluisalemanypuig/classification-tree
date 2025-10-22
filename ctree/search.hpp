@@ -33,19 +33,28 @@
 namespace classtree {
 
 template <LessthanComparable data_t, typename metadata_t>
-	requires NotCompound<data_t, metadata_t>
 [[nodiscard]] static constexpr inline std::pair<size_t, bool> search(
 	const std::vector<element_t<data_t, metadata_t>>& v, const data_t& value
 ) noexcept
 {
+	const auto value_elem = [](const element_t<data_t, metadata_t>& elem)
+	{
+		if constexpr (Compound<data_t, metadata_t>) {
+			return elem.data;
+		}
+		else {
+			return elem;
+		}
+	};
+
 	if (v.size() == 0) [[unlikely]] {
 		return {0, false};
 	}
 	if (v.size() == 1) [[unlikely]] {
-		if (value < v[0]) {
+		if (value < value_elem(v[0])) {
 			return {0, false};
 		}
-		else if (v[0] < value) {
+		else if (value_elem(v[0]) < value) {
 			return {1, false};
 		}
 		return {0, true};
@@ -56,13 +65,13 @@ template <LessthanComparable data_t, typename metadata_t>
 	while (i < j) {
 		const size_t m = ((i + j) / 2);
 
-		if (value < v[m]) {
+		if (value < value_elem(v[m])) {
 			if (m == 0) [[unlikely]] {
 				return {0, false};
 			}
 			j = m - 1;
 		}
-		else if (v[m] < value) {
+		else if (value_elem(v[m]) < value) {
 			if (m == v.size() - 1) [[unlikely]] {
 				return {v.size(), false};
 			}
@@ -73,69 +82,18 @@ template <LessthanComparable data_t, typename metadata_t>
 		}
 	}
 
-	if (value < v[i]) {
+	if (value < value_elem(v[i])) {
 		return {i, false};
 	}
-	if (v[i] < value) {
-		return {i + 1, false};
-	}
-	return {i, true};
-}
-
-template <LessthanComparable data_t, typename metadata_t>
-	requires Compound<data_t, metadata_t>
-[[nodiscard]] static constexpr inline std::pair<size_t, bool> search(
-	const std::vector<element_t<data_t, metadata_t>>& v, const data_t& value
-) noexcept
-{
-	if (v.size() == 0) [[unlikely]] {
-		return {0, false};
-	}
-	if (v.size() == 1) [[unlikely]] {
-		if (value < v[0].data) {
-			return {0, false};
-		}
-		else if (v[0].data < value) {
-			return {1, false};
-		}
-		return {0, true};
-	}
-
-	size_t i = 0;
-	size_t j = v.size() - 1;
-	while (i < j) {
-		const size_t m = ((i + j) / 2);
-
-		if (value < v[m].data) {
-			if (m == 0) [[unlikely]] {
-				return {0, false};
-			}
-			j = m - 1;
-		}
-		else if (v[m].data < value) {
-			if (m == v.size() - 1) [[unlikely]] {
-				return {v.size(), false};
-			}
-			i = m + 1;
-		}
-		else {
-			return {m, true};
-		}
-	}
-
-	if (value < v[i].data) {
-		return {i, false};
-	}
-	if (v[i].data < value) {
+	if (value_elem(v[i]) < value) {
 		return {i + 1, false};
 	}
 	return {i, true};
 }
 
 template <LessthanComparable T, typename U>
-[[nodiscard]] static constexpr inline std::pair<size_t, bool> search(
-	const std::vector<std::pair<T, U>>& v, const T& value
-) noexcept
+[[nodiscard]] static constexpr inline std::pair<size_t, bool>
+search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
 {
 	if (v.size() == 0) [[unlikely]] {
 		return {0, false};
