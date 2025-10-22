@@ -60,12 +60,4 @@ using element_t = std::
 template <typename data_t, typename metadata_t>
 concept Compound = not std::is_void_v<metadata_t>;
 
-/**
- * @brief Is @ref element_t a compound type of data and metadata?
- * @tparam data_t Type of the data contained.
- * @tparam metadata_t Type of the metadata associated to the data.
- */
-template <typename data_t, typename metadata_t>
-concept NotCompound = not Compound<data_t, metadata_t>;
-
 } // namespace classtree
