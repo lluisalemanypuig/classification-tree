@@ -27,10 +27,10 @@ function(configure_executable executable)
 	set_target_properties(${executable} PROPERTIES SOVERSION 1)
 	set_target_properties(${executable} PROPERTIES LINKER_LANGUAGE CXX)
 
-	# ******************************************************************************
+	# **************************************************************************
 	# Definitions
 
-	# ******************************************************************************
+	# **************************************************************************
 	# Warning flags
 
 	add_compiler_flag(${executable} -Wall)
@@ -53,7 +53,7 @@ function(configure_executable executable)
 	add_compiler_flag(${executable} -Wuseless-cast)
 	add_compiler_flag(${executable} -Wrestrict)
 
-	# ******************************************************************************
+	# **************************************************************************
 	# Optimisation flags
 
 	if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
@@ -67,7 +67,7 @@ function(configure_executable executable)
 		define_symbol(${executable} -UDEBUG)
 	endif()
 
-	# ***************************************************************************
+	# **************************************************************************
 	# Include paths
 
 	target_include_directories(${executable} PRIVATE ${CTREE_DIR})
@@ -125,6 +125,7 @@ message(STATUS "    CTREE_LIB_NAME: ${CTREE_LIB_NAME}")
 # Add subdirectories
 
 add_subdirectory(tests)
+add_subdirectory(benchmark)
 add_subdirectory(examples)
 add_subdirectory(cases)
 
