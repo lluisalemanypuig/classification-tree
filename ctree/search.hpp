@@ -31,9 +31,11 @@
 #include <ctree/types.hpp>
 
 namespace classtree {
+namespace detail {
 
 template <LessthanComparable data_t, typename metadata_t>
-[[nodiscard]] static constexpr inline std::pair<size_t, bool> search(
+[[nodiscard]] static constexpr inline std::pair<size_t, bool>
+element_search_linear(
 	const std::vector<element_t<data_t, metadata_t>>& v, const data_t& value
 ) noexcept
 {
@@ -60,24 +62,52 @@ template <LessthanComparable data_t, typename metadata_t>
 		return {0, true};
 	}
 
-	if (v.size() <= 16) {
-		for (size_t i = 0; i < v.size() - 1; ++i) {
-			if (value < value_elem(v[i])) {
-				return {i, false};
-			}
-			else if (value_elem(v[i]) < value) {
-				if (value < value_elem(v[i + 1])) {
-					return {i + 1, false};
-				}
-			}
-			else {
-				return {i, true};
+	for (size_t i = 0; i < v.size() - 1; ++i) {
+		if (value < value_elem(v[i])) {
+			return {i, false};
+		}
+		else if (value_elem(v[i]) < value) {
+			if (value < value_elem(v[i + 1])) {
+				return {i + 1, false};
 			}
 		}
-		if (value_elem(v.back()) < value) {
-			return {v.size(), false};
+		else {
+			return {i, true};
 		}
-		return {v.size() - 1, true};
+	}
+	if (value_elem(v.back()) < value) {
+		return {v.size(), false};
+	}
+	return {v.size() - 1, true};
+}
+
+template <LessthanComparable data_t, typename metadata_t>
+[[nodiscard]] static constexpr inline std::pair<size_t, bool>
+element_search_binary(
+	const std::vector<element_t<data_t, metadata_t>>& v, const data_t& value
+) noexcept
+{
+	const auto value_elem = [](const element_t<data_t, metadata_t>& elem)
+	{
+		if constexpr (Compound<data_t, metadata_t>) {
+			return elem.data;
+		}
+		else {
+			return elem;
+		}
+	};
+
+	if (v.size() == 0) [[unlikely]] {
+		return {0, false};
+	}
+	if (v.size() == 1) [[unlikely]] {
+		if (value < value_elem(v[0])) {
+			return {0, false};
+		}
+		if (value_elem(v[0]) < value) {
+			return {1, false};
+		}
+		return {0, true};
 	}
 
 	size_t i = 0;
@@ -113,7 +143,8 @@ template <LessthanComparable data_t, typename metadata_t>
 
 template <LessthanComparable T, typename U>
 [[nodiscard]] static constexpr inline std::pair<size_t, bool>
-search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
+pair_search_linear(const std::vector<std::pair<T, U>>& v, const T& value)
+	noexcept
 {
 	if (v.size() == 0) [[unlikely]] {
 		return {0, false};
@@ -128,24 +159,41 @@ search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
 		return {0, true};
 	}
 
-	if (v.size() <= 16) {
-		for (size_t i = 0; i < v.size() - 1; ++i) {
-			if (value < v[i].first) {
-				return {i, false};
-			}
-			else if (v[i].first < value) {
-				if (value < v[i + 1].first) {
-					return {i + 1, false};
-				}
-			}
-			else {
-				return {i, true};
+	for (size_t i = 0; i < v.size() - 1; ++i) {
+		if (value < v[i].first) {
+			return {i, false};
+		}
+		else if (v[i].first < value) {
+			if (value < v[i + 1].first) {
+				return {i + 1, false};
 			}
 		}
-		if (v.back().first < value) {
-			return {v.size(), false};
+		else {
+			return {i, true};
 		}
-		return {v.size() - 1, true};
+	}
+	if (v.back().first < value) {
+		return {v.size(), false};
+	}
+	return {v.size() - 1, true};
+}
+
+template <LessthanComparable T, typename U>
+[[nodiscard]] static constexpr inline std::pair<size_t, bool>
+pair_search_binary(const std::vector<std::pair<T, U>>& v, const T& value)
+	noexcept
+{
+	if (v.size() == 0) [[unlikely]] {
+		return {0, false};
+	}
+	if (v.size() == 1) [[unlikely]] {
+		if (value < v[0].first) {
+			return {0, false};
+		}
+		if (v[0].first < value) {
+			return {1, false};
+		}
+		return {0, true};
 	}
 
 	size_t i = 0;
@@ -177,6 +225,29 @@ search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
 		return {i + 1, false};
 	}
 	return {i, true};
+}
+
+} // namespace detail
+
+template <LessthanComparable data_t, typename metadata_t>
+[[nodiscard]] static constexpr inline std::pair<size_t, bool> search(
+	const std::vector<element_t<data_t, metadata_t>>& v, const data_t& value
+) noexcept
+{
+	if (v.size() <= 32) {
+		return detail::element_search_linear<data_t, metadata_t>(v, value);
+	}
+	return detail::element_search_binary<data_t, metadata_t>(v, value);
+}
+
+template <LessthanComparable T, typename U>
+[[nodiscard]] static constexpr inline std::pair<size_t, bool>
+search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
+{
+	if (v.size() <= 32) {
+		return detail::pair_search_linear<T, U>(v, value);
+	}
+	return detail::pair_search_binary<T, U>(v, value);
 }
 
 } // namespace classtree
