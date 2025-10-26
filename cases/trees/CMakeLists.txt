@@ -12,24 +12,20 @@ include(GNUInstallDirs)
 # Custom functions
 
 function(configure_tree_executable executable)
-	# configure executable normally
+
 	configure_executable(${executable})
 
-	# ******************************************************************************
+	# **************************************************************************
 	# Include paths
+
 	target_include_directories(${executable} PRIVATE ../..)
 	target_include_directories(${executable} PRIVATE ${LAL_DIR})
 
-	# ******************************************************************************
+	# **************************************************************************
 	# Dependencies
 
-	# GMP
 	target_link_libraries(${executable} gmp)
-
-	# pthread
 	target_link_libraries(${executable} pthread)
-
-	# OpenMP
 	target_link_libraries(${executable} ${OpenMP_CXX_LIBRARIES})
 
 	# Linear Arrangement Library
@@ -62,7 +58,6 @@ endif()
 # LIBRARIES
 # check if libraries are installed in the system
 
-# ***
 # GMP
 find_library(GMP_LIB gmp)
 if (GMP_LIB)
@@ -71,7 +66,6 @@ else()
 	message(FATAL_ERROR "Error: gmp library not found")
 endif()
 
-# *******
 # pthread
 find_library(PTHREAD_LIB pthread)
 if (PTHREAD_LIB)
@@ -80,7 +74,6 @@ else()
 	message(FATAL_ERROR "Error: pthread library not found")
 endif()
 
-# ******
 # OpenMP
 find_package(OpenMP REQUIRED)
 
