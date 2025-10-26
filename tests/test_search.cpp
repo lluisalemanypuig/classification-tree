@@ -38,25 +38,25 @@ TEST_CASE("Empty vector")
 	for (int i = 1; i <= 9; ++i) {
 		{
 			const auto [pos, found] =
-				classtree::detail::pair_search_linear(v, i);
+				classtree::detail::small_pair_search_linear(v, i);
 			CHECK(not found);
 			CHECK_EQ(pos, 0);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::pair_search_binary(v, i);
+				classtree::detail::small_pair_search_binary(v, i);
 			CHECK(not found);
 			CHECK_EQ(pos, 0);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::element_search_linear<int, int>(v2, i);
+				classtree::detail::small_element_search_linear<int, int>(v2, i);
 			CHECK(not found);
 			CHECK_EQ(pos, 0);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::element_search_binary<int, int>(v2, i);
+				classtree::detail::small_element_search_binary<int, int>(v2, i);
 			CHECK(not found);
 			CHECK_EQ(pos, 0);
 		}
@@ -71,49 +71,51 @@ TEST_CASE("Singleton vector")
 	for (int i = 1; i <= 4; ++i) {
 		{
 			const auto [pos, found] =
-				classtree::detail::pair_search_linear(v, i);
+				classtree::detail::small_pair_search_linear(v, i);
 			CHECK(not found);
 			CHECK_EQ(pos, 0);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::pair_search_binary(v, i);
+				classtree::detail::small_pair_search_binary(v, i);
 			CHECK(not found);
 			CHECK_EQ(pos, 0);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::element_search_linear<int, int>(v2, i);
+				classtree::detail::small_element_search_linear<int, int>(v2, i);
 			CHECK(not found);
 			CHECK_EQ(pos, 0);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::element_search_binary<int, int>(v2, i);
+				classtree::detail::small_element_search_binary<int, int>(v2, i);
 			CHECK(not found);
 			CHECK_EQ(pos, 0);
 		}
 	}
 
 	{
-		const auto [pos, found] = classtree::detail::pair_search_linear(v, 5);
-		CHECK(found);
-		CHECK_EQ(pos, 0);
-	}
-	{
-		const auto [pos, found] = classtree::detail::pair_search_binary(v, 5);
+		const auto [pos, found] =
+			classtree::detail::small_pair_search_linear(v, 5);
 		CHECK(found);
 		CHECK_EQ(pos, 0);
 	}
 	{
 		const auto [pos, found] =
-			classtree::detail::element_search_linear<int, int>(v2, 5);
+			classtree::detail::small_pair_search_binary(v, 5);
 		CHECK(found);
 		CHECK_EQ(pos, 0);
 	}
 	{
 		const auto [pos, found] =
-			classtree::detail::element_search_binary<int, int>(v2, 5);
+			classtree::detail::small_element_search_linear<int, int>(v2, 5);
+		CHECK(found);
+		CHECK_EQ(pos, 0);
+	}
+	{
+		const auto [pos, found] =
+			classtree::detail::small_element_search_binary<int, int>(v2, 5);
 		CHECK(found);
 		CHECK_EQ(pos, 0);
 	}
@@ -121,25 +123,25 @@ TEST_CASE("Singleton vector")
 	for (int i = 6; i <= 9; ++i) {
 		{
 			const auto [pos, found] =
-				classtree::detail::pair_search_linear(v, i);
+				classtree::detail::small_pair_search_linear(v, i);
 			CHECK(not found);
 			CHECK_EQ(pos, 1);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::pair_search_binary(v, i);
+				classtree::detail::small_pair_search_binary(v, i);
 			CHECK(not found);
 			CHECK_EQ(pos, 1);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::element_search_linear<int, int>(v2, i);
+				classtree::detail::small_element_search_linear<int, int>(v2, i);
 			CHECK(not found);
 			CHECK_EQ(pos, 1);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::element_search_binary<int, int>(v2, i);
+				classtree::detail::small_element_search_binary<int, int>(v2, i);
 			CHECK(not found);
 			CHECK_EQ(pos, 1);
 		}
@@ -160,25 +162,29 @@ TEST_CASE("Tiny vector")
 	for (size_t i = 1; i <= 9; i += 2) {
 		{
 			const auto [pos, found] =
-				classtree::detail::pair_search_linear(v, i);
+				classtree::detail::small_pair_search_linear(v, i);
 			CHECK(found);
 			CHECK_EQ(pos, (i - 1) / 2);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::pair_search_binary(v, i);
+				classtree::detail::small_pair_search_binary(v, i);
 			CHECK(found);
 			CHECK_EQ(pos, (i - 1) / 2);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::element_search_linear<size_t, size_t>(v2, i);
+				classtree::detail::small_element_search_linear<size_t, size_t>(
+					v2, i
+				);
 			CHECK(found);
 			CHECK_EQ(pos, (i - 1) / 2);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::element_search_binary<size_t, size_t>(v2, i);
+				classtree::detail::small_element_search_binary<size_t, size_t>(
+					v2, i
+				);
 			CHECK(found);
 			CHECK_EQ(pos, (i - 1) / 2);
 		}
@@ -187,25 +193,29 @@ TEST_CASE("Tiny vector")
 	for (size_t i = 0; i <= 10; i += 2) {
 		{
 			const auto [pos, found] =
-				classtree::detail::pair_search_linear(v, i);
+				classtree::detail::small_pair_search_linear(v, i);
 			CHECK(not found);
 			CHECK_EQ(pos, i / 2);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::pair_search_binary(v, i);
+				classtree::detail::small_pair_search_binary(v, i);
 			CHECK(not found);
 			CHECK_EQ(pos, i / 2);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::element_search_linear<size_t, size_t>(v2, i);
+				classtree::detail::small_element_search_linear<size_t, size_t>(
+					v2, i
+				);
 			CHECK(not found);
 			CHECK_EQ(pos, i / 2);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::element_search_binary<size_t, size_t>(v2, i);
+				classtree::detail::small_element_search_binary<size_t, size_t>(
+					v2, i
+				);
 			CHECK(not found);
 			CHECK_EQ(pos, i / 2);
 		}
@@ -226,25 +236,29 @@ TEST_CASE("Small vector")
 	for (size_t i = 1; i <= 17; i += 2) {
 		{
 			const auto [pos, found] =
-				classtree::detail::pair_search_linear(v, i);
+				classtree::detail::small_pair_search_linear(v, i);
 			CHECK(found);
 			CHECK_EQ(pos, (i - 1) / 2);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::pair_search_binary(v, i);
+				classtree::detail::small_pair_search_binary(v, i);
 			CHECK(found);
 			CHECK_EQ(pos, (i - 1) / 2);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::element_search_linear<size_t, size_t>(v2, i);
+				classtree::detail::small_element_search_linear<size_t, size_t>(
+					v2, i
+				);
 			CHECK(found);
 			CHECK_EQ(pos, (i - 1) / 2);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::element_search_binary<size_t, size_t>(v2, i);
+				classtree::detail::small_element_search_binary<size_t, size_t>(
+					v2, i
+				);
 			CHECK(found);
 			CHECK_EQ(pos, (i - 1) / 2);
 		}
@@ -253,25 +267,29 @@ TEST_CASE("Small vector")
 	for (size_t i = 0; i <= 18; i += 2) {
 		{
 			const auto [pos, found] =
-				classtree::detail::pair_search_linear(v, i);
+				classtree::detail::small_pair_search_linear(v, i);
 			CHECK(not found);
 			CHECK_EQ(pos, i / 2);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::pair_search_binary(v, i);
+				classtree::detail::small_pair_search_binary(v, i);
 			CHECK(not found);
 			CHECK_EQ(pos, i / 2);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::element_search_linear<size_t, size_t>(v2, i);
+				classtree::detail::small_element_search_linear<size_t, size_t>(
+					v2, i
+				);
 			CHECK(not found);
 			CHECK_EQ(pos, i / 2);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::element_search_binary<size_t, size_t>(v2, i);
+				classtree::detail::small_element_search_binary<size_t, size_t>(
+					v2, i
+				);
 			CHECK(not found);
 			CHECK_EQ(pos, i / 2);
 		}
@@ -292,25 +310,29 @@ TEST_CASE("Large vector")
 	for (size_t i = 1; i <= 301; i += 2) {
 		{
 			const auto [pos, found] =
-				classtree::detail::pair_search_linear(v, i);
+				classtree::detail::small_pair_search_linear(v, i);
 			CHECK(found);
 			CHECK_EQ(pos, (i - 1) / 2);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::pair_search_binary(v, i);
+				classtree::detail::small_pair_search_binary(v, i);
 			CHECK(found);
 			CHECK_EQ(pos, (i - 1) / 2);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::element_search_linear<size_t, size_t>(v2, i);
+				classtree::detail::small_element_search_linear<size_t, size_t>(
+					v2, i
+				);
 			CHECK(found);
 			CHECK_EQ(pos, (i - 1) / 2);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::element_search_binary<size_t, size_t>(v2, i);
+				classtree::detail::small_element_search_binary<size_t, size_t>(
+					v2, i
+				);
 			CHECK(found);
 			CHECK_EQ(pos, (i - 1) / 2);
 		}
@@ -319,25 +341,29 @@ TEST_CASE("Large vector")
 	for (size_t i = 0; i <= 302; i += 2) {
 		{
 			const auto [pos, found] =
-				classtree::detail::pair_search_linear(v, i);
+				classtree::detail::small_pair_search_linear(v, i);
 			CHECK(not found);
 			CHECK_EQ(pos, i / 2);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::pair_search_binary(v, i);
+				classtree::detail::small_pair_search_binary(v, i);
 			CHECK(not found);
 			CHECK_EQ(pos, i / 2);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::element_search_linear<size_t, size_t>(v2, i);
+				classtree::detail::small_element_search_linear<size_t, size_t>(
+					v2, i
+				);
 			CHECK(not found);
 			CHECK_EQ(pos, i / 2);
 		}
 		{
 			const auto [pos, found] =
-				classtree::detail::element_search_binary<size_t, size_t>(v2, i);
+				classtree::detail::small_element_search_binary<size_t, size_t>(
+					v2, i
+				);
 			CHECK(not found);
 			CHECK_EQ(pos, i / 2);
 		}
