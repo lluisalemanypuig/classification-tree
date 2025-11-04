@@ -105,5 +105,13 @@ int main(int argc, char **argv)
 	doctest::Context context;
 	context.applyCommandLine(argc, argv);
 
-	return context.run(); // run doctest
+	const int res = context.run(); // run doctest
+
+	// important - query flags (and --exit) rely on the user doing this
+	if (context.shouldExit()) {
+		// propagate the result of the tests
+		return res;
+	}
+
+	return res;
 }

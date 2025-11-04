@@ -38,7 +38,7 @@
 TEST_CASE("All elements (1)")
 {
 	typedef classtree::ctree<data_lt, void, int, int, int> my_tree;
-	
+
 	my_tree kd;
 	static_assert(std::is_nothrow_move_constructible_v<my_tree>);
 	static_assert(std::is_move_constructible_v<my_tree>);
@@ -172,46 +172,46 @@ TEST_CASE("All elements (1)")
 	{
 		auto it = kd.get_const_iterator_begin();
 		CHECK_EQ(*it, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
-		
+
 		++it;
 		CHECK_EQ(*it, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
-		
+
 		++it;
 		CHECK_EQ(*it, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
-		
+
 		--it;
 		CHECK_EQ(*it, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
-		
-		--it;
-		CHECK_EQ(*it, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
-		
-		++it;
-		CHECK_EQ(*it, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
-		
+
 		--it;
 		CHECK_EQ(*it, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
-		
+
 		++it;
 		CHECK_EQ(*it, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
-		
+
+		--it;
+		CHECK_EQ(*it, data_lt{.i = 1, .j = 1, .k = 1, .z = 1});
+
 		++it;
 		CHECK_EQ(*it, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
-		
+
+		++it;
+		CHECK_EQ(*it, data_lt{.i = 1, .j = 1, .k = 1, .z = 2});
+
 		++it;
 		CHECK_EQ(*it, data_lt{.i = 1, .j = 1, .k = 1, .z = 3});
-		
+
 		++it;
 		CHECK_EQ(*it, data_lt{.i = 1, .j = 1, .k = 1, .z = 4});
-		
+
 		++it;
 		CHECK_EQ(*it, data_lt{.i = 1, .j = 2, .k = 1, .z = 1});
-		
+
 		++it;
 		CHECK_EQ(*it, data_lt{.i = 1, .j = 2, .k = 2, .z = 1});
-		
+
 		--it;
 		CHECK_EQ(*it, data_lt{.i = 1, .j = 2, .k = 1, .z = 1});
-		
+
 		--it;
 		CHECK_EQ(*it, data_lt{.i = 1, .j = 1, .k = 1, .z = 4});
 	}
@@ -776,7 +776,7 @@ TEST_CASE("All elements (1)")
 TEST_CASE("All elements (2)")
 {
 	typedef classtree::ctree<data_lt, void, int, int, int> my_tree;
-	
+
 	my_tree kd;
 	static_assert(std::is_nothrow_move_constructible_v<my_tree>);
 	static_assert(std::is_move_constructible_v<my_tree>);
@@ -1120,7 +1120,7 @@ TEST_CASE("All elements (2)")
 TEST_CASE("All elements (3)")
 {
 	typedef classtree::ctree<data_lt, void, int, int, int> my_tree;
-	
+
 	my_tree kd;
 	static_assert(std::is_nothrow_move_constructible_v<my_tree>);
 	static_assert(std::is_move_constructible_v<my_tree>);
@@ -1215,5 +1215,13 @@ int main(int argc, char **argv)
 	doctest::Context context;
 	context.applyCommandLine(argc, argv);
 
-	return context.run(); // run doctest
+	const int res = context.run(); // run doctest
+
+	// important - query flags (and --exit) rely on the user doing this
+	if (context.shouldExit()) {
+		// propagate the result of the tests
+		return res;
+	}
+
+	return res;
 }
