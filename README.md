@@ -37,7 +37,7 @@ Using it in C++ is easy. The data structure is a class template, and including i
 Declaring a possible tree for the example above is as easy as
 
 ```cpp
-ctree::ctree<object, object_metadata, int, double, std::string> kd;
+classtree::ctree<object, object_metadata, int, double, std::string> kd;
 ```
 
 Here, `object_metadata` can be a struct that implements the `+=` operator so that the metadata of the new object is merged with the object already present in the structure. For example
