@@ -34,7 +34,8 @@ namespace classtree {
 namespace detail {
 
 template <LessthanComparable data_t, typename metadata_t>
-const data_t& value_elem(const element_t<data_t, metadata_t>& elem)
+[[nodiscard]] const data_t& value_elem(const element_t<data_t, metadata_t>& elem
+)
 {
 	if constexpr (Compound<data_t, metadata_t>) {
 		return elem.data;
@@ -256,7 +257,9 @@ template <LessthanComparable data_t, typename metadata_t>
 ) noexcept
 {
 	if (v.size() <= 6) {
-		return detail::small_element_search_linear<data_t, metadata_t>(v, value);
+		return detail::small_element_search_linear<data_t, metadata_t>(
+			v, value
+		);
 	}
 	return detail::element_search_binary<data_t, metadata_t>(v, value);
 }

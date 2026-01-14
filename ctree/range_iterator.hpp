@@ -273,18 +273,18 @@ public:
 		std::enable_if_t<
 			std::is_same_v<pointer_t<data_t, metadata_t>, _inner_pointer_t>,
 			bool> = true>
-	leaf_element_t& operator* () noexcept
+	[[nodiscard]] leaf_element_t& operator* () noexcept
 	{
 		return *m_it;
 	}
 	/// Returns the current value of the iteration.
-	const leaf_element_t& operator* () const noexcept
+	[[nodiscard]] const leaf_element_t& operator* () const noexcept
 	{
 		return *m_it;
 	}
 
 	/// Returns the current value of the iteration.
-	std::tuple<leaf_element_t> operator+ () const noexcept
+	[[nodiscard]] std::tuple<leaf_element_t> operator+ () const noexcept
 	{
 		if constexpr (Compound<data_t, metadata_t>) {
 			return std::make_tuple(leaf_element_t{m_it->data, m_it->metadata});
@@ -364,7 +364,7 @@ public:
 	template <typename Callable, typename... Callables>
 	void set_functions(Callable&& f, Callables&&...fs) noexcept
 	{
-		m_func = std::move(f);
+		m_func = std::forward<Callable>(f);
 		m_subtree_iterator.set_functions(std::forward<Callables>(fs)...);
 	}
 
@@ -538,18 +538,19 @@ public:
 				pointer_t<data_t, metadata_t, key_t, keys_t...>,
 				_inner_pointer_t>,
 			bool> = true>
-	leaf_element_t& operator* () noexcept
+	[[nodiscard]] leaf_element_t& operator* () noexcept
 	{
 		return *m_subtree_iterator;
 	}
 	/// Returns the current value of the iteration.
-	const leaf_element_t& operator* () const noexcept
+	[[nodiscard]] const leaf_element_t& operator* () const noexcept
 	{
 		return *m_subtree_iterator;
 	}
 
 	/// Returns the current value of the iteration.
-	std::tuple<leaf_element_t, key_t, keys_t...> operator+ () const noexcept
+	[[nodiscard]] std::tuple<leaf_element_t, key_t, keys_t...>
+	operator+ () const noexcept
 	{
 		std::tuple<leaf_element_t, keys_t...> subtree = +m_subtree_iterator;
 

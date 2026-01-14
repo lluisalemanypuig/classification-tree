@@ -288,7 +288,7 @@ public:
 	 * @param i A valid index. Must be less than @ref num_keys().
 	 * @returns A constant reference to a key value.
 	 */
-	const key_t& get_key(const size_t i) const noexcept
+	[[nodiscard]] const key_t& get_key(const size_t i) const noexcept
 	{
 #if defined DEBUG
 		assert(i < m_children.size());
@@ -303,7 +303,7 @@ public:
 	 * @param i A valid index. Must be less than @ref num_keys().
 	 * @returns A non-constant reference to a key value.
 	 */
-	child_t& get_child(const size_t i) noexcept
+	[[nodiscard]] child_t& get_child(const size_t i) noexcept
 	{
 #if defined DEBUG
 		assert(i < m_children.size());
@@ -318,7 +318,7 @@ public:
 	 * @param i A valid index. Must be less than @ref num_keys().
 	 * @returns A constant reference to a key value.
 	 */
-	const child_t& get_child(const size_t i) const noexcept
+	[[nodiscard]] const child_t& get_child(const size_t i) const noexcept
 	{
 #if defined DEBUG
 		assert(i < m_children.size());
@@ -521,7 +521,7 @@ private:
 	 * @returns True if all the types are same. False if otherwise.
 	 */
 	template <typename _leaf_element_t, typename... _keys_t>
-	static consteval bool check_types() noexcept
+	[[nodiscard]] static consteval bool check_types() noexcept
 	{
 		return std::is_same_v<
 				   std::remove_cvref_t<_leaf_element_t>,

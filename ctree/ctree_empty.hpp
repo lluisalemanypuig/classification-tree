@@ -246,7 +246,7 @@ public:
 	 * @param i A valid index. Must be less than @ref num_keys().
 	 * @returns A non-constant reference to a key value.
 	 */
-	leaf_element_t& get_child(const size_t i) noexcept
+	[[nodiscard]] leaf_element_t& get_child(const size_t i) noexcept
 	{
 #if defined DEBUG
 		assert(i < m_data.size());
@@ -258,7 +258,7 @@ public:
 	 * @param i A valid index. Must be less than @ref num_keys().
 	 * @returns A non-constant reference to a key value.
 	 */
-	const leaf_element_t& get_child(const size_t i) const noexcept
+	[[nodiscard]] const leaf_element_t& get_child(const size_t i) const noexcept
 	{
 #if defined DEBUG
 		assert(i < m_data.size());
