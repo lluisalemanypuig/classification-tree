@@ -29,6 +29,7 @@
 #endif
 #include <algorithm>
 #include <vector>
+#include <ranges>
 
 // custom includes
 #include <ctree/search.hpp>
@@ -246,13 +247,15 @@ public:
 		const std::string& tab = ""
 	) const
 	{
+		const auto s = m_children.size();
+
 		os << tab << "size: " << size() << '\n';
 		os << tab << "keys: " << num_keys() << '\n';
 
-		size_t i = 0;
-		for (const auto& [v, child] : m_children) {
+		for (const auto& [i, value] : m_children | std::views::enumerate) {
+			const auto& [v, child] = value;
 
-			if (i < m_children.size() - 1) {
+			if (static_cast<size_t>(i) < s - 1) {
 				os << tab << "├── " << v << '\n';
 				child.print(os, print_leaves, tab + "│   ");
 			}
@@ -260,8 +263,6 @@ public:
 				os << tab << "└── " << v << '\n';
 				child.print(os, print_leaves, tab + "    ");
 			}
-
-			++i;
 		}
 	}
 
@@ -274,12 +275,14 @@ public:
 	[[nodiscard]] std::vector<size_t> sizes() const noexcept
 	{
 		std::vector<size_t> s(m_children.size(), 0);
-
-		size_t i = 0;
-		for (const auto& [_, child] : m_children) {
-			s[i] = child.size();
-			++i;
-		}
+		std::ranges::transform(
+			m_children,
+			s,
+			[](const auto& key_child)
+			{
+				return key_child.second.size();
+			}
+		);
 		return s;
 	}
 

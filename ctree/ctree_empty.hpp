@@ -29,6 +29,7 @@
 #endif
 #include <ostream>
 #include <vector>
+#include <ranges>
 
 // custom includes
 #include <ctree/ctree.hpp>
@@ -280,8 +281,10 @@ public:
 	{
 		os << tab << "^ size: " << size() << '\n';
 		if (print_leaves) {
-			for (size_t i = 0; i < m_data.size(); ++i) {
-				if (i < m_data.size() - 1) {
+			const auto s = m_data.size();
+			for (const auto& [i, value] : m_data | std::views::enumerate) {
+
+				if (static_cast<size_t>(i) < s - 1) {
 					os << tab << "├── ";
 				}
 				else {
@@ -289,11 +292,11 @@ public:
 				}
 
 				if constexpr (is_compound) {
-					const auto& [v, meta] = m_data[i];
+					const auto& [v, meta] = value;
 					os << v << ' ' << meta << '\n';
 				}
 				else {
-					const auto& v = m_data[i];
+					const auto& v = value;
 					os << v << '\n';
 				}
 			}
