@@ -27,6 +27,7 @@
 #if defined DEBUG
 #include <cassert>
 #endif
+#include <memory_resource>
 #include <ostream>
 #include <vector>
 #include <ranges>
@@ -53,12 +54,32 @@ public:
 	using leaf_element_t = element_t<data_t, metadata_t>;
 
 	/// The container that stores the key values, and the associated subtree.
-	using container_t = std::vector<leaf_element_t>;
+	using container_t = std::pmr::vector<leaf_element_t>;
 
 	/// Direct access to a nice property of @ref element_t.
 	static constexpr bool is_compound = Compound<data_t, metadata_t>;
 
 public:
+
+	/**
+	 * @brief Reserves memory for this leaf node
+	 *
+	 * Uses the memory resource allocator passed as parameter.
+	 * @tparam istream_t Type of the input stream.
+	 * @param is Stream to read the memory profile from.
+	 * @param mem_res Memory resource allocator.
+	 */
+	template <typename istream_t>
+	void initialize(
+		istream_t& is,
+		std::pmr::memory_resource *mem_res = std::pmr::get_default_resource()
+	)
+	{
+		size_t size;
+		is >> size;
+		m_data = container_t(mem_res);
+		m_data.resize(size);
+	}
 
 	/// Clear the memory occupied by this leaf node.
 	void clear() noexcept

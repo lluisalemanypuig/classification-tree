@@ -27,6 +27,7 @@
 #if defined DEBUG
 #include <cassert>
 #endif
+#include <memory_resource>
 #include <algorithm>
 #include <vector>
 #include <ranges>
@@ -63,9 +64,35 @@ public:
 	using subtree_t = std::pair<key_t, child_t>;
 
 	/// The container that stores the key values, and the associated subtree.
-	using container_t = std::vector<subtree_t>;
+	using container_t = std::pmr::vector<subtree_t>;
 
 public:
+
+	/**
+	 * @brief Reserves memory for this leaf node
+	 *
+	 * Uses the memory resource allocator passed as parameter.
+	 * @tparam istream_t Type of the input stream.
+	 * @param is Stream to read the memory profile from.
+	 * @param mem_res Memory resource allocator.
+	 */
+	template <typename istream_t>
+	void initialize(
+		istream_t& is,
+		std::pmr::memory_resource *mem_res = std::pmr::get_default_resource()
+	)
+	{
+		size_t size;
+		is >> size;
+		m_children = container_t(mem_res);
+		m_children.resize(size);
+		for (size_t i = 0; i < size; ++i) {
+			is >> m_children[i].first;
+		}
+		for (size_t i = 0; i < size; ++i) {
+			m_children[i].second.initialize(is, mem_res);
+		}
+	}
 
 	/**
 	 * @brief Clear the memory occupied by this internal node.

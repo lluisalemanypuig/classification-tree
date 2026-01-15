@@ -48,7 +48,8 @@ template <LessthanComparable data_t, typename metadata_t>
 template <LessthanComparable data_t, typename metadata_t>
 [[nodiscard]] static constexpr inline std::pair<size_t, bool>
 element_search_linear(
-	const std::vector<element_t<data_t, metadata_t>>& v, const data_t& value
+	const std::pmr::vector<element_t<data_t, metadata_t>>& v,
+	const data_t& value
 ) noexcept
 {
 	for (size_t i = 0; i < v.size() - 1; ++i) {
@@ -73,7 +74,8 @@ element_search_linear(
 template <LessthanComparable data_t, typename metadata_t>
 [[nodiscard]] static constexpr inline std::pair<size_t, bool>
 small_element_search_linear(
-	const std::vector<element_t<data_t, metadata_t>>& v, const data_t& value
+	const std::pmr::vector<element_t<data_t, metadata_t>>& v,
+	const data_t& value
 ) noexcept
 {
 	if (v.size() == 0) [[unlikely]] {
@@ -94,7 +96,8 @@ small_element_search_linear(
 template <LessthanComparable data_t, typename metadata_t>
 [[nodiscard]] static constexpr inline std::pair<size_t, bool>
 element_search_binary(
-	const std::vector<element_t<data_t, metadata_t>>& v, const data_t& value
+	const std::pmr::vector<element_t<data_t, metadata_t>>& v,
+	const data_t& value
 ) noexcept
 {
 	size_t i = 0;
@@ -131,7 +134,8 @@ element_search_binary(
 template <LessthanComparable data_t, typename metadata_t>
 [[nodiscard]] static constexpr inline std::pair<size_t, bool>
 small_element_search_binary(
-	const std::vector<element_t<data_t, metadata_t>>& v, const data_t& value
+	const std::pmr::vector<element_t<data_t, metadata_t>>& v,
+	const data_t& value
 ) noexcept
 {
 	if (v.size() == 0) [[unlikely]] {
@@ -151,7 +155,7 @@ small_element_search_binary(
 
 template <LessthanComparable T, typename U>
 [[nodiscard]] static constexpr inline std::pair<size_t, bool>
-pair_search_linear(const std::vector<std::pair<T, U>>& v, const T& value)
+pair_search_linear(const std::pmr::vector<std::pair<T, U>>& v, const T& value)
 	noexcept
 {
 	for (size_t i = 0; i < v.size() - 1; ++i) {
@@ -175,8 +179,9 @@ pair_search_linear(const std::vector<std::pair<T, U>>& v, const T& value)
 
 template <LessthanComparable T, typename U>
 [[nodiscard]] static constexpr inline std::pair<size_t, bool>
-small_pair_search_linear(const std::vector<std::pair<T, U>>& v, const T& value)
-	noexcept
+small_pair_search_linear(
+	const std::pmr::vector<std::pair<T, U>>& v, const T& value
+) noexcept
 {
 	if (v.size() == 0) [[unlikely]] {
 		return {0, false};
@@ -195,7 +200,7 @@ small_pair_search_linear(const std::vector<std::pair<T, U>>& v, const T& value)
 
 template <LessthanComparable T, typename U>
 [[nodiscard]] static constexpr inline std::pair<size_t, bool>
-pair_search_binary(const std::vector<std::pair<T, U>>& v, const T& value)
+pair_search_binary(const std::pmr::vector<std::pair<T, U>>& v, const T& value)
 	noexcept
 {
 	size_t i = 0;
@@ -231,8 +236,9 @@ pair_search_binary(const std::vector<std::pair<T, U>>& v, const T& value)
 
 template <LessthanComparable T, typename U>
 [[nodiscard]] static constexpr inline std::pair<size_t, bool>
-small_pair_search_binary(const std::vector<std::pair<T, U>>& v, const T& value)
-	noexcept
+small_pair_search_binary(
+	const std::pmr::vector<std::pair<T, U>>& v, const T& value
+) noexcept
 {
 	if (v.size() == 0) [[unlikely]] {
 		return {0, false};
@@ -253,7 +259,8 @@ small_pair_search_binary(const std::vector<std::pair<T, U>>& v, const T& value)
 
 template <LessthanComparable data_t, typename metadata_t>
 [[nodiscard]] static constexpr inline std::pair<size_t, bool> search(
-	const std::vector<element_t<data_t, metadata_t>>& v, const data_t& value
+	const std::pmr::vector<element_t<data_t, metadata_t>>& v,
+	const data_t& value
 ) noexcept
 {
 	if (v.size() <= 6) {
@@ -266,7 +273,7 @@ template <LessthanComparable data_t, typename metadata_t>
 
 template <LessthanComparable T, typename U>
 [[nodiscard]] static constexpr inline std::pair<size_t, bool>
-search(const std::vector<std::pair<T, U>>& v, const T& value) noexcept
+search(const std::pmr::vector<std::pair<T, U>>& v, const T& value) noexcept
 {
 	if (v.size() <= 6) {
 		return detail::small_pair_search_linear<T, U>(v, value);
