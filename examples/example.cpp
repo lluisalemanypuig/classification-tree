@@ -149,7 +149,7 @@ int main()
 			size_t total_bytes;
 			fin >> total_bytes;
 			std::cout << "    total_bytes= " << total_bytes << '\n';
-			kd2.initialize(fin);
+			classtree::initialize(kd2, fin);
 		}
 	}
 }
