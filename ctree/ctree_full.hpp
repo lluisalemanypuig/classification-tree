@@ -36,6 +36,7 @@
 #include <ctree/search.hpp>
 #include <ctree/type_traits.hpp>
 #include <ctree/ctree.hpp>
+#include <ctree/types.hpp>
 
 namespace classtree {
 
@@ -69,29 +70,23 @@ public:
 public:
 
 	/**
-	 * @brief Reserves memory for this leaf node
+	 * @brief Resets the children empty and sets the memory resource
 	 *
-	 * Uses the memory resource allocator passed as parameter.
-	 * @tparam istream_t Type of the input stream.
-	 * @param is Stream to read the memory profile from.
+	 * Resets the @ref m_children vector and sets the memory resource
 	 * @param mem_res Memory resource allocator.
 	 */
-	template <typename istream_t>
-	void initialize(
-		istream_t& is,
-		std::pmr::memory_resource *mem_res = std::pmr::get_default_resource()
-	)
+	void set_allocator(std::pmr::memory_resource *mem_res)
 	{
-		size_t size;
-		is >> size;
 		m_children = container_t(mem_res);
-		m_children.resize(size);
-		for (size_t i = 0; i < size; ++i) {
-			is >> m_children[i].first;
-		}
-		for (size_t i = 0; i < size; ++i) {
-			m_children[i].second.initialize(is, mem_res);
-		}
+	}
+
+	/**
+	 * @brief Resizes the allocator of children
+	 * @param s Size.
+	 */
+	void resize(const size_t s)
+	{
+		m_children.resize(s);
 	}
 
 	/**

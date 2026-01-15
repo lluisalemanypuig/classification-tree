@@ -43,7 +43,7 @@ namespace detail {
  * @tparam output_t Type of the output stream.
  * @tparam data_t Type of the data stored in the leaves of the tree.
  * @tparam metadata_t Type of the metadata stored in the leaves of the tree.
- * @tparam Ts Types of the keys of the tree.
+ * @tparam keys_t Types of the keys of the tree.
  * @param t The tree whose memory profile is to be written to @e fout.
  * @param fout The output stream.
  */
@@ -51,10 +51,12 @@ template <
 	typename output_t,
 	typename data_t,
 	typename metadata_t,
-	Comparable... Ts>
-void output_profile(const ctree<data_t, metadata_t, Ts...>& t, output_t& fout)
+	Comparable... keys_t>
+void output_profile(
+	const ctree<data_t, metadata_t, keys_t...>& t, output_t& fout
+)
 {
-	if constexpr (sizeof...(Ts) == 0) {
+	if constexpr (sizeof...(keys_t) == 0) {
 		fout << t.size() << ' ';
 	}
 	else {
@@ -82,7 +84,7 @@ void output_profile(const ctree<data_t, metadata_t, Ts...>& t, output_t& fout)
  * @tparam output_t Type of the output stream.
  * @tparam data_t Type of the data stored in the leaves of the tree.
  * @tparam metadata_t Type of the metadata stored in the leaves of the tree.
- * @tparam Ts Types of the keys of the tree.
+ * @tparam keys_t Types of the keys of the tree.
  * @param t The tree whose memory profile is to be written to @e fout.
  * @param fout The output stream.
  */
@@ -90,8 +92,10 @@ template <
 	typename output_t,
 	typename data_t,
 	typename metadata_t,
-	Comparable... Ts>
-void output_profile(const ctree<data_t, metadata_t, Ts...>& t, output_t& fout)
+	Comparable... keys_t>
+void output_profile(
+	const ctree<data_t, metadata_t, keys_t...>& t, output_t& fout
+)
 {
 	fout << t.num_bytes() << ' ';
 	detail::output_profile(t, fout);
@@ -108,9 +112,9 @@ void output_profile(const ctree<data_t, metadata_t, Ts...>& t, output_t& fout)
  * @param t The tree whose memory profile is to be written to @e fout.
  * @param filename The name of the file to write to.
  */
-template <typename data_t, typename metadata_t, Comparable... Ts>
+template <typename data_t, typename metadata_t, Comparable... keys_t>
 [[nodiscard]] bool output_profile(
-	const ctree<data_t, metadata_t, Ts...>& t, const std::string& filename
+	const ctree<data_t, metadata_t, keys_t...>& t, const std::string& filename
 )
 {
 	std::ofstream fout(filename);
@@ -120,6 +124,108 @@ template <typename data_t, typename metadata_t, Comparable... Ts>
 
 	output_profile(t, fout);
 	return true;
+}
+
+namespace detail {
+
+/**
+ * @brief Reserves memory for this leaf node
+ *
+ * Uses the memory resource allocator passed as parameter.
+ * @tparam istream_t Type of the input stream.
+ * @tparam data_t Type of the values to add.
+ * @tparam metadata_t Type of the metadata associated to the values.
+ * @param is Stream to read the memory profile from.
+ * @param mem_res Memory resource allocator.
+ */
+template <typename istream_t, typename data_t, typename metadata_t>
+void initialize_leaf(
+	ctree<data_t, metadata_t>& t,
+	istream_t& is,
+	std::pmr::memory_resource *mem_res
+)
+{
+	size_t size;
+	is >> size;
+	t.set_allocator(mem_res);
+	t.resize(size);
+}
+
+/**
+ * @brief Reserves memory for this leaf node
+ *
+ * Uses the memory resource allocator passed as parameter.
+ * @tparam istream_t Type of the input stream.
+ * @tparam data_t Type of the values to add.
+ * @tparam metadata_t Type of the metadata associated to the values.
+ * @tparam keys_t Type of the remaining keys.
+ * @param is Stream to read the memory profile from.
+ * @param mem_res Memory resource allocator.
+ */
+template <
+	typename istream_t,
+	typename data_t,
+	typename metadata_t,
+	typename... keys_t>
+void initialize_internal(
+	ctree<data_t, metadata_t, keys_t...>& t,
+	istream_t& is,
+	std::pmr::memory_resource *mem_res
+)
+{
+	size_t size;
+	is >> size;
+
+	t.set_allocator(mem_res);
+	t.resize(size);
+
+	const auto it_end = t.end();
+
+	auto it = t.begin();
+	while (it != it_end) {
+		is >> it->first;
+		++it;
+	}
+
+	it = t.begin();
+	while (it != it_end) {
+		if constexpr (sizeof...(keys_t) == 1) {
+			initialize_leaf(it->second, is, mem_res);
+		}
+		else {
+			initialize_internal(it->second, is, mem_res);
+		}
+		++it;
+	}
+}
+
+} // namespace detail
+
+/**
+ * @brief Reserves memory for this leaf node
+ *
+ * Uses the memory resource allocator passed as parameter.
+ * @tparam istream_t Type of the input stream.
+ * @param is Stream to read the memory profile from.
+ * @param mem_res Memory resource allocator.
+ */
+template <
+	typename istream_t,
+	typename data_t,
+	typename metadata_t,
+	typename... keys_t>
+void initialize(
+	ctree<data_t, metadata_t, keys_t...>& t,
+	istream_t& is,
+	std::pmr::memory_resource *mem_res = std::pmr::get_default_resource()
+)
+{
+	if constexpr (sizeof...(keys_t) == 0) {
+		detail::initialize_leaf(t, is, mem_res);
+	}
+	else {
+		detail::initialize_internal(t, is, mem_res);
+	}
 }
 
 } // namespace classtree
