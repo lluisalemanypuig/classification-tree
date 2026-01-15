@@ -55,7 +55,7 @@ TEST_CASE("All elements")
 	SUBCASE("Print entire tree")
 	{
 
-		static constexpr std::string_view kd_str = "^ size: 11 11\n"
+		static constexpr std::string_view kd_str = "^ size: 11\n"
 												   "├── (1 1 1 2)\n"
 												   "├── (1 1 1 1)\n"
 												   "├── (1 1 1 3)\n"

@@ -234,11 +234,11 @@ public:
 	 * @brief The number of keys in this node.
 	 *
 	 * This is equal to the number of children of this node.
-	 * @returns The number of keys in this node.
+	 * @returns 0 since there are no children in this leaf node.
 	 */
 	[[nodiscard]] size_t num_keys() const noexcept
 	{
-		return m_data.size();
+		return 0;
 	}
 
 	/**
@@ -278,7 +278,7 @@ public:
 		const std::string& tab = ""
 	) const
 	{
-		os << tab << "^ size: " << size() << ' ' << num_keys() << '\n';
+		os << tab << "^ size: " << size() << '\n';
 		if (print_leaves) {
 			for (size_t i = 0; i < m_data.size(); ++i) {
 				if (i < m_data.size() - 1) {

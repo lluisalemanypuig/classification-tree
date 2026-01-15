@@ -62,7 +62,7 @@ TEST_CASE("Unique elements (1)")
 		static constexpr std::string_view kd_str = "size: 10\n"
 												   "keys: 2\n"
 												   "├── 1\n"
-												   "│   ^ size: 7 7\n"
+												   "│   ^ size: 7\n"
 												   "│   ├── (1 1 1 1)\n"
 												   "│   ├── (1 1 1 2)\n"
 												   "│   ├── (1 1 1 3)\n"
@@ -71,7 +71,7 @@ TEST_CASE("Unique elements (1)")
 												   "│   ├── (1 2 2 1)\n"
 												   "│   └── (1 3 5 1)\n"
 												   "└── 2\n"
-												   "    ^ size: 3 3\n"
+												   "    ^ size: 3\n"
 												   "    ├── (2 2 2 1)\n"
 												   "    ├── (2 2 2 2)\n"
 												   "    └── (2 2 3 2)\n";

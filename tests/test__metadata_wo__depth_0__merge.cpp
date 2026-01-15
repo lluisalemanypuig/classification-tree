@@ -59,7 +59,7 @@ TEST_CASE("Empty trees")
 		CHECK_EQ(kd.size(), 6);
 	}
 	{
-		const std::string_view kd_str = "^ size: 6 6\n"
+		const std::string_view kd_str = "^ size: 6\n"
 										"├── (1 1 1 1)\n"
 										"├── (1 1 1 2)\n"
 										"├── (1 1 1 3)\n"
@@ -85,7 +85,7 @@ TEST_CASE("Empty trees")
 		CHECK_EQ(kd.size(), 6);
 	}
 	{
-		const std::string_view kd_str = "^ size: 6 6\n"
+		const std::string_view kd_str = "^ size: 6\n"
 										"├── (1 1 1 1)\n"
 										"├── (1 1 1 2)\n"
 										"├── (1 1 1 3)\n"

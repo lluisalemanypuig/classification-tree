@@ -168,7 +168,7 @@ public:
 		assert(m_tree != nullptr);
 #endif
 
-		if (m_tree->num_keys() == 0) [[unlikely]] {
+		if (m_tree->size() == 0) [[unlikely]] {
 			m_past_begin = true;
 			m_it = m_tree->end();
 			return false;
@@ -190,7 +190,7 @@ public:
 		assert(m_tree != nullptr);
 #endif
 
-		if (m_tree->num_keys() == 0) [[unlikely]] {
+		if (m_tree->size() == 0) [[unlikely]] {
 			m_past_begin = true;
 			m_it = m_tree->end();
 			return false;

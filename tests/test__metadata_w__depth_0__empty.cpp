@@ -42,7 +42,7 @@ TEST_CASE("Empty tree")
 
 	SUBCASE("Print entire tree")
 	{
-		static constexpr std::string_view kd_str = "^ size: 0 0\n";
+		static constexpr std::string_view kd_str = "^ size: 0\n";
 		const std::string print_str_const = print_string(kd);
 		CHECK_EQ(print_str_const, kd_str);
 	}
