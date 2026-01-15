@@ -32,8 +32,8 @@
 
 TEST_CASE("Empty vector")
 {
-	std::vector<std::pair<int, int>> v;
-	std::vector<classtree::element_t<int, int>> v2;
+	std::pmr::vector<std::pair<int, int>> v;
+	std::pmr::vector<classtree::element_t<int, int>> v2;
 
 	for (int i = 1; i <= 9; ++i) {
 		{
@@ -65,8 +65,8 @@ TEST_CASE("Empty vector")
 
 TEST_CASE("Singleton vector")
 {
-	std::vector<std::pair<int, int>> v{{5, 5}};
-	std::vector<classtree::element_t<int, int>> v2{{5, 5}};
+	std::pmr::vector<std::pair<int, int>> v{{5, 5}};
+	std::pmr::vector<classtree::element_t<int, int>> v2{{5, 5}};
 
 	for (int i = 1; i <= 4; ++i) {
 		{
@@ -150,8 +150,8 @@ TEST_CASE("Singleton vector")
 
 TEST_CASE("Tiny vector")
 {
-	std::vector<std::pair<size_t, size_t>> v;
-	std::vector<classtree::element_t<size_t, size_t>> v2;
+	std::pmr::vector<std::pair<size_t, size_t>> v;
+	std::pmr::vector<classtree::element_t<size_t, size_t>> v2;
 	for (size_t i = 1; i <= 9; i += 2) {
 		v.push_back({i, i});
 		classtree::pair<size_t, size_t> p;
@@ -224,8 +224,8 @@ TEST_CASE("Tiny vector")
 
 TEST_CASE("Small vector")
 {
-	std::vector<std::pair<size_t, size_t>> v;
-	std::vector<classtree::element_t<size_t, size_t>> v2;
+	std::pmr::vector<std::pair<size_t, size_t>> v;
+	std::pmr::vector<classtree::element_t<size_t, size_t>> v2;
 	for (size_t i = 1; i <= 17; i += 2) {
 		v.push_back({i, i});
 		classtree::pair<size_t, size_t> p;
@@ -298,8 +298,8 @@ TEST_CASE("Small vector")
 
 TEST_CASE("Large vector")
 {
-	std::vector<std::pair<size_t, size_t>> v;
-	std::vector<classtree::element_t<size_t, size_t>> v2;
+	std::pmr::vector<std::pair<size_t, size_t>> v;
+	std::pmr::vector<classtree::element_t<size_t, size_t>> v2;
 	for (size_t i = 1; i <= 301; i += 2) {
 		v.push_back({i, i});
 		classtree::pair<size_t, size_t> p;
