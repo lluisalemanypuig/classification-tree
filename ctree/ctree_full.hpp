@@ -234,6 +234,20 @@ public:
 	{
 		return m_children.size();
 	}
+	/**
+	 * @brief The number of bytes occupied by this leaf node.
+	 *
+	 * This value is calculated.
+	 * @returns The number of bytes that this tree requires.
+	 */
+	[[nodiscard]] size_t num_bytes() const noexcept
+	{
+		size_t bytes = m_children.size() * sizeof(subtree_t);
+		for (const auto& [_, child] : m_children) {
+			bytes += child.num_bytes();
+		}
+		return bytes;
+	}
 
 	/**
 	 * @brief Prints this tree to the output specified by @e os.

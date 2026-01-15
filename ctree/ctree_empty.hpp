@@ -241,6 +241,16 @@ public:
 	{
 		return 0;
 	}
+	/**
+	 * @brief The number of bytes occupied by this leaf node.
+	 *
+	 * This value is calculated.
+	 * @returns The number of bytes that this tree requires.
+	 */
+	[[nodiscard]] size_t num_bytes() const noexcept
+	{
+		return m_data.size() * sizeof(leaf_element_t);
+	}
 
 	/**
 	 * @brief Returns the @e i-th child of this node.
