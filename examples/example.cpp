@@ -28,6 +28,7 @@
 #include <ctree/ctree.hpp>
 #include <ctree/iterator.hpp>
 #include <ctree/range_iterator.hpp>
+#include <ctree/memory_profile.hpp>
 
 struct A {
 	int i, j;
@@ -131,6 +132,24 @@ int main()
 					  << "' '" << std::get<2>(data) << "' '"
 					  << std::get<3>(data) << "'\n";
 			++it;
+		}
+	}
+
+	{
+		std::cout << "Internal nodes profile\n";
+		std::cout << "    ";
+		classtree::output_profile(kd, std::cout);
+		std::cout << '\n';
+	}
+	{
+		std::cout << "Initialize from profile\n";
+		classtree::ctree<A, B, int, double, std::string> kd2;
+		std::ifstream fin("../../examples/profile_1.txt");
+		if (fin.is_open()) {
+			size_t total_bytes;
+			fin >> total_bytes;
+			std::cout << "    total_bytes= " << total_bytes << '\n';
+			kd2.initialize(fin);
 		}
 	}
 }
