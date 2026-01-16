@@ -148,7 +148,7 @@ void initialize_leaf(
 	size_t size;
 	is >> size;
 	t.set_allocator(mem_res);
-	t.resize(size);
+	t.reserve(size);
 }
 
 /**

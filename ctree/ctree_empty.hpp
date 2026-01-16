@@ -77,9 +77,9 @@ public:
 	 * @brief Resizes the allocator of children
 	 * @param s Size.
 	 */
-	void resize(const size_t s)
+	void reserve(const size_t s)
 	{
-		m_data.resize(s);
+		m_data.reserve(s);
 	}
 
 	/// Clear the memory occupied by this leaf node.
