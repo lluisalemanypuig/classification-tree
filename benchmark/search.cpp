@@ -19,7 +19,7 @@
 
 template <typename Contained, typename Value, typename Callable>
 void custom_search(
-	const std::vector<Contained>& v, Value max_val, const Callable& f
+	const std::pmr::vector<Contained>& v, Value max_val, const Callable& f
 )
 {
 	for (size_t j = 0; j < max_val + 150; ++j) {
@@ -32,7 +32,7 @@ static void pair_search_linear(benchmark::State& state)
 	const size_t n = static_cast<size_t>(state.range(0));
 
 	size_t j = 150;
-	std::vector<std::pair<size_t, size_t>> v(n);
+	std::pmr::vector<std::pair<size_t, size_t>> v(n);
 	for (size_t i = 0; i < n; ++i) {
 		v.push_back({j, j});
 		j += 2;
@@ -57,7 +57,7 @@ static void pair_search_binary(benchmark::State& state)
 	const size_t n = static_cast<size_t>(state.range(0));
 
 	size_t j = 150;
-	std::vector<std::pair<size_t, size_t>> v(n);
+	std::pmr::vector<std::pair<size_t, size_t>> v(n);
 	for (size_t i = 0; i < n; ++i) {
 		v.push_back({j, j});
 		j += 2;
@@ -82,7 +82,7 @@ static void element_search_linear(benchmark::State& state)
 	const size_t n = static_cast<size_t>(state.range(0));
 
 	size_t j = 150;
-	std::vector<classtree::element_t<size_t, size_t>> v(n);
+	std::pmr::vector<classtree::element_t<size_t, size_t>> v(n);
 	for (size_t i = 0; i < n; ++i) {
 		v.push_back({j, j});
 		j += 2;
@@ -110,7 +110,7 @@ static void element_search_binary(benchmark::State& state)
 	const size_t n = static_cast<size_t>(state.range(0));
 
 	size_t j = 150;
-	std::vector<classtree::element_t<size_t, size_t>> v(n);
+	std::pmr::vector<classtree::element_t<size_t, size_t>> v(n);
 	for (size_t i = 0; i < n; ++i) {
 		v.push_back({j, j});
 		j += 2;
