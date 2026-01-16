@@ -97,7 +97,7 @@ void output_profile(
 	const ctree<data_t, metadata_t, keys_t...>& t, output_t& fout
 )
 {
-	fout << t.num_bytes() << ' ';
+	fout << t.total_bytes() << ' ';
 	detail::output_profile(t, fout);
 }
 
@@ -147,6 +147,7 @@ void initialize_leaf(
 {
 	size_t size;
 	is >> size;
+
 	t.set_allocator(mem_res);
 	t.reserve(size);
 }
@@ -190,10 +191,10 @@ void initialize_internal(
 	it = t.begin();
 	while (it != it_end) {
 		if constexpr (sizeof...(keys_t) == 1) {
-			initialize_leaf(it->second, is, mem_res);
+			detail::initialize_leaf(it->second, is, mem_res);
 		}
 		else {
-			initialize_internal(it->second, is, mem_res);
+			detail::initialize_internal(it->second, is, mem_res);
 		}
 		++it;
 	}
@@ -220,6 +221,7 @@ void initialize(
 	std::pmr::memory_resource *mem_res = std::pmr::get_default_resource()
 )
 {
+	t.clear();
 	if constexpr (sizeof...(keys_t) == 0) {
 		detail::initialize_leaf(t, is, mem_res);
 	}
