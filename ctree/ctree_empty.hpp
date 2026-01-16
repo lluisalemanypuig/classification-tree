@@ -275,6 +275,15 @@ public:
 	}
 
 	/**
+	 * @brief Updates the size of the current node.
+	 * @returns The resulting size.
+	 */
+	size_t update_size() noexcept
+	{
+		return m_data.size();
+	}
+
+	/**
 	 * @brief Returns the @e i-th child of this node.
 	 * @param i A valid index. Must be less than @ref num_keys().
 	 * @returns A non-constant reference to a key value.

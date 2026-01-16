@@ -272,6 +272,19 @@ public:
 	}
 
 	/**
+	 * @brief Updates the size of the current node.
+	 * @returns The resulting size.
+	 */
+	size_t update_size() noexcept
+	{
+		m_size = 0;
+		for (auto& [_, child] : m_children) {
+			m_size += child.update_size();
+		}
+		return m_size;
+	}
+
+	/**
 	 * @brief Prints this tree to the output specified by @e os.
 	 * @param os Output stream.
 	 * @param print_leaves Whether or not to print the values in the leaves of the tree.
