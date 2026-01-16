@@ -77,7 +77,11 @@ public:
 	 */
 	void set_allocator(std::pmr::memory_resource *mem_res)
 	{
-		m_children = container_t(mem_res);
+		m_children.clear();
+
+		new (&m_children) std::pmr::vector<subtree_t>(
+			std::pmr::polymorphic_allocator<subtree_t>{mem_res}
+		);
 	}
 
 	/**
@@ -257,16 +261,26 @@ public:
 		return m_children.size();
 	}
 	/**
-	 * @brief The number of bytes occupied by this leaf node.
+	 * @brief The number of bytes occupied by this internal node.
 	 *
 	 * This value is calculated.
 	 * @returns The number of bytes that this tree requires.
 	 */
 	[[nodiscard]] size_t num_bytes() const noexcept
 	{
-		size_t bytes = m_children.size() * sizeof(subtree_t);
+		return num_keys() * sizeof(subtree_t);
+	}
+	/**
+	 * @brief The number of bytes occupied by this tree.
+	 *
+	 * This value is calculated.
+	 * @returns The number of bytes that the tree rooted at this node requires.
+	 */
+	[[nodiscard]] size_t total_bytes() const noexcept
+	{
+		size_t bytes = num_bytes();
 		for (const auto& [_, child] : m_children) {
-			bytes += child.num_bytes();
+			bytes += child.total_bytes();
 		}
 		return bytes;
 	}

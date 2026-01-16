@@ -70,7 +70,11 @@ public:
 	 */
 	void set_allocator(std::pmr::memory_resource *mem_res)
 	{
-		m_data = container_t(mem_res);
+		m_data.clear();
+
+		new (&m_data) std::pmr::vector<leaf_element_t>(
+			std::pmr::polymorphic_allocator<leaf_element_t>{mem_res}
+		);
 	}
 
 	/**
@@ -267,11 +271,21 @@ public:
 	 * @brief The number of bytes occupied by this leaf node.
 	 *
 	 * This value is calculated.
-	 * @returns The number of bytes that this tree requires.
+	 * @returns The number of bytes that this node requires.
 	 */
 	[[nodiscard]] size_t num_bytes() const noexcept
 	{
 		return m_data.size() * sizeof(leaf_element_t);
+	}
+	/**
+	 * @brief The number of bytes occupied by this tree.
+	 *
+	 * This value is calculated.
+	 * @returns The number of bytes that the tree rooted at this node requires.
+	 */
+	[[nodiscard]] size_t total_bytes() const noexcept
+	{
+		return num_bytes();
 	}
 
 	/**
@@ -320,7 +334,7 @@ public:
 		const std::string& tab = ""
 	) const
 	{
-		os << tab << "^ size: " << size() << '\n';
+		os << tab << "^ size: " << size() << ' ' << num_bytes() << '\n';
 		if (print_leaves) {
 			const auto s = m_data.size();
 			for (const auto& [i, value] : m_data | std::views::enumerate) {
