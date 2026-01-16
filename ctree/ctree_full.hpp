@@ -323,10 +323,10 @@ public:
 	 */
 	[[nodiscard]] std::vector<size_t> sizes() const noexcept
 	{
-		std::vector<size_t> s(m_children.size(), 0);
+		std::vector<size_t> s(num_keys(), 0);
 		std::ranges::transform(
 			m_children,
-			s,
+			s.begin(),
 			[](const auto& key_child)
 			{
 				return key_child.second.size();
