@@ -70,7 +70,7 @@ public:
 	 */
 	void set_allocator(std::pmr::memory_resource *mem_res)
 	{
-		m_data.clear();
+		m_data.~vector<leaf_element_t>();
 
 		new (&m_data) std::pmr::vector<leaf_element_t>(
 			std::pmr::polymorphic_allocator<leaf_element_t>{mem_res}

@@ -77,7 +77,7 @@ public:
 	 */
 	void set_allocator(std::pmr::memory_resource *mem_res)
 	{
-		m_children.clear();
+		m_children.~vector<subtree_t>();
 
 		new (&m_children) std::pmr::vector<subtree_t>(
 			std::pmr::polymorphic_allocator<subtree_t>{mem_res}
