@@ -4,46 +4,46 @@ message(STATUS "===========================")
 message(STATUS "Configuring tests for CTREE")
 message(STATUS "===========================")
 
-# project declaration
+#project declaration
 project(CTREETESTS VERSION "${CTREE_MAJOR}.${CTREE_PATCH}")
 project(CTREETESTS DESCRIPTION "Tests for classification tree")
 
-# needed includes to make CMake work
+#needed includes to make CMake work
 include(CheckCXXCompilerFlag)
-# installation directories(platform dependent)
+#installation directories(platform dependent)
 include(GNUInstallDirs)
-# include CTest for testing
+#include CTest for testing
 include(CTest)
 
-# ******************************************************************************
-# Custom functions
+#******************************************************************************
+#Custom functions
 
 function(configure_test_executable executable)
 
 	define_symbol(${executable} -DCTREE_DEBUG)
 
-	# doctest
+#doctest
 	target_link_libraries(${executable} doctest::doctest)
 
-	# configure executable normally
+#configure executable normally
 	configure_executable(${executable})
 
 endfunction(configure_test_executable)
 
-# ******************************************************************************
-# Set default build type
+#******************************************************************************
+#Set default build type
 
 set(default_build_type "Release")
 
-# ******************************************************************************
-# LIBRARIES
-# check if libraries are installed in the system
+#******************************************************************************
+#LIBRARIES
+#check if libraries are installed in the system
 
-# doctest
+#doctest
 find_package(doctest REQUIRED)
 
-# ******************************************************************************
-# MAKE EXECUTABLES
+#******************************************************************************
+#MAKE EXECUTABLES
 
 file(GLOB_RECURSE ctree ../ctree/*.hpp)
 
@@ -243,6 +243,14 @@ add_test(NAME test__metadata_wo__depth_11__eq__all COMMAND test__metadata_wo__de
 # MISCELLANEA
 # ===========
 
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+	# Size in bytes
+	add_executable(test_bytes test_bytes.cpp ${ctree})
+	configure_executable(test_bytes)
+	add_test(NAME test_bytes COMMAND test_bytes)
+endif()
+
+# Search
 add_executable(test_search test_search.cpp definitions.hpp ${ctree})
 configure_executable(test_search)
 add_test(NAME test_search COMMAND test_search)
