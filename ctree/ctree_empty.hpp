@@ -270,19 +270,27 @@ public:
 	/**
 	 * @brief The number of bytes occupied by this leaf node.
 	 *
+	 * This counts the number of bytes of the memory allocated for the keys
+	 * and the memory allocated to hold the subtree and the size of *this.
 	 * This value is calculated.
 	 * @returns The number of bytes that this node requires.
 	 */
 	[[nodiscard]] size_t num_bytes() const noexcept
 	{
-		return m_data.size() * sizeof(leaf_element_t);
+		return m_data.size() * sizeof(leaf_element_t) + sizeof(*this);
 	}
 	/**
 	 * @brief The number of bytes occupied by this tree.
 	 *
+	 * This counts the number of bytes of the memory allocated for the keys
+	 * and the memory allocated to hold the subtree and the size of *this.
 	 * This value is calculated.
+	 * @tparam adjust_alignment Adjust the number of bytes according to the alignment
+	 * of the child subtrees. Since there are no child subtrees in leaf nodes,
+	 * there is no adjustment to be made.
 	 * @returns The number of bytes that the tree rooted at this node requires.
 	 */
+	template <bool adjust_alignment = true>
 	[[nodiscard]] size_t total_bytes() const noexcept
 	{
 		return num_bytes();
@@ -334,7 +342,8 @@ public:
 		const std::string& tab = ""
 	) const
 	{
-		os << tab << "^ size: " << size() << ' ' << num_bytes() << '\n';
+		os << tab << "^ size: " << size() << '\n';
+		//os << tab << "^ bytes: " << num_bytes() << '\n';
 		if (print_leaves) {
 			const auto s = m_data.size();
 			for (const auto& [i, value] : m_data | std::views::enumerate) {
@@ -521,7 +530,7 @@ private:
 
 private:
 
-	/// The unique elements in this tree.
+	/// The elements in this leaf node.
 	container_t m_data;
 };
 

@@ -263,24 +263,31 @@ public:
 	/**
 	 * @brief The number of bytes occupied by this internal node.
 	 *
+	 * This counts the number of bytes of the memory allocated for the keys
+	 * and the memory allocated to hold the subtree and the size of *this.
 	 * This value is calculated.
 	 * @returns The number of bytes that this tree requires.
 	 */
 	[[nodiscard]] size_t num_bytes() const noexcept
 	{
-		return num_keys() * sizeof(subtree_t);
+		return num_keys() * sizeof(subtree_t) + sizeof(*this);
 	}
 	/**
 	 * @brief The number of bytes occupied by this tree.
 	 *
+	 * This counts the number of bytes of the memory allocated for the keys
+	 * and the memory allocated to hold the subtree and the size of *this.
 	 * This value is calculated.
+	 * @tparam adjust_alignment Adjust the number of bytes according to the alignment
+	 * of the child subtrees.
 	 * @returns The number of bytes that the tree rooted at this node requires.
 	 */
+	template <bool adjust_alignment = true>
 	[[nodiscard]] size_t total_bytes() const noexcept
 	{
 		size_t bytes = num_bytes();
 		for (const auto& [_, child] : m_children) {
-			bytes += child.total_bytes();
+			bytes += child.template total_bytes<adjust_alignment>();
 		}
 		return bytes;
 	}
@@ -314,6 +321,11 @@ public:
 
 		os << tab << "size: " << size() << '\n';
 		os << tab << "keys: " << num_keys() << '\n';
+		/*
+		os << tab << "size subtree: " << sizeof(subtree_t) << '\n';
+		os << tab << "node bytes:   " << num_bytes() << '\n';
+		os << tab << "total bytes:  " << total_bytes() << '\n';
+		*/
 
 		for (const auto& [i, value] : m_children | std::views::enumerate) {
 			const auto& [v, child] = value;
