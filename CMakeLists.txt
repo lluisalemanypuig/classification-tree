@@ -110,16 +110,30 @@ message(STATUS "CTREE_DIR: ${CTREE_DIR}")
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-	message(STATUS "Link against ctree (debug compilation of ctree)")
-	set(CTREE_LIB_DIR ${CTREE_DIR}/build-debug/ctree)
+	message(STATUS "    Link against ctree (debug compilation of ctree)")
+	set(BUILD_DIR build-debug)
+	set(CTREE_LIB_DIR ${CTREE_DIR}/${BUILD_DIR}/ctree)
 	set(CTREE_LIB_NAME ctree)
 else()
-	message(STATUS "Link against ctreeotimized (release compilation of ctree)")
-	set(CTREE_LIB_DIR ${CTREE_DIR}/build-release/ctree)
+	message(STATUS "    Link against ctreeoptimized (release compilation of ctree)")
+	set(BUILD_DIR build-release)
+	set(CTREE_LIB_DIR ${CTREE_DIR}/${BUILD_RELEASE}/ctree)
 	set(CTREE_LIB_NAME ctreeoptimized)
 endif()
 message(STATUS "    CTREE_LIB_DIR:  ${CTREE_LIB_DIR}")
 message(STATUS "    CTREE_LIB_NAME: ${CTREE_LIB_NAME}")
+
+set(COMPILE_COMMANDS_ORIG ${CTREE_DIR}/${BUILD_DIR}/compile_commands.json)
+set(COMPILE_COMMANDS_DEST ${CTREE_DIR}/compile_commands.json)
+
+message(STATUS "    Current compile_commands.json:     ${COMPILE_COMMANDS_ORIG}")
+message(STATUS "    Destination compile_commands.json: ${COMPILE_COMMANDS_DEST}")
+
+add_custom_target(
+	copy_compile_commands ALL
+	COMMAND ${CMAKE_COMMAND} -E copy_if_different ${COMPILE_COMMANDS_ORIG} ${COMPILE_COMMANDS_DEST}
+	DEPENDS ${COMPILE_COMMANDS_ORIG}
+)
 
 # *******************************************************************************
 # Add subdirectories
@@ -128,12 +142,3 @@ add_subdirectory(tests)
 add_subdirectory(benchmark)
 add_subdirectory(examples)
 add_subdirectory(cases)
-
-# *******************************************************************************
-# Other
-
-set(COMMANDS_FILE_ORIG ${CMAKE_BUILD_TYPE}/compile_commands.json)
-set(COMMANDS_FILE_DEST compile_commands.json)
-if(EXISTS "${COMMANDS_FILE_ORIG}")
-	file(COPY_FILE "${COMMANDS_FILE_ORIG}" "${COMMANDS_FILE_DEST}")
-endif()
