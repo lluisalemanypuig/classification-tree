@@ -87,116 +87,143 @@ TEST_CASE("Leaf t")
 	{
 		classtree::ctree<char, void> t;
 
-		CHECK_EQ(t.template total_bytes<true>(), 32);
-		CHECK_EQ(t.template total_bytes<false>(), 32);
+		CHECK_EQ(t.template total_bytes<true>(), 0);
+		CHECK_EQ(t.template total_bytes<false>(), 0);
 		t.add('a');
-		CHECK_EQ(t.template total_bytes<true>(), 33);
-		CHECK_EQ(t.template total_bytes<false>(), 33);
+		CHECK_EQ(t.template total_bytes<true>(), 1);
+		CHECK_EQ(t.template total_bytes<false>(), 1);
 		t.add('b');
-		CHECK_EQ(t.template total_bytes<true>(), 34);
-		CHECK_EQ(t.template total_bytes<false>(), 34);
+		CHECK_EQ(t.template total_bytes<true>(), 2);
+		CHECK_EQ(t.template total_bytes<false>(), 2);
 		t.add('c');
-		CHECK_EQ(t.template total_bytes<true>(), 35);
-		CHECK_EQ(t.template total_bytes<false>(), 35);
+		CHECK_EQ(t.template total_bytes<true>(), 3);
+		CHECK_EQ(t.template total_bytes<false>(), 3);
 	}
 
 	{
 		classtree::ctree<char, int> t;
-		CHECK_EQ(t.template total_bytes<true>(), 32);
-		CHECK_EQ(t.template total_bytes<false>(), 32);
+		CHECK_EQ(t.template total_bytes<true>(), 0);
+		CHECK_EQ(t.template total_bytes<false>(), 0);
 		t.add({'a', 1});
-		CHECK_EQ(t.template total_bytes<true>(), 40);
-		CHECK_EQ(t.template total_bytes<false>(), 40);
+		CHECK_EQ(t.template total_bytes<true>(), 8);
+		CHECK_EQ(t.template total_bytes<false>(), 8);
 		t.add({'b', 2});
-		CHECK_EQ(t.template total_bytes<true>(), 48);
-		CHECK_EQ(t.template total_bytes<false>(), 48);
+		CHECK_EQ(t.template total_bytes<true>(), 16);
+		CHECK_EQ(t.template total_bytes<false>(), 16);
 		t.add({'c', 3});
-		CHECK_EQ(t.template total_bytes<true>(), 56);
-		CHECK_EQ(t.template total_bytes<false>(), 56);
+		CHECK_EQ(t.template total_bytes<true>(), 24);
+		CHECK_EQ(t.template total_bytes<false>(), 24);
 	}
 
 	{
 		classtree::ctree<int, void> t;
-		CHECK_EQ(t.template total_bytes<true>(), 32);
-		CHECK_EQ(t.template total_bytes<false>(), 32);
+		CHECK_EQ(t.template total_bytes<true>(), 0);
+		CHECK_EQ(t.template total_bytes<false>(), 0);
 		t.add(1);
-		CHECK_EQ(t.template total_bytes<true>(), 36);
-		CHECK_EQ(t.template total_bytes<false>(), 36);
+		CHECK_EQ(t.template total_bytes<true>(), 4);
+		CHECK_EQ(t.template total_bytes<false>(), 4);
 		t.add(2);
-		CHECK_EQ(t.template total_bytes<true>(), 40);
-		CHECK_EQ(t.template total_bytes<false>(), 40);
+		CHECK_EQ(t.template total_bytes<true>(), 8);
+		CHECK_EQ(t.template total_bytes<false>(), 8);
 		t.add(3);
-		CHECK_EQ(t.template total_bytes<true>(), 44);
-		CHECK_EQ(t.template total_bytes<false>(), 44);
+		CHECK_EQ(t.template total_bytes<true>(), 12);
+		CHECK_EQ(t.template total_bytes<false>(), 12);
 	}
 
 	{
 		classtree::ctree<int, int> t;
-		CHECK_EQ(t.template total_bytes<true>(), 32);
-		CHECK_EQ(t.template total_bytes<false>(), 32);
-		t.add({1, 1});
-		CHECK_EQ(t.template total_bytes<true>(), 40);
-		CHECK_EQ(t.template total_bytes<false>(), 40);
-		t.add({2, 2});
-		CHECK_EQ(t.template total_bytes<true>(), 48);
-		CHECK_EQ(t.template total_bytes<false>(), 48);
-		t.add({3, 3});
-		CHECK_EQ(t.template total_bytes<true>(), 56);
-		CHECK_EQ(t.template total_bytes<false>(), 56);
+		CHECK_EQ(t.template total_bytes<true>(), 0);
+		CHECK_EQ(t.template total_bytes<false>(), 0);
+		t.add({'a', 1});
+		CHECK_EQ(t.template total_bytes<true>(), 8);
+		CHECK_EQ(t.template total_bytes<false>(), 8);
+		t.add({'b', 2});
+		CHECK_EQ(t.template total_bytes<true>(), 16);
+		CHECK_EQ(t.template total_bytes<false>(), 16);
+		t.add({'c', 3});
+		CHECK_EQ(t.template total_bytes<true>(), 24);
+		CHECK_EQ(t.template total_bytes<false>(), 24);
 	}
 }
 
 TEST_CASE("1-level t")
 {
-	SUBCASE("1 branch")
-	{
-		struct pair_key_subt {
-			char key;
-			classtree::ctree<char, void> subt;
-		};
-		static constexpr size_t subtree_s = sizeof(pair_key_subt);
-		static_assert(subtree_s == 40);
+	struct pair_key_subt {
+		char key;
+		classtree::ctree<char, void> subt;
+	};
 
+	SUBCASE("First branching")
+	{
 		classtree::ctree<char, void, int> t;
-		CHECK_EQ(t.template total_bytes<true>(), 40);
-		CHECK_EQ(t.template total_bytes<false>(), 40);
+		CHECK_EQ(t.template total_bytes<true>(), 0);
+		CHECK_EQ(t.template total_bytes<false>(), 0);
+
+		// 1 branch
 		t.add('a', 1);
-		CHECK_EQ(t.template total_bytes<true>(), 113);
-		CHECK_EQ(t.template total_bytes<false>(), 113);
+		CHECK_EQ(t.template total_bytes<true>(), 48);
+		CHECK_EQ(t.template total_bytes<false>(), 41);
 		t.add('b', 1);
-		CHECK_EQ(t.template total_bytes<true>(), 114);
-		CHECK_EQ(t.template total_bytes<false>(), 114);
+		CHECK_EQ(t.template total_bytes<true>(), 48);
+		CHECK_EQ(t.template total_bytes<false>(), 42);
 		t.add('c', 1);
-		CHECK_EQ(t.template total_bytes<true>(), 115);
-		CHECK_EQ(t.template total_bytes<false>(), 115);
+		CHECK_EQ(t.template total_bytes<true>(), 48);
+		CHECK_EQ(t.template total_bytes<false>(), 43);
+
+		// 2 branches
+		t.add('d', 2);
+		CHECK_EQ(t.template total_bytes<true>(), 96);
+		CHECK_EQ(t.template total_bytes<false>(), 84);
 	}
 
-	SUBCASE("2 branch")
+	SUBCASE("Second branching")
 	{
-		struct pair_key_subt {
-			char key;
-			classtree::ctree<char, void> subt;
-		};
-		static constexpr size_t subtree_s = sizeof(pair_key_subt);
-		static_assert(subtree_s == 40);
-
 		classtree::ctree<char, void, int> t;
-		CHECK_EQ(t.template total_bytes<true>(), 40);
-		CHECK_EQ(t.template total_bytes<false>(), 40);
-		t.add('a', 1);
-		CHECK_EQ(t.template total_bytes<true>(), 113);
-		CHECK_EQ(t.template total_bytes<false>(), 113);
-		t.add('b', 1);
-		CHECK_EQ(t.template total_bytes<true>(), 114);
-		CHECK_EQ(t.template total_bytes<false>(), 114);
-		t.add('c', 1);
-		CHECK_EQ(t.template total_bytes<true>(), 115);
-		CHECK_EQ(t.template total_bytes<false>(), 115);
-		t.add('a', 2);
-		CHECK_EQ(t.template total_bytes<true>(), 188);
-		CHECK_EQ(t.template total_bytes<false>(), 188);
+		CHECK_EQ(t.template total_bytes<true>(), 0);
+		CHECK_EQ(t.template total_bytes<false>(), 0);
 
-		t.print(std::cout);
+		// 1 branch
+		t.add('1', 1);
+		CHECK_EQ(t.template total_bytes<true>(), 48);
+		CHECK_EQ(t.template total_bytes<false>(), 41);
+		t.add('2', 1);
+		CHECK_EQ(t.template total_bytes<true>(), 48);
+		CHECK_EQ(t.template total_bytes<false>(), 42);
+		t.add('3', 1);
+		CHECK_EQ(t.template total_bytes<true>(), 48);
+		CHECK_EQ(t.template total_bytes<false>(), 43);
+		t.add('4', 1);
+		CHECK_EQ(t.template total_bytes<true>(), 48);
+		CHECK_EQ(t.template total_bytes<false>(), 44);
+		t.add('5', 1);
+		CHECK_EQ(t.template total_bytes<true>(), 48);
+		CHECK_EQ(t.template total_bytes<false>(), 45);
+		t.add('6', 1);
+		CHECK_EQ(t.template total_bytes<true>(), 48);
+		CHECK_EQ(t.template total_bytes<false>(), 46);
+		t.add('7', 1);
+		CHECK_EQ(t.template total_bytes<true>(), 48);
+		CHECK_EQ(t.template total_bytes<false>(), 47);
+		t.add('8', 1);
+		CHECK_EQ(t.template total_bytes<true>(), 48);
+		CHECK_EQ(t.template total_bytes<false>(), 48);
+		t.add('9', 1);
+		CHECK_EQ(t.template total_bytes<true>(), 56);
+		CHECK_EQ(t.template total_bytes<false>(), 49);
+		t.add('A', 1);
+		CHECK_EQ(t.template total_bytes<true>(), 56);
+		CHECK_EQ(t.template total_bytes<false>(), 50);
+		t.add('B', 1);
+		CHECK_EQ(t.template total_bytes<true>(), 56);
+		CHECK_EQ(t.template total_bytes<false>(), 51);
+		t.add('C', 1);
+		CHECK_EQ(t.template total_bytes<true>(), 56);
+		CHECK_EQ(t.template total_bytes<false>(), 52);
+
+		// 2 branches
+		t.add('d', 2);
+		CHECK_EQ(t.template total_bytes<true>(), 104);
+		CHECK_EQ(t.template total_bytes<false>(), 93);
 	}
 }
 
