@@ -81,6 +81,7 @@ void output_profile(
  *
  * The memory profile is the total number of bytes of the tree plus the internal
  * memory profile of the tree (see @ref detail::output_profile).
+ * @tparam adjust_alignment Output size in bytes taking alignment into account.
  * @tparam output_t Type of the output stream.
  * @tparam data_t Type of the data stored in the leaves of the tree.
  * @tparam metadata_t Type of the metadata stored in the leaves of the tree.
@@ -89,6 +90,7 @@ void output_profile(
  * @param fout The output stream.
  */
 template <
+	bool adjust_alignment,
 	typename output_t,
 	typename data_t,
 	typename metadata_t,
@@ -97,7 +99,7 @@ void output_profile(
 	const ctree<data_t, metadata_t, keys_t...>& t, output_t& fout
 )
 {
-	fout << t.total_bytes() << ' ';
+	fout << t.template total_bytes<adjust_alignment>() << ' ';
 	detail::output_profile(t, fout);
 }
 
