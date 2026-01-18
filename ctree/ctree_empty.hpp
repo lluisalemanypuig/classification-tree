@@ -272,20 +272,22 @@ public:
 	/**
 	 * @brief The number of bytes occupied by this leaf node.
 	 *
-	 * This counts the number of bytes of the memory allocated for the keys
-	 * and the memory allocated to hold the subtree and the size of *this.
+	 * This only counts the number of bytes of the memory allocated for the data
+	 * and metadata (if any). Therefore, it counts bytes allocated in the heap,
+	 * while assuming that the variable of (*this) type is allocated in the stack.
 	 * This value is calculated.
 	 * @returns The number of bytes that this node requires.
 	 */
 	[[nodiscard]] size_t num_bytes() const noexcept
 	{
-		return m_data.size() * sizeof(leaf_element_t) + sizeof(*this);
+		return m_data.size() * sizeof(leaf_element_t);
 	}
 	/**
 	 * @brief The number of bytes occupied by this tree.
 	 *
-	 * This counts the number of bytes of the memory allocated for the keys
-	 * and the memory allocated to hold the subtree and the size of *this.
+	 * This only counts the number of bytes of the memory allocated for the data
+	 * and metadata (if any). Therefore, it counts bytes allocated in the heap,
+	 * while assuming that the variable of (*this) type is allocated in the stack.
 	 * This value is calculated.
 	 * @tparam adjust_alignment Adjust the number of bytes according to the alignment
 	 * of the child subtrees. Since there are no child subtrees in leaf nodes,
@@ -334,10 +336,12 @@ public:
 
 	/**
 	 * @brief Prints this tree to the output specified by @e os.
+	 * @tparam show_sizes Print the sizes in bytes as well.
 	 * @param os Output stream.
 	 * @param print_leaves Whether or not to print the values in the leaves of the tree.
 	 * @param tab The tabulator string.
 	 */
+	template <bool show_sizes = false>
 	void print(
 		std::ostream& os,
 		const bool print_leaves = true,
@@ -345,7 +349,9 @@ public:
 	) const
 	{
 		os << tab << "^ size: " << size() << '\n';
-		//os << tab << "^ bytes: " << num_bytes() << '\n';
+		if constexpr (show_sizes) {
+			os << tab << "^ bytes: " << num_bytes() << '\n';
+		}
 		if (print_leaves) {
 			const auto s = m_data.size();
 			for (const auto& [i, value] : m_data | std::views::enumerate) {

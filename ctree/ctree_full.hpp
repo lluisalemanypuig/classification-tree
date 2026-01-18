@@ -266,14 +266,15 @@ public:
 	/**
 	 * @brief The number of bytes occupied by this internal node.
 	 *
-	 * This counts the number of bytes of the memory allocated for the keys
-	 * and the memory allocated to hold the subtree and the size of *this.
+	 * This only counts the number of bytes of the memory allocated for the data
+	 * and metadata (if any). Therefore, it counts bytes allocated in the heap,
+	 * while assuming that the variable of (*this) type is allocated in the stack.
 	 * This value is calculated.
 	 * @returns The number of bytes that this tree requires.
 	 */
 	[[nodiscard]] size_t num_bytes() const noexcept
 	{
-		return num_keys() * sizeof(subtree_t) + sizeof(*this);
+		return sizeof(subtree_t) * m_children.size();
 	}
 	/**
 	 * @brief The number of bytes occupied by this tree.
@@ -281,8 +282,8 @@ public:
 	 * This counts the number of bytes of the memory allocated for the keys
 	 * and the memory allocated to hold the subtree and the size of *this.
 	 * This value is calculated.
-	 * @tparam adjust_alignment Adjust the number of bytes according to the alignment
-	 * of the child subtrees.
+	 * @tparam adjust_alignment Adjust the number of bytes according to the
+	 * alignment of the child subtrees.
 	 * @returns The number of bytes that the tree rooted at this node requires.
 	 */
 	template <bool adjust_alignment = true>
@@ -291,6 +292,12 @@ public:
 		size_t bytes = num_bytes();
 		for (const auto& [_, child] : m_children) {
 			bytes += child.template total_bytes<adjust_alignment>();
+
+			if constexpr (adjust_alignment) {
+				const size_t align = alignof(child_t);
+				const size_t pad = (align - (bytes % align)) % align;
+				bytes += pad;
+			}
 		}
 		return bytes;
 	}
@@ -310,10 +317,12 @@ public:
 
 	/**
 	 * @brief Prints this tree to the output specified by @e os.
+	 * @tparam show_sizes Print the sizes in bytes as well.
 	 * @param os Output stream.
 	 * @param print_leaves Whether or not to print the values in the leaves of the tree.
 	 * @param tab The tabulator string.
 	 */
+	template <bool show_sizes = false>
 	void print(
 		std::ostream& os,
 		const bool print_leaves = true,
@@ -324,22 +333,26 @@ public:
 
 		os << tab << "size: " << size() << '\n';
 		os << tab << "keys: " << num_keys() << '\n';
-		/*
-		os << tab << "size subtree: " << sizeof(subtree_t) << '\n';
-		os << tab << "node bytes:   " << num_bytes() << '\n';
-		os << tab << "total bytes:  " << total_bytes() << '\n';
-		*/
+		if constexpr (show_sizes) {
+			os << tab << "size subtree: " << sizeof(subtree_t) << '\n';
+			os << tab << "node bytes:   " << num_bytes() << '\n';
+			os << tab << "total bytes:  " << total_bytes() << '\n';
+		}
 
 		for (const auto& [i, value] : m_children | std::views::enumerate) {
 			const auto& [v, child] = value;
 
 			if (static_cast<size_t>(i) < s - 1) {
 				os << tab << "├── " << v << '\n';
-				child.print(os, print_leaves, tab + "│   ");
+				child.template print<show_sizes>(
+					os, print_leaves, tab + "│   "
+				);
 			}
 			else {
 				os << tab << "└── " << v << '\n';
-				child.print(os, print_leaves, tab + "    ");
+				child.template print<show_sizes>(
+					os, print_leaves, tab + "    "
+				);
 			}
 		}
 	}
