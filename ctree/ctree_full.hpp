@@ -286,7 +286,7 @@ public:
 	 * alignment of the child subtrees.
 	 * @returns The number of bytes that the tree rooted at this node requires.
 	 */
-	template <bool adjust_alignment = true>
+	template <bool adjust_alignment>
 	[[nodiscard]] size_t total_bytes() const noexcept
 	{
 		size_t bytes = num_bytes();
