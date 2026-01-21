@@ -1,6 +1,6 @@
 /**
  * Case study of the Isomorphic Representatives Tree
- * Copyright (C) 2025  Lluís Alemany Puig
+ * Copyright (C) 2025 - 2026  Lluís Alemany Puig
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
