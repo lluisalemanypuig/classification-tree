@@ -138,7 +138,7 @@ int main()
 	{
 		std::cout << "Internal nodes profile\n";
 		std::cout << "    ";
-		classtree::output_profile(kd, std::cout);
+		classtree::output_profile<true>(kd, std::cout);
 		std::cout << '\n';
 	}
 	{
