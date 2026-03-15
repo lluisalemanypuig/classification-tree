@@ -70,9 +70,7 @@ public:
 	 */
 	void set_allocator(std::pmr::memory_resource *mem_res)
 	{
-		m_data.~vector<
-			leaf_element_t,
-			std::pmr::polymorphic_allocator<leaf_element_t>>();
+		m_data.~vector();
 
 		new (&m_data) std::pmr::vector<leaf_element_t>(
 			std::pmr::polymorphic_allocator<leaf_element_t>{mem_res}
@@ -269,6 +267,7 @@ public:
 	{
 		return 0;
 	}
+
 	/**
 	 * @brief The number of bytes occupied by this leaf node.
 	 *
@@ -298,6 +297,42 @@ public:
 	[[nodiscard]] size_t total_bytes() const noexcept
 	{
 		return num_bytes();
+	}
+
+	/**
+	 * @brief The number of capacity bytes of this leaf node.
+	 *
+	 * This only counts the number of bytes of the memory allocated for the data
+	 * and metadata (if any). Therefore, it counts bytes allocated in the heap,
+	 * while assuming that the variable of (*this) type is allocated in the stack.
+	 * This value is calculated.
+	 * @returns The number of bytes that this node requires.
+	 */
+	[[nodiscard]] size_t num_capacity_bytes() const noexcept
+	{
+		return m_data.capacity() * sizeof(leaf_element_t);
+	}
+	/**
+	 * @brief The number of capacity bytes of this tree.
+	 *
+	 * This only counts the number of bytes of the memory allocated for the data
+	 * and metadata (if any). Therefore, it counts bytes allocated in the heap,
+	 * while assuming that the variable of (*this) type is allocated in the stack.
+	 * This value is calculated.
+	 * @tparam adjust_alignment Adjust the number of bytes according to the alignment
+	 * of the child subtrees. Since there are no child subtrees in leaf nodes,
+	 * there is no adjustment to be made.
+	 * @returns The number of bytes that the tree rooted at this node requires.
+	 */
+	template <bool adjust_alignment = true>
+	[[nodiscard]] size_t total_capacity_bytes() const noexcept
+	{
+		return num_capacity_bytes();
+	}
+
+	[[nodiscard]] size_t capacity() const noexcept
+	{
+		return m_data.capacity();
 	}
 
 	/**

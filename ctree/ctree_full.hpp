@@ -77,8 +77,7 @@ public:
 	 */
 	void set_allocator(std::pmr::memory_resource *mem_res)
 	{
-		m_children
-			.~vector<subtree_t, std::pmr::polymorphic_allocator<subtree_t>>();
+		m_children.~vector();
 
 		new (&m_children) std::pmr::vector<subtree_t>(
 			std::pmr::polymorphic_allocator<subtree_t>{mem_res}
@@ -263,6 +262,7 @@ public:
 	{
 		return m_children.size();
 	}
+
 	/**
 	 * @brief The number of bytes occupied by this internal node.
 	 *
@@ -274,7 +274,7 @@ public:
 	 */
 	[[nodiscard]] size_t num_bytes() const noexcept
 	{
-		return sizeof(subtree_t) * m_children.size();
+		return m_children.size() * sizeof(subtree_t);
 	}
 	/**
 	 * @brief The number of bytes occupied by this tree.
@@ -300,6 +300,54 @@ public:
 			}
 		}
 		return bytes;
+	}
+
+	/**
+	 * @brief The number of capacity bytes of this internal node.
+	 *
+	 * This only counts the number of bytes of the memory allocated for the data
+	 * and metadata (if any). Therefore, it counts bytes allocated in the heap,
+	 * while assuming that the variable of (*this) type is allocated in the stack.
+	 * This value is calculated.
+	 * @returns The number of bytes that this tree requires.
+	 */
+	[[nodiscard]] size_t num_capacity_bytes() const noexcept
+	{
+		return m_children.capacity() * sizeof(subtree_t);
+	}
+	/**
+	 * @brief The number of capacity bytes of this tree.
+	 *
+	 * This counts the number of bytes of the memory allocated for the keys
+	 * and the memory allocated to hold the subtree and the size of *this.
+	 * This value is calculated.
+	 * @tparam adjust_alignment Adjust the number of bytes according to the
+	 * alignment of the child subtrees.
+	 * @returns The number of bytes that the tree rooted at this node requires.
+	 */
+	template <bool adjust_alignment>
+	[[nodiscard]] size_t total_capacity_bytes() const noexcept
+	{
+		size_t bytes = num_capacity_bytes();
+		for (const auto& [_, child] : m_children) {
+			bytes += child.template total_capacity_bytes<adjust_alignment>();
+
+			if constexpr (adjust_alignment) {
+				const size_t align = alignof(child_t);
+				const size_t pad = (align - (bytes % align)) % align;
+				bytes += pad;
+			}
+		}
+		return bytes;
+	}
+
+	[[nodiscard]] size_t capacity() const noexcept
+	{
+		size_t s = 0;
+		for (const auto& [_, child] : m_children) {
+			s += child.capacity();
+		}
+		return s;
 	}
 
 	/**
