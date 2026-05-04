@@ -32,19 +32,23 @@ namespace classtree {
 template <typename... args>
 struct parameter_pack { };
 
+template <typename pack1, typename pack2>
+constexpr bool are_packs_equal_v = false;
+
 template <
 	typename head1_t,
-	typename... args1,
+	typename... pack1,
 	typename head2_t,
-	typename... args2>
-static consteval inline bool
-check_packs(const parameter_pack<head1_t, args1...>&, const parameter_pack<head2_t, args2...>&)
-	noexcept
-{
-	if constexpr (sizeof...(args1) > 0) {
-		return check_packs(parameter_pack<args1...>{}, parameter_pack<args2...>{});
-	}
-	return std::is_same_v<head1_t, head2_t>;
-}
+	typename... pack2>
+constexpr bool are_packs_equal_v<
+	parameter_pack<head1_t, pack1...>,
+	parameter_pack<head2_t, pack2...>> =
+	std::is_same_v<head1_t, head2_t> and
+	are_packs_equal_v<parameter_pack<pack1...>, parameter_pack<pack2...>>;
 
-} // namespace isorepr
+template <typename head1_t, typename head2_t>
+constexpr bool
+	are_packs_equal_v<parameter_pack<head1_t>, parameter_pack<head2_t>> =
+		std::is_same_v<head1_t, head2_t>;
+
+} // namespace classtree
