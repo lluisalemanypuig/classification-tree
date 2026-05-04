@@ -665,13 +665,9 @@ private:
 	template <typename _leaf_element_t, typename... _keys_t>
 	[[nodiscard]] static consteval bool check_types() noexcept
 	{
-		return std::is_same_v<
-				   std::remove_cvref_t<_leaf_element_t>,
-				   leaf_element_t> and
-			   check_packs(
-				   parameter_pack<key_t, keys_t...>{},
-				   parameter_pack<std::remove_cvref_t<_keys_t>...>{}
-			   );
+		return are_packs_equal_v<
+			parameter_pack<key_t, keys_t...>,
+			parameter_pack<std::remove_cvref_t<_keys_t>...>>;
 	}
 };
 
